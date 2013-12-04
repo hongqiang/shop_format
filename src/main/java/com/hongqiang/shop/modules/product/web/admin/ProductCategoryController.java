@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hongqiang.shop.common.web.BaseController;
-import com.hongqiang.shop.modules.product.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 //import net.shopxx.Message;
 //import net.shopxx.service.BrandService;
@@ -64,8 +65,7 @@ public class ProductCategoryController extends BaseController
 //    productCategory.setPromotions(null);
     
 //     //test
-//		 productCategory.setName("nihao");
-     
+//		 productCategory.setName("nihao");//测试没问题，相关问题参见《springMVC问题集》的23,24条。
     this.productCategoryService.save(productCategory);
 	//设置重定向的属性？和上一个判断采用同样的函数，这里有好几个后一种乱码，感觉像是一种字符串。
 //    IIIllIlI(redirectAttributes, IIIlllII);

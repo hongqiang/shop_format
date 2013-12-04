@@ -1,11 +1,12 @@
 package com.hongqiang.shop.modules.product.dao;
 
 import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.modules.product.entity.Product;
-import com.hongqiang.shop.modules.product.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.Product;
+import com.hongqiang.shop.modules.entity.ProductCategory;
 
 public interface ProductDao extends ProductDaoCustom,
 		CrudRepository<ProductCategory, Long> {

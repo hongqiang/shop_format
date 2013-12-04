@@ -2,7 +2,7 @@ package com.hongqiang.shop.modules.product.service;
 
 import java.util.List;
 
-import com.hongqiang.shop.modules.product.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.ProductCategory;
 
 public  interface ProductCategoryService  
 {

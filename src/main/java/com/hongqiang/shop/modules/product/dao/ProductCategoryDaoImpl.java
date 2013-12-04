@@ -11,7 +11,8 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.modules.product.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.ProductCategory;
+
 import org.springframework.util.Assert;
 
 /**

@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.modules.product.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.ProductCategory;
 
 public interface ProductCategoryDao extends ProductCategoryDaoCustom, CrudRepository<ProductCategory, Long> {
 	

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hongqiang.shop.common.web.BaseController;
-import com.hongqiang.shop.modules.product.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 
 @Controller("shopProductCategoryController")
