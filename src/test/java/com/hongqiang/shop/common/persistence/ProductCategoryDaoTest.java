@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hongqiang.shop.common.test.SpringTransactionalContextTests;
 import com.hongqiang.shop.modules.product.dao.ProductCategoryDao;
-import com.hongqiang.shop.modules.product.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 
 public class ProductCategoryDaoTest extends SpringTransactionalContextTests{

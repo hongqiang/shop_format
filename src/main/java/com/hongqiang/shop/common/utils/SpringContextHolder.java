@@ -5,12 +5,16 @@
  */
 package com.hongqiang.shop.common.utils;
 
+import java.util.Locale;
+
 import org.apache.commons.lang3.Validate;
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.servlet.LocaleResolver;
 
 /**
  * 以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候取出ApplicaitonContext.
@@ -50,6 +54,13 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
 		return applicationContext.getBean(requiredType);
 	}
 
+	  public static String getMessage(String code, Object[] args)
+	  {
+	    LocaleResolver localLocaleResolver = (LocaleResolver)applicationContext.getBean("localeResolver", LocaleResolver.class);
+	    Locale localLocale = localLocaleResolver.resolveLocale(null);
+	    return applicationContext.getMessage(code, args, localLocale);
+	  }
+	
 	/**
 	 * 清除SpringContextHolder中的ApplicationContext为Null.
 	 */

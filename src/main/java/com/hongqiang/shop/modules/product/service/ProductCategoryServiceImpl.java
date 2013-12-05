@@ -87,7 +87,7 @@ public class ProductCategoryServiceImpl extends BaseService implements
 	// "consultation"}, allEntries=true)
 	public ProductCategory update(ProductCategory productCategory) {
 		return (ProductCategory) this.productCategoryDao
-				.update(productCategory);
+				.merge(productCategory);
 	}
 
 	// Remove the entity instance by id.

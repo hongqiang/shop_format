@@ -8,6 +8,7 @@ package com.hongqiang.shop.common.persistence;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -46,6 +47,24 @@ public interface BaseDao<T> {
 	 * 清除缓存数据
 	 */
 	public void clear();
+	
+	//save
+	public  void persist(T paramT);
+
+	//update
+	public  T merge(T paramT);
+
+	//delete
+	public  void remove(T paramT);
+	
+	//update
+	public  void refresh(T paramT);
+
+	public  boolean isManaged(T paramT);
+
+	public  void detach(T paramT);
+
+	public  void lock(T paramT, LockModeType paramLockModeType);
 	
 	// -------------- QL Query --------------
 
@@ -234,21 +253,5 @@ public interface BaseDao<T> {
 	 * @param fields 字段名
 	 */
 	public List<T> keywordsHighlight(BooleanQuery query, List<T> list, int subLength, String... fields);
-	
-	// -------------- update persistence --------------
-		public abstract void persist(T paramT);
 
-	  public abstract T merge(T paramT);
-
-	  public abstract void remove(T paramT);
-	/**
-	 * 更新实体对象.
-	 * 
-	 * @param entity对象
-	 * @return T entity对象
-	 *            
-	 */
-  public abstract T update(T paramT);
-  
-	
 }

@@ -13,7 +13,7 @@ import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 
 @Controller("shopProductCategoryController")
-@RequestMapping(value = "${adminPath}/product_category")
+@RequestMapping(value = "${frontPath}/product_category")
 public class ProductCategoryController extends BaseController {
 
 	@Autowired
