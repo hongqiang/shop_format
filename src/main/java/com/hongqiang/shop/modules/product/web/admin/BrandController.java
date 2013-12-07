@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
-//import net.shopxx.Pageable;
 import com.hongqiang.shop.modules.entity.Brand;
 import com.hongqiang.shop.modules.entity.Brand.Type;
 import com.hongqiang.shop.modules.product.service.BrandService;

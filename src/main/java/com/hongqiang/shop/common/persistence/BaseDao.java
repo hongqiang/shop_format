@@ -78,6 +78,16 @@ public interface BaseDao<T> {
     public <E> Page<E> find(Page<E> page, String qlString, Object... parameter);
     
     /**
+     * QL 分页查询
+     * @param qlString 完整的sql语句
+     * @param parameter sql语句中的参数
+     * @param firstResults 返回firstResults个结果
+     * @param MaxResults 限制最大结果数
+     * @return
+     */
+    public <E> List<E> findList(String qlString, Object[] parameter,Integer firstResults, Integer MaxResults);
+    
+    /**
 	 * QL 查询
 	 * @param qlString
 	 * @param parameter

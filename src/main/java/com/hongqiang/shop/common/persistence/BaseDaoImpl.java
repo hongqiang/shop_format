@@ -224,7 +224,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		Query query = createQuery(qlString, parameter);
 		return query.list();
 	}
-
+	
 	/**
 	 * QL 查询
 	 * 
@@ -234,8 +234,14 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> List<E> findList(String qlString, Object[] parameter) {
+	public <E> List<E> findList(String qlString, Object[] parameter,Integer firstResults, Integer MaxResults){
 		Query query = createQueryByList(qlString, parameter);
+		if(firstResults!=null){
+			query.setFirstResult(firstResults);
+		}
+		if(MaxResults!=null){
+			 query.setMaxResults(MaxResults); 
+		}
 		return query.list();
 	}
 

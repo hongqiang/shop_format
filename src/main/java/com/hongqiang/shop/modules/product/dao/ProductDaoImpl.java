@@ -2,37 +2,51 @@ package com.hongqiang.shop.modules.product.dao;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import javax.persistence.FlushModeType;
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-
-import org.springframework.stereotype.Repository;
-
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.modules.entity.Attribute;
-import com.hongqiang.shop.modules.entity.Brand;
-import com.hongqiang.shop.modules.entity.OrderEntity;
-import com.hongqiang.shop.modules.entity.Product;
-import com.hongqiang.shop.modules.entity.ProductCategory;
-import com.hongqiang.shop.modules.entity.Promotion;
-import com.hongqiang.shop.modules.entity.Tag;
-import com.hongqiang.shop.modules.util.Filter;
-
+import java.util.Collections;
+import java.util.Comparator;
 //import net.shopxx.Setting;
 //import net.shopxx.dao.GoodsDao;
 //import net.shopxx.dao.ProductDao;
 //import net.shopxx.dao.SnDao;
 //import net.shopxx.util.SettingUtils;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.persistence.FlushModeType;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
+
+import com.hongqiang.shop.common.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
+import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.modules.entity.Attribute;
+import com.hongqiang.shop.modules.entity.Brand;
+import com.hongqiang.shop.modules.entity.Goods;
+import com.hongqiang.shop.modules.entity.Product;
+import com.hongqiang.shop.modules.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.Promotion;
+import com.hongqiang.shop.modules.entity.SpecificationValue;
+import com.hongqiang.shop.modules.entity.Tag;
 
 @Repository
 class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
+
+	class ProductComparator implements Comparator<SpecificationValue> {
+		public int compare(SpecificationValue a1, SpecificationValue a2) {
+			return new CompareToBuilder().append(a1.getSpecification(),
+					a2.getSpecification()).toComparison();
+		}
+	}
+
 	private static final Pattern pattern = Pattern.compile("\\d*");
 
 	// @Resource(name = "goodsDaoImpl")
@@ -52,58 +66,29 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 		return localLong.longValue() > 0L;
 	}
 
-	public Product findBySn(String sn) {
-		if (sn == null)
-			return null;
-		String str = "select product from Product product where lower(product.sn) = lower(:sn)";
-		try {
-			return (Product) this.getEntityManager()
-					.createQuery(str, Product.class)
-					.setFlushMode(FlushModeType.COMMIT).setParameter("sn", sn)
-					.getSingleResult();
-		} catch (NoResultException localNoResultException) {
+	@Override
+	public List<Product> search(String keyword, Boolean isGift, Integer count) {
+		if (StringUtils.isEmpty(keyword))
+			return Collections.emptyList();
+		String sqlString = "select DISTINCT product from Product product where 1=1 ";
+		List<Object> params = new ArrayList<Object>();
+		if (pattern.matcher(keyword).matches()) {
+			sqlString += " and (product.id = ? or product.sn like (?) or product.fullName like (?)) ";
+			params.add(Long.valueOf(keyword));
+			params.add("%" + keyword + "%");
+			params.add("%" + keyword + "%");
+		} else {
+			sqlString += " and (product.sn like (?) or product.fullName like (?)) ";
+			params.add("%" + keyword + "%");
+			params.add("%" + keyword + "%");
 		}
-		return null;
+		if (isGift != null) {
+			sqlString += " and product.isGift =? ";
+			params.add(isGift);
+		}
+		sqlString += " order by product.isTop DESC, product.updateDate DESC ";
+		return this.findList(sqlString, params.toArray(), null, count);
 	}
-
-	// public List<Product> search(String keyword, Boolean isGift, Integer
-	// count) {
-	// if (StringUtils.isEmpty(keyword))
-	// return Collections.emptyList();
-	// CriteriaBuilder localCriteriaBuilder = this.entityManager
-	// .getCriteriaBuilder();
-	// CriteriaQuery localCriteriaQuery = localCriteriaBuilder
-	// .createQuery(Product.class);
-	// Root localRoot = localCriteriaQuery.from(Product.class);
-	// localCriteriaQuery.select(localRoot);
-	// Predicate localPredicate = localCriteriaBuilder.conjunction();
-	// if (pattern.matcher(keyword).matches())
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.or(new Predicate[] {
-	// localCriteriaBuilder.equal(localRoot.get("id"),
-	// Long.valueOf(keyword)),
-	// localCriteriaBuilder.like(localRoot.get("sn"), "%"
-	// + keyword + "%"),
-	// localCriteriaBuilder.like(
-	// localRoot.get("fullName"), "%" + keyword
-	// + "%") }));
-	// else
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.or(localCriteriaBuilder.like(
-	// localRoot.get("sn"), "%" + keyword + "%"),
-	// localCriteriaBuilder.like(
-	// localRoot.get("fullName"), "%" + keyword
-	// + "%")));
-	// if (isGift != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.equal(
-	// localRoot.get("isGift"), isGift));
-	// localCriteriaQuery.where(localPredicate);
-	// localCriteriaQuery
-	// .orderBy(new javax.persistence.criteria.Order[] { localCriteriaBuilder
-	// .desc(localRoot.get("isTop")) });
-	// return super.entityManager(localCriteriaQuery, null, count, null, null);
-	// }
 
 	@Override
 	public List<Product> findList(ProductCategory productCategory, Brand brand,
@@ -112,371 +97,259 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
 			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
 			Boolean isStockAlert, Product.OrderType orderType, Integer count,
-			List<Filter> filters, List<OrderEntity> orders) {
-		String sqlString = "select product from Product product where 1=1";
+			List<Filter> filters, List<Order> orders) {
+		String sqlString = "select DISTINCT product from Product product where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
-		int i = 1;
 		if (productCategory != null) {
-			sqlString += " and product.productCategory.id  = ?";
-			params.add(productCategory.getId());
-//			sqlString += " or product.productCategory.treePath like ?" + i++ + ")";
-//			params.add("%," + productCategory.getId() + ",%");
+			sqlString += " and (product.productCategory = ? ";
+			params.add(productCategory);
+			sqlString += " or product.productCategory.treePath like ?) ";
+			params.add("%," + productCategory.getId() + ",%");
 		}
 		if (brand != null) {
-			sqlString += " and product.brand=?" + i++;
+			sqlString += " and product.brand=?";
 			params.add(brand);
 		}
 		if (promotion != null) {
-			sqlString += " and product.promotions =" + i++;
-			params.add(promotion);//和源码不同
+			sqlString += " and product.promotions =?";
+			params.add(promotion);// 和源码不同,这里把左连接promotion表，左连接productCategory表，以及左连接brand表省略。
 
+		}
+		if (attributeValue != null) {
+			Iterator localObject2 = attributeValue.entrySet().iterator();
+			while (((Iterator) localObject2).hasNext()) {
+				Map.Entry localObject1 = (Map.Entry) ((Iterator) localObject2)
+						.next();
+				Object localObject3 = "attributeValue"
+						+ ((Attribute) ((Map.Entry) localObject1).getKey())
+								.getPropertyIndex();
+				sqlString += " and product." + (String) localObject3 + " = ? ";
+				params.add(((Map.Entry) localObject1).getValue());
+			}
+		}
+		if ((startPrice != null) && (endPrice != null)
+				&& (startPrice.compareTo(endPrice) > 0)) {
+			Object localObject1 = startPrice;
+			startPrice = endPrice;
+			endPrice = (BigDecimal) localObject1;
+		}
+		if ((startPrice != null)
+				&& (startPrice.compareTo(new BigDecimal(0)) >= 0)) {
+			sqlString += " and product.price>=?";
+			params.add(startPrice);
+		}
+		if ((endPrice != null) && (endPrice.compareTo(new BigDecimal(0)) >= 0)) {
+			sqlString += " and product.price<=?";
+			params.add(endPrice);
+		}
+		if ((tags != null) && (!tags.isEmpty())) {
+			sqlString += " and product.tags in (?)";
+			params.add(tags);// Specify whether duplicate query results will be
+								// eliminated
+		}
+		if (isMarketable != null) {
+			sqlString += " and product.isMarketable=?";
+			params.add(isMarketable);
+		}
+		if (isList != null) {
+			sqlString += " and product.isList=?";
+			params.add(isList);
+		}
+		if (isTop != null) {
+			sqlString += " and product.isTop=?";
+			params.add(isTop);
+		}
+		if (isGift != null) {
+			sqlString += " and product.isGift=?";
+			params.add(isGift);
+		}
+		if (isOutOfStock != null) {
+			if (isOutOfStock.booleanValue()) {
+				sqlString += " and (product.stock !=null and product.stock<= product.allocatedStock) ";
+			} else {
+				sqlString += " and (product.stock !=null or product.stock> product.allocatedStock)";
+			}
+		}
+		if (isStockAlert != null) {
+			// Long stockAlertCount= SettingUtils.get().getStockAlertCount();
+			Long stockAlertCount = 1L;
+			if (isStockAlert.booleanValue()) {
+				sqlString += " and (product.stock !=null and product.stock<= (product.allocatedStock+?)) ";
+				params.add(stockAlertCount);
+			} else {
+				sqlString += " and (product.stock !=null or product.stock> (product.allocatedStock+?)) ";
+				params.add(stockAlertCount);
+			}
+		}
+
+		if (orderType == Product.OrderType.priceAsc) {
+			sqlString += " order by product.price ASC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.priceDesc) {
+			sqlString += " order by product.price DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.salesDesc) {
+			sqlString += " order by product.sales DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.scoreDesc) {
+			sqlString += " order by product.score DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.dateDesc) {
+			sqlString += " order by product.createDate DESC ";
+		} else {
+			sqlString += " order by product.isTop DESC, product.updateDate DESC ";
 		}
 		System.out.println(sqlString);
 		System.out.println(params.toArray());
-		String sql= "select product from Product product where 1=1 and product.productCategory.id = "+productCategory.getId();
-		return this.findList(sqlString,params.toArray());
+		String sql = "select product from Product product where 1=1 and product.productCategory.id = "
+				+ productCategory.getId();
+		// return this.findList(sqlString,params.toArray());
+		return this.find(sqlString, params.toArray());// 测试下jeesite的函数能用不
 	}
-//		Object localObject3;
-//		if (attributeValue != null) {
-//			localObject2 = attributeValue.entrySet().iterator();
-//			while (((Iterator) localObject2).hasNext()) {
-//				localObject1 = (Map.Entry) ((Iterator) localObject2).next();
-//				localObject3 = "attributeValue"
-//						+ ((Attribute) ((Map.Entry) localObject1).getKey())
-//								.getPropertyIndex();
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localCriteriaBuilder.equal(
-//								localRoot.get((String) localObject3),
-//								((Map.Entry) localObject1).getValue()));
-//			}
-//		}
-//		if ((startPrice != null) && (endPrice != null)
-//				&& (startPrice.compareTo(endPrice) > 0)) {
-//			Object localObject1 = startPrice;
-//			startPrice = endPrice;
-//			endPrice = (BigDecimal) localObject1;
-//		}
-//		if ((startPrice != null)
-//				&& (startPrice.compareTo(new BigDecimal(0)) >= 0))
-//
-//			localPredicate = localCriteriaBuilder
-//					.and(localPredicate, localCriteriaBuilder.ge(
-//							localRoot.get("price"), startPrice));
-//		if ((endPrice != null) && (endPrice.compareTo(new BigDecimal(0)) >= 0))
-//			localPredicate = localCriteriaBuilder.and(localPredicate,
-//					localCriteriaBuilder.le(localRoot.get("price"), endPrice));
-//		if ((tags != null) && (!tags.isEmpty())) {
-//			localPredicate = localCriteriaBuilder.and(localPredicate, localRoot
-//					.join("tags").in(tags));
-//			localCriteriaQuery.distinct(true);
-//		}
-//		if (isMarketable != null)
-//			localPredicate = localCriteriaBuilder.and(localPredicate,
-//					localCriteriaBuilder.equal(localRoot.get("isMarketable"),
-//							isMarketable));
-//		if (isList != null)
-//			localPredicate = localCriteriaBuilder
-//					.and(localPredicate, localCriteriaBuilder.equal(
-//							localRoot.get("isList"), isList));
-//		if (isTop != null)
-//			localPredicate = localCriteriaBuilder.and(localPredicate,
-//					localCriteriaBuilder.equal(localRoot.get("isTop"), isTop));
-//		if (isGift != null)
-//			localPredicate = localCriteriaBuilder
-//					.and(localPredicate, localCriteriaBuilder.equal(
-//							localRoot.get("isGift"), isGift));
-//		Object localObject1 = localRoot.get("stock");
-//		Object localObject2 = localRoot.get("allocatedStock");
-//		if (isOutOfStock != null)
-//			if (isOutOfStock.booleanValue())
-//				localPredicate = localCriteriaBuilder.and(new Predicate[] {
-//						localPredicate,
-//						localCriteriaBuilder
-//								.isNotNull((Expression) localObject1),
-//						localCriteriaBuilder.lessThanOrEqualTo(
-//								(Expression) localObject1,
-//								(Expression) localObject2) });
-//			else
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localCriteriaBuilder.or(localCriteriaBuilder
-//								.isNull((Expression) localObject1),
-//								localCriteriaBuilder.greaterThan(
-//										(Expression) localObject1,
-//										(Expression) localObject2)));
-//		if (isStockAlert != null) {
-//			localObject3 = SettingUtils.get();
-//			if (isStockAlert.booleanValue())
-//				localPredicate = localCriteriaBuilder
-//						.and(new Predicate[] {
-//								localPredicate,
-//								localCriteriaBuilder
-//										.isNotNull((Expression) localObject1),
-//								localCriteriaBuilder.lessThanOrEqualTo(
-//										(Expression) localObject1,
-//										localCriteriaBuilder.sum(
-//												(Expression) localObject2,
-//												((Setting) localObject3)
-//														.getStockAlertCount())) });
-//			else
-//				localPredicate = localCriteriaBuilder
-//						.and(localPredicate,
-//								localCriteriaBuilder.or(
-//										localCriteriaBuilder
-//												.isNull((Expression) localObject1),
-//										localCriteriaBuilder
-//												.greaterThan(
-//														(Expression) localObject1,
-//														localCriteriaBuilder
-//																.sum((Expression) localObject2,
-//																		((Setting) localObject3)
-//																				.getStockAlertCount()))));
-//		}
-//		localCriteriaQuery.where(localPredicate);
-//		if (orderType == Product.OrderType.priceAsc) {
-//			orders.add(net.shopxx.Order.asc("price"));
-//			orders.add(net.shopxx.Order.desc("createDate"));
-//		} else if (orderType == Product.OrderType.priceDesc) {
-//			orders.add(net.shopxx.Order.desc("price"));
-//			orders.add(net.shopxx.Order.desc("createDate"));
-//		} else if (orderType == Product.OrderType.salesDesc) {
-//			orders.add(net.shopxx.Order.desc("sales"));
-//			orders.add(net.shopxx.Order.desc("createDate"));
-//		} else if (orderType == Product.OrderType.scoreDesc) {
-//			orders.add(net.shopxx.Order.desc("score"));
-//			orders.add(net.shopxx.Order.desc("createDate"));
-//		} else if (orderType == Product.OrderType.dateDesc) {
-//			orders.add(net.shopxx.Order.desc("createDate"));
-//		} else {
-//			orders.add(net.shopxx.Order.desc("isTop"));
-//			orders.add(net.shopxx.Order.desc("modifyDate"));
-//		}
-//		return (List<Product>) (List<Product>) (List<Product>) super
-//				.entityManager(localCriteriaQuery, null, count, filters, orders);
-//	}
 
-	// public List<Product> findList(ProductCategory productCategory,
-	// Date beginDate, Date endDate, Integer first, Integer count) {
-	// CriteriaBuilder localCriteriaBuilder = this.entityManager
-	// .getCriteriaBuilder();
-	// CriteriaQuery localCriteriaQuery = localCriteriaBuilder
-	// .createQuery(Product.class);
-	// Root localRoot = localCriteriaQuery.from(Product.class);
-	// localCriteriaQuery.select(localRoot);
-	// Predicate localPredicate = localCriteriaBuilder.conjunction();
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(localRoot.get("isMarketable"),
-	// Boolean.valueOf(true)));
-	// if (productCategory != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.or(
-	// localCriteriaBuilder.equal(
-	// localRoot.get("productCategory"),
-	// productCategory), localCriteriaBuilder
-	// .like(localRoot.get("productCategory").get(
-	// "treePath"),
-	// "%," + productCategory.getId()
-	// + "," + "%")));
-	// if (beginDate != null)
-	// localPredicate = localCriteriaBuilder.and(
-	// localPredicate,
-	// localCriteriaBuilder.greaterThanOrEqualTo(
-	// localRoot.get("createDate"), beginDate));
-	// if (endDate != null)
-	// localPredicate = localCriteriaBuilder.and(
-	// localPredicate,
-	// localCriteriaBuilder.lessThanOrEqualTo(
-	// localRoot.get("createDate"), endDate));
-	// localCriteriaQuery.where(localPredicate);
-	// localCriteriaQuery
-	// .orderBy(new javax.persistence.criteria.Order[] { localCriteriaBuilder
-	// .desc(localRoot.get("isTop")) });
-	// return super
-	// .entityManager(localCriteriaQuery, first, count, null, null);
-	// return this.find(sqlString,params);
-	// }
-	//
-	// public List<Product> findList(Goods goods, Set<Product> excludes) {
-	// CriteriaBuilder localCriteriaBuilder = this.entityManager
-	// .getCriteriaBuilder();
-	// CriteriaQuery localCriteriaQuery = localCriteriaBuilder
-	// .createQuery(Product.class);
-	// Root localRoot = localCriteriaQuery.from(Product.class);
-	// localCriteriaQuery.select(localRoot);
-	// Predicate localPredicate = localCriteriaBuilder.conjunction();
-	// if (goods != null)
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(localRoot.get("goods"), goods));
-	// if ((excludes != null) && (!excludes.isEmpty()))
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.not(localRoot.in(excludes)));
-	// localCriteriaQuery.where(localPredicate);
-	// return this.entityManager.createQuery(localCriteriaQuery)
-	// .setFlushMode(FlushModeType.COMMIT).getResultList();
-	// }
-	//
-	// public Page<Product> findPage(ProductCategory productCategory, Brand
-	// brand,
-	// Promotion promotion, List<Tag> tags,
-	// Map<Attribute, String> attributeValue, BigDecimal startPrice,
-	// BigDecimal endPrice, Boolean isMarketable, Boolean isList,
-	// Boolean isTop, Boolean isGift, Boolean isOutOfStock,
-	// Boolean isStockAlert, Product.OrderType orderType, Pageable pageable) {
-	// CriteriaBuilder localCriteriaBuilder = this.entityManager
-	// .getCriteriaBuilder();
-	// CriteriaQuery localCriteriaQuery = localCriteriaBuilder
-	// .createQuery(Product.class);
-	// Root localRoot = localCriteriaQuery.from(Product.class);
-	// localCriteriaQuery.select(localRoot);
-	// Predicate localPredicate = localCriteriaBuilder.conjunction();
-	// if (productCategory != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.or(
-	// localCriteriaBuilder.equal(
-	// localRoot.get("productCategory"),
-	// productCategory), localCriteriaBuilder
-	// .like(localRoot.get("productCategory").get(
-	// "treePath"),
-	// "%," + productCategory.getId()
-	// + "," + "%")));
-	// if (brand != null)
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(localRoot.get("brand"), brand));
-	// if (promotion != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder
-	// .or(new Predicate[] {
-	// localCriteriaBuilder.equal(localRoot.join(
-	// "promotions", JoinType.LEFT),
-	// promotion),
-	// localCriteriaBuilder.equal(
-	// localRoot.join("productCategory",
-	// JoinType.LEFT)
-	// .join("promotions",
-	// JoinType.LEFT),
-	// promotion),
-	// localCriteriaBuilder.equal(
-	// localRoot.join("brand",
-	// JoinType.LEFT)
-	// .join("promotions",
-	// JoinType.LEFT),
-	// promotion) }));
-	// if ((tags != null) && (!tags.isEmpty())) {
-	// localPredicate = localCriteriaBuilder.and(localPredicate, localRoot
-	// .join("tags").in(tags));
-	// localCriteriaQuery.distinct(true);
-	// }
-	// if (attributeValue != null) {
-	// localObject2 = attributeValue.entrySet().iterator();
-	// while (((Iterator) localObject2).hasNext()) {
-	// localObject1 = (Map.Entry) ((Iterator) localObject2).next();
-	// localObject3 = "attributeValue"
-	// + ((Attribute) ((Map.Entry) localObject1).getKey())
-	// .getPropertyIndex();
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(
-	// localRoot.get((String) localObject3),
-	// ((Map.Entry) localObject1).getValue()));
-	// }
-	// }
-	// if ((startPrice != null) && (endPrice != null)
-	// && (startPrice.compareTo(endPrice) > 0)) {
-	// localObject1 = startPrice;
-	// startPrice = endPrice;
-	// endPrice = (BigDecimal) localObject1;
-	// }
-	// if ((startPrice != null)
-	// && (startPrice.compareTo(new BigDecimal(0)) >= 0))
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.ge(
-	// localRoot.get("price"), startPrice));
-	// if ((endPrice != null) && (endPrice.compareTo(new BigDecimal(0)) >= 0))
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.le(localRoot.get("price"), endPrice));
-	// if (isMarketable != null)
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(localRoot.get("isMarketable"),
-	// isMarketable));
-	// if (isList != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.equal(
-	// localRoot.get("isList"), isList));
-	// if (isTop != null)
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(localRoot.get("isTop"), isTop));
-	// if (isGift != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.equal(
-	// localRoot.get("isGift"), isGift));
-	// Object localObject1 = localRoot.get("stock");
-	// Object localObject2 = localRoot.get("allocatedStock");
-	// if (isOutOfStock != null)
-	// if (isOutOfStock.booleanValue())
-	// localPredicate = localCriteriaBuilder.and(new Predicate[] {
-	// localPredicate,
-	// localCriteriaBuilder
-	// .isNotNull((Expression) localObject1),
-	// localCriteriaBuilder.lessThanOrEqualTo(
-	// (Expression) localObject1,
-	// (Expression) localObject2) });
-	// else
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.or(localCriteriaBuilder
-	// .isNull((Expression) localObject1),
-	// localCriteriaBuilder.greaterThan(
-	// (Expression) localObject1,
-	// (Expression) localObject2)));
-	// if (isStockAlert != null) {
-	// localObject3 = SettingUtils.get();
-	// if (isStockAlert.booleanValue())
-	// localPredicate = localCriteriaBuilder
-	// .and(new Predicate[] {
-	// localPredicate,
-	// localCriteriaBuilder
-	// .isNotNull((Expression) localObject1),
-	// localCriteriaBuilder.lessThanOrEqualTo(
-	// (Expression) localObject1,
-	// localCriteriaBuilder.sum(
-	// (Expression) localObject2,
-	// ((Setting) localObject3)
-	// .getStockAlertCount())) });
-	// else
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate,
-	// localCriteriaBuilder.or(
-	// localCriteriaBuilder
-	// .isNull((Expression) localObject1),
-	// localCriteriaBuilder
-	// .greaterThan(
-	// (Expression) localObject1,
-	// localCriteriaBuilder
-	// .sum((Expression) localObject2,
-	// ((Setting) localObject3)
-	// .getStockAlertCount()))));
-	// }
-	// localCriteriaQuery.where(localPredicate);
-	// Object localObject3 = pageable.getOrders();
-	// if (orderType == Product.OrderType.priceAsc) {
-	// ((List) localObject3).add(net.shopxx.Order.asc("price"));
-	// ((List) localObject3).add(net.shopxx.Order.desc("createDate"));
-	// } else if (orderType == Product.OrderType.priceDesc) {
-	// ((List) localObject3).add(net.shopxx.Order.desc("price"));
-	// ((List) localObject3).add(net.shopxx.Order.desc("createDate"));
-	// } else if (orderType == Product.OrderType.salesDesc) {
-	// ((List) localObject3).add(net.shopxx.Order.desc("sales"));
-	// ((List) localObject3).add(net.shopxx.Order.desc("createDate"));
-	// } else if (orderType == Product.OrderType.scoreDesc) {
-	// ((List) localObject3).add(net.shopxx.Order.desc("score"));
-	// ((List) localObject3).add(net.shopxx.Order.desc("createDate"));
-	// } else if (orderType == Product.OrderType.dateDesc) {
-	// ((List) localObject3).add(net.shopxx.Order.desc("createDate"));
-	// } else {
-	// ((List) localObject3).add(net.shopxx.Order.desc("isTop"));
-	// ((List) localObject3).add(net.shopxx.Order.desc("modifyDate"));
-	// }
-	// return (Page<Product>) (Page<Product>) (Page<Product>) super
-	// .entityManager(localCriteriaQuery, pageable);
-	// }
-	//
+	@Override
+	public List<Product> findList(ProductCategory productCategory,
+			Date beginDate, Date endDate, Integer first, Integer count) {
+		String sqlString = "select DISTINCT product from Product product where product.isMarketable= '1' ";
+		List<Object> params = new ArrayList<Object>();
+		if (productCategory != null) {
+			sqlString += " and (product.productCategory = ? ";
+			params.add(productCategory);
+			sqlString += " or product.productCategory.treePath like ?) ";
+			params.add("%," + productCategory.getId() + ",%");
+		}
+		if (beginDate != null) {
+			sqlString += " and product.createDate>=?";
+			params.add(beginDate);
+		}
+		if (endDate != null) {
+			sqlString += " and product.createDate<=?";
+			params.add(endDate);
+		}
+		sqlString += " order by product.isTop DESC, product.updateDate DESC ";
+		return this.findList(sqlString, params.toArray(), first, count);
+	}
+
+	@Override
+	public List<Product> findList(Goods goods, Set<Product> excludes) {
+		String sqlString = "select DISTINCT product from Product product where 1=1 ";
+		List<Object> params = new ArrayList<Object>();
+		if (goods != null) {
+			sqlString += " and product.goods = ? ";
+			params.add(goods);
+		}
+		if ((excludes != null) && (!excludes.isEmpty())) {
+			sqlString += " and product not in (?) ";
+			params.add(excludes);
+		}
+		return this.findList(sqlString, params.toArray(), null, null);
+	}
+
+	
+	public Page<Product> findPage(ProductCategory productCategory, Brand brand,
+			Promotion promotion, List<Tag> tags,
+			Map<Attribute, String> attributeValue, BigDecimal startPrice,
+			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
+			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
+			Boolean isStockAlert, Product.OrderType orderType, Pageable pageable) {
+		String sqlString = "select DISTINCT product from Product product where 1=1 ";
+		List<Object> params = new ArrayList<Object>();
+		if (productCategory != null) {
+			sqlString += " and (product.productCategory = ? ";
+			params.add(productCategory);
+			sqlString += " or product.productCategory.treePath like ?) ";
+			params.add("%," + productCategory.getId() + ",%");
+		}
+		if (brand != null) {
+			sqlString += " and product.brand=?";
+			params.add(brand);
+		}
+		if (promotion != null) {
+			sqlString += " and product.promotions =?";
+			params.add(promotion);// 和源码不同,这里把左连接promotion表，左连接productCategory表，以及左连接brand表省略。
+
+		}
+		if (attributeValue != null) {
+			Iterator localObject2 = attributeValue.entrySet().iterator();
+			while (((Iterator) localObject2).hasNext()) {
+				Map.Entry localObject1 = (Map.Entry) ((Iterator) localObject2)
+						.next();
+				Object localObject3 = "attributeValue"
+						+ ((Attribute) ((Map.Entry) localObject1).getKey())
+								.getPropertyIndex();
+				sqlString += " and product." + (String) localObject3 + " = ? ";
+				params.add(((Map.Entry) localObject1).getValue());
+			}
+		}
+		if ((startPrice != null) && (endPrice != null)
+				&& (startPrice.compareTo(endPrice) > 0)) {
+			Object localObject1 = startPrice;
+			startPrice = endPrice;
+			endPrice = (BigDecimal) localObject1;
+		}
+		if ((startPrice != null)
+				&& (startPrice.compareTo(new BigDecimal(0)) >= 0)) {
+			sqlString += " and product.price>=?";
+			params.add(startPrice);
+		}
+		if ((endPrice != null) && (endPrice.compareTo(new BigDecimal(0)) >= 0)) {
+			sqlString += " and product.price<=?";
+			params.add(endPrice);
+		}
+		if ((tags != null) && (!tags.isEmpty())) {
+			sqlString += " and product.tags in (?)";
+			params.add(tags);// Specify whether duplicate query results will be
+								// eliminated
+		}
+		if (isMarketable != null) {
+			sqlString += " and product.isMarketable=?";
+			params.add(isMarketable);
+		}
+		if (isList != null) {
+			sqlString += " and product.isList=?";
+			params.add(isList);
+		}
+		if (isTop != null) {
+			sqlString += " and product.isTop=?";
+			params.add(isTop);
+		}
+		if (isGift != null) {
+			sqlString += " and product.isGift=?";
+			params.add(isGift);
+		}
+		if (isOutOfStock != null) {
+			if (isOutOfStock.booleanValue()) {
+				sqlString += " and (product.stock !=null and product.stock<= product.allocatedStock) ";
+			} else {
+				sqlString += " and (product.stock !=null or product.stock> product.allocatedStock)";
+			}
+		}
+		if (isStockAlert != null) {
+			// Long stockAlertCount= SettingUtils.get().getStockAlertCount();
+			int stockAlertCount = 1;
+			if (isStockAlert.booleanValue()) {
+				sqlString += " and (product.stock !=null and product.stock<= (product.allocatedStock+?)) ";
+				params.add(stockAlertCount);
+			} else {
+				sqlString += " and (product.stock !=null or product.stock> (product.allocatedStock+?)) ";
+				params.add(stockAlertCount);
+			}
+		}
+
+		if (orderType == Product.OrderType.priceAsc) {
+			sqlString += " order by product.price ASC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.priceDesc) {
+			sqlString += " order by product.price DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.salesDesc) {
+			sqlString += " order by product.sales DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.scoreDesc) {
+			sqlString += " order by product.score DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.dateDesc) {
+			sqlString += " order by product.createDate DESC ";
+		} else {
+			sqlString += " order by product.isTop DESC, product.updateDate DESC ";
+		}
+		Page<Product> brandPage = new Page<Product>(pageable.getPageNumber(),
+				pageable.getPageSize());
+		return this.find(brandPage, sqlString, params.toArray());// 测试这样是否可行，如果不行，需要重写该函数
+	}
+
 	// public Page<Product> findPage(Member member, Pageable pageable) {
 	// if (member == null)
 	// return new Page(Collections.emptyList(), 0L, pageable);
@@ -646,75 +519,80 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 	// .getSingleResult();
 	// return localLong.longValue() > 0L;
 	// }
-	//
-	// public void persist(Product product) {
-	// Assert.notNull(product);
-	// setProductFullName(product);
-	// super.persist(product);
-	// }
-	//
-	// public Product merge(Product product) {
-	// Assert.notNull(product);
-	// String str;
-	// if (!product.getIsGift().booleanValue()) {
-	// str = "delete from GiftItem giftItem where giftItem.gift = :product";
-	// this.entityManager.createQuery(str)
-	// .setFlushMode(FlushModeType.COMMIT)
-	// .setParameter("product", product).executeUpdate();
-	// }
-	// if ((!product.getIsMarketable().booleanValue())
-	// || (product.getIsGift().booleanValue())) {
-	// str = "delete from CartItem cartItem where cartItem.product = :product";
-	// this.entityManager.createQuery(str)
-	// .setFlushMode(FlushModeType.COMMIT)
-	// .setParameter("product", product).executeUpdate();
-	// }
-	// setProductFullName(product);
-	// return (Product) super.merge(product);
-	// }
-	//
-	// public void remove(Product product) {
-	// if (product != null) {
-	// Goods localGoods = product.getGoods();
-	// if ((localGoods != null) && (localGoods.getProducts() != null)) {
-	// localGoods.getProducts().remove(product);
-	// if (localGoods.getProducts().isEmpty())
-	// this.goodsDao.remove(localGoods);
-	// }
-	// }
-	// super.remove(product);
-	// }
-	//
-	// private void setProductFullName(Product paramProduct)
-	// {
-	// if (paramProduct == null)
-	// return;
-	// if (StringUtils.isEmpty(paramProduct.getSn()))
-	// {
-	// do
-	// localObject = this.snDao.generate(Sn.Type.product);
-	// while (snExists((String)localObject));
-	// paramProduct.setSn((String)localObject);
-	// }
-	// Object localObject = new StringBuffer(paramProduct.getName());
-	// if ((paramProduct.getSpecificationValues() != null) &&
-	// (!paramProduct.getSpecificationValues().isEmpty()))
-	// {
-	// ArrayList localArrayList = new
-	// ArrayList(paramProduct.getSpecificationValues());
-	// Collections.sort(localArrayList, new ProductDaoImpl.1(this));
-	// ((StringBuffer)localObject).append("[");
-	// int i = 0;
-	// Iterator localIterator = localArrayList.iterator();
-	// while (localIterator.hasNext())
-	// {
-	// if (i != 0)
-	// ((StringBuffer)localObject).append(" ");
-	// ((StringBuffer)localObject).append(((SpecificationValue)localIterator.next()).getName());
-	// i++;
-	// }
-	// ((StringBuffer)localObject).append("]");
-	// }
-	// paramProduct.setFullName(((StringBuffer)localObject).toString());
-	// }
+
+	@Override
+	public void persist(Product product) {
+		Assert.notNull(product);
+		setProductFullName(product);
+		System.out.println("persist product there.");
+		super.persist(product);
+	}
+
+	@Override
+	public Product merge(Product product) {
+		Assert.notNull(product);
+		String str;
+		if (!product.getIsGift().booleanValue()) {
+			str = "delete from GiftItem giftItem where giftItem.gift = :product";
+			this.getEntityManager().createQuery(str)
+					.setFlushMode(FlushModeType.COMMIT)
+					.setParameter("product", product).executeUpdate();
+		}
+		if ((!product.getIsMarketable().booleanValue())
+				|| (product.getIsGift().booleanValue())) {
+			str = "delete from CartItem cartItem where cartItem.product = :product";
+			this.getEntityManager().createQuery(str)
+					.setFlushMode(FlushModeType.COMMIT)
+					.setParameter("product", product).executeUpdate();
+		}
+		setProductFullName(product);
+		return (Product) super.merge(product);
+	}
+
+	@Override
+	public void remove(Product product) {
+		if (product != null) {
+			Goods localGoods = product.getGoods();
+			if ((localGoods != null) && (localGoods.getProducts() != null)) {
+				localGoods.getProducts().remove(product);
+				if (localGoods.getProducts().isEmpty())
+					// this.goodsDao.remove(localGoods);
+					System.out.println("goodsDao nothing");
+			}
+		}
+		super.remove(product);
+	}
+
+	private void setProductFullName(Product paramProduct) {
+		if (paramProduct == null)
+			return;
+		if (StringUtils.isEmpty(paramProduct.getSn())) {
+			// do
+			// localObject = this.snDao.generate(Sn.Type.product);
+			// while (snExists((String)localObject));
+			// paramProduct.setSn((String)localObject);
+		}
+		Object localObject = new StringBuffer(paramProduct.getName());
+		if ((paramProduct.getSpecificationValues() != null)
+				&& (!paramProduct.getSpecificationValues().isEmpty())) {
+			List<SpecificationValue> localArrayList = new ArrayList<SpecificationValue>(
+					paramProduct.getSpecificationValues());
+			Collections.sort(localArrayList, new ProductComparator());
+			((StringBuffer) localObject).append("[");
+			int i = 0;
+			Iterator<SpecificationValue> localIterator = localArrayList
+					.iterator();
+			while (localIterator.hasNext()) {
+				if (i != 0)
+					((StringBuffer) localObject).append(" ");
+				((StringBuffer) localObject)
+						.append(((SpecificationValue) localIterator.next())
+								.getName());
+				i++;
+			}
+			((StringBuffer) localObject).append("]");
+		}
+		paramProduct.setFullName(((StringBuffer) localObject).toString());
+	}
+
 }

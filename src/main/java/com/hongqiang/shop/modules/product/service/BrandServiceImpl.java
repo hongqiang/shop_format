@@ -39,6 +39,9 @@ public class BrandServiceImpl extends BaseService
 //  public Page<Brand[]> findPage(Page<Brand[]> pageBrand){
 //		return this.brandDao.find(objPage);
 //  }
+   
+ @Transactional
+@CacheEvict(value={"brand"}, allEntries=true)
    public Page<Brand> findPage(Pageable pageable){
 	   return this.brandDao.findPage(pageable);
    }
