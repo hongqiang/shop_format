@@ -15,6 +15,8 @@
 	
     <!-- 加载配置属性文件 -->
 	<context:property-placeholder ignore-unresolvable="true" location="classpath*:/application.properties" />
+	<context:property-placeholder location="classpath*:/hqshop.properties" ignore-resource-not-found="true" ignore-unresolvable="true" />
+	<context:property-placeholder location="classpath*:/shophq.xml" ignore-resource-not-found="true" ignore-unresolvable="true" />
 	
 	<!-- 获取bean工具注入 -->
 	<bean id="springContextHolder" class="com.hongqiang.shop.common.utils.SpringContextHolder" lazy-init="false"/>

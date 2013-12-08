@@ -40,7 +40,7 @@ import com.hongqiang.shop.modules.entity.Tag;
 @Repository
 class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 
-	class ProductComparator implements Comparator<SpecificationValue> {
+	class SortSpecificationValue implements Comparator<SpecificationValue> {
 		public int compare(SpecificationValue a1, SpecificationValue a2) {
 			return new CompareToBuilder().append(a1.getSpecification(),
 					a2.getSpecification()).toComparison();
@@ -562,7 +562,34 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 		}
 		super.remove(product);
 	}
-
+	
+	@Override
+	public void  deleteAttributeOfProduct(Attribute attribute){
+		String str1 = "attributeValue" + attribute.getPropertyIndex();
+		String str2 = "update Product product set product."
+				+ str1
+				+ " = null where product.productCategory = :productCategory";
+		this.getEntityManager()
+		.createQuery(str2)
+		.setFlushMode(FlushModeType.COMMIT)
+		.setParameter("productCategory",
+				attribute.getProductCategory()).executeUpdate();
+	}
+	
+	@Override
+	public void  updateAttributeOfProduct(Attribute attribute){
+		String str1 = "attributeValue" + attribute.getPropertyIndex();
+		String str2 = "update Product product set product."
+				+ str1
+				+ " = '"+attribute.getName()
+				+"' where product.productCategory = :productCategory";
+		this.getEntityManager()
+		.createQuery(str2)
+		.setFlushMode(FlushModeType.COMMIT)
+		.setParameter("productCategory",
+				attribute.getProductCategory()).executeUpdate();
+	}
+	
 	private void setProductFullName(Product paramProduct) {
 		if (paramProduct == null)
 			return;
@@ -577,7 +604,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 				&& (!paramProduct.getSpecificationValues().isEmpty())) {
 			List<SpecificationValue> localArrayList = new ArrayList<SpecificationValue>(
 					paramProduct.getSpecificationValues());
-			Collections.sort(localArrayList, new ProductComparator());
+			Collections.sort(localArrayList, new SortSpecificationValue());
 			((StringBuffer) localObject).append("[");
 			int i = 0;
 			Iterator<SpecificationValue> localIterator = localArrayList

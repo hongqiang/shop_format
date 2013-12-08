@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="h	q_specification")
+@Table(name="hq_specification")
 public class Specification extends OrderEntity
 {
 
