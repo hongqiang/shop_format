@@ -27,6 +27,7 @@ public class ParameterDaoImpl extends BaseDaoImpl<Parameter>
 		  System.out.print("wo zai zheli ");
 			for (Parameter op : excludes) {
 				System.out.print(op.getName()+", "+op.getParameterGroup()+"\n");
+				params.add(op.getId().intValue());
 			}
 			sqlString += " and parameter not in (";
 			for (Parameter parameter : excludes) {
@@ -35,10 +36,11 @@ public class ParameterDaoImpl extends BaseDaoImpl<Parameter>
 			}
 			sqlString = sqlString.substring(0,sqlString.length()-2);
 			sqlString +=")";
-//		  sqlString += " and parameter not in (?)";
-//		  params.add(excludes);
+//		  sqlString += " and parameter.id not in (?)";
+////		  params.add(excludes);
 	  }
 	  System.out.print("sql="+sqlString+"\n");
 	  return super.find(sqlString,params.toArray());
+//	  return super.find(sqlString,new Object[]{parameterGroup,params});
   }
 }

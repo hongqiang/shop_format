@@ -77,6 +77,15 @@ public interface BaseDao<T> {
 	 */
     public <E> Page<E> find(Page<E> page, String qlString, Object... parameter);
     
+	/**
+	 * QL 分页查询-shop 传递数组形式的参数
+	 * @param page
+	 * @param qlString
+	 * @param parameter
+	 * @return
+	 */
+    public <E> Page<E> findPage(Page<E> page, String qlString, Object[] parameter);
+    
     /**
      * QL 分页查询
      * @param qlString 完整的sql语句

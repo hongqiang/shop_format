@@ -23,6 +23,8 @@ public abstract interface ProductService {
 
 	// 通过sn找到商品
 	public Product findBySn(String paramString);
+	
+	public Product find(Long id);
 
 	// 判断两个sn是否一样
 	public boolean snUnique(String paramString1, String paramString2);

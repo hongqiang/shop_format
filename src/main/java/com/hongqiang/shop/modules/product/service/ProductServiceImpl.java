@@ -63,6 +63,10 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		return this.productDao.findBySn(sn);
 	}
 
+	public Product find(Long id){
+		return this.productDao.findById(id);
+	}
+	
 	@Transactional(readOnly = true)
 	public boolean snUnique(String previousSn, String currentSn) {
 		if (StringUtils.equalsIgnoreCase(previousSn, currentSn))

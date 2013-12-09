@@ -213,6 +213,49 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	/**
+	 * QL 分页查询
+	 * 
+	 * @param page
+	 * @param qlString
+	 * @param parameter
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <E> Page<E> findPage(Page<E> page, String qlString, Object[] parameter) {
+		// get count
+		if (!page.isDisabled() && !page.isNotCount()) {
+			String countQlString = "select count(*) "
+					+ removeSelect(removeOrders(qlString));
+			// page.setCount(Long.valueOf(createQuery(countQlString,
+			// parameter).uniqueResult().toString()));
+			Query query = createQueryByList(countQlString, parameter);
+			List<Object> list = query.list();
+			if (list.size() > 0) {
+				page.setCount(Long.valueOf(list.get(0).toString()));
+			} else {
+				page.setCount(list.size());
+			}
+			if (page.getCount() < 1) {
+				return page;
+			}
+		}
+		// order by
+		String ql = qlString;
+		if (StringUtils.isNotBlank(page.getOrderBy())) {
+			ql += " order by " + page.getOrderBy();
+		}
+		Query query = createQuery(ql, parameter);
+		// set page
+		if (!page.isDisabled()) {
+			query.setFirstResult(page.getFirstResult());
+			query.setMaxResults(page.getMaxResults());
+		}
+		page.setList(query.list());
+		return page;
+	}
+	
+	
+	/**
 	 * QL 查询
 	 * 
 	 * @param qlString
