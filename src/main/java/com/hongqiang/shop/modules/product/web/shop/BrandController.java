@@ -2,18 +2,18 @@ package com.hongqiang.shop.modules.product.web.shop;
 
 import javax.annotation.Resource;
 
-import com.hongqiang.shop.common.persistence.Page;
-//import net.shopxx.Pageable;
-import com.hongqiang.shop.common.utils.ResourceNotFoundException;
-import com.hongqiang.shop.modules.entity.Brand;
-import com.hongqiang.shop.modules.product.service.BrandService;
-import com.hongqiang.shop.common.web.BaseController;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.hongqiang.shop.common.utils.Pageable;
+//import net.shopxx.Pageable;
+import com.hongqiang.shop.common.utils.ResourceNotFoundException;
+import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.entity.Brand;
+import com.hongqiang.shop.modules.product.service.BrandService;
 
 @Controller("shopBrandController")
 @RequestMapping({"${frontPath}/brand"})
@@ -27,8 +27,8 @@ public class BrandController extends BaseController
   @RequestMapping(value={"/list/{pageNumber}"}, method=RequestMethod.GET)
   public String list(@PathVariable Integer pageNumber, ModelMap model)
   {
-	Page<Brand[]> pageBrand= new Page<Brand[]>(pageNumber,Integer.valueOf(PAGE_NUMBER));
-//    model.addAttribute("page", this.brandService.findPage(pageBrand));
+	Pageable pageBrand= new Pageable(pageNumber,Integer.valueOf(PAGE_NUMBER));
+    model.addAttribute("page", this.brandService.findPage(pageBrand));
     return "/shop/brand/list";
   }
 

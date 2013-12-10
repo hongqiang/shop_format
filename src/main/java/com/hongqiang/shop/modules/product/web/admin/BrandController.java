@@ -41,17 +41,17 @@ public class BrandController extends BaseController
   @RequestMapping(value={"/save"}, method=RequestMethod.POST)
   public String save(Brand brand, RedirectAttributes redirectAttributes)
   {
-//    if (!IIIllIlI(brand, new Class[0]))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,brand, new Class[0]))
+      return ERROR_PAGE;
     if (brand.getType() == Brand.Type.text)
       brand.setLogo(null);
     else if (StringUtils.isEmpty(brand.getLogo()))
-      return "/admin/common/error";
+      return ERROR_PAGE;
     brand.setProducts(null);
     brand.setProductCategories(null);
     brand.setPromotions(null);
     this.brandService.save(brand);
-//    IIIllIlI(redirectAttributes, IIIlllII);
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -66,14 +66,14 @@ public class BrandController extends BaseController
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)
   public String update(Brand brand, RedirectAttributes redirectAttributes)
   {
-//    if (!IIIllIlI(brand, new Class[0]))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,brand, new Class[0]))
+      return ERROR_PAGE;
     if (brand.getType() == Brand.Type.text)
       brand.setLogo(null);
     else if (StringUtils.isEmpty(brand.getLogo()))
-      return "/admin/common/error";
+      return ERROR_PAGE;
 //    this.brandService.update(brand, new String[] { "products", "productCategories", "promotions" });
-//    IIIllIlI(redirectAttributes, IIIlllII);
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -84,14 +84,13 @@ public class BrandController extends BaseController
     return "/admin/brand/list";
   }
 
-//  @RequestMapping(value={"/delete"}, method=RequestMethod.POST)
-//  @ResponseBody
-//  public Message delete(Long[] ids)
-//  {
-//    this.brandService.delete(ids);
-////    return Message("success");
-//    return "success";
-//  }
+  @RequestMapping(value={"/delete"}, method=RequestMethod.POST)
+  @ResponseBody
+  public Message delete(Long[] ids)
+  {
+    this.brandService.delete(ids);
+    return ADMIN_SUCCESS;
+  }
 
   	@RequestMapping(value={"/do"},method=RequestMethod.GET)
   	public void doit(){

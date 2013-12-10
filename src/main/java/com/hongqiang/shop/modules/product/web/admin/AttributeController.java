@@ -1,26 +1,21 @@
 package com.hongqiang.shop.modules.product.web.admin;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.annotation.Resource;
-//import net.shopxx.entity.BaseEntity.Save;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.mapping.Array;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hongqiang.shop.common.persistence.BaseEntity;
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.entity.Attribute;
+import com.hongqiang.shop.modules.entity.BaseEntity;
 import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.service.AttributeService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
@@ -47,7 +42,7 @@ public class AttributeController extends BaseController
   @RequestMapping(value={"/save"}, method=RequestMethod.POST)
   public String save(Attribute attribute, Long productCategoryId, RedirectAttributes redirectAttributes)
   {
-    Iterator localIterator = attribute.getOptions().iterator();
+    Iterator<String> localIterator = attribute.getOptions().iterator();
     while (localIterator.hasNext())
     {
       String str = (String)localIterator.next();
@@ -56,17 +51,17 @@ public class AttributeController extends BaseController
       localIterator.remove();
     }
     attribute.setProductCategory((ProductCategory)this.productCategoryService.find(productCategoryId));
-//    if (!IIIllIlI(attribute, new Class[] { BaseEntity.Save.class }))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,attribute, new Class[] { BaseEntity.Save.class }))
+      return ERROR_PAGE;
     if (attribute.getProductCategory().getAttributes().size() >= 20)
     {
-//      IIIllIlI(redirectAttributes, Message.error("admin.attribute.addCountNotAllowed", new Object[] { Integer.valueOf(20) }));
+    	addMessage(redirectAttributes, Message.error("admin.attribute.addCountNotAllowed", new Object[] { Integer.valueOf(20) }));
     }
     else
     {
       attribute.setPropertyIndex(null);
       this.attributeService.save(attribute);
-//      IIIllIlI(redirectAttributes, IIIlllII);
+      addMessage(redirectAttributes, ADMIN_SUCCESS);
     }
     return "redirect:list.jhtml";
   }
@@ -83,7 +78,7 @@ public class AttributeController extends BaseController
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)
   public String update(Attribute attribute, RedirectAttributes redirectAttributes)
   {
-    Iterator localIterator = attribute.getOptions().iterator();
+    Iterator<String> localIterator = attribute.getOptions().iterator();
     while (localIterator.hasNext())
     {
       String str = (String)localIterator.next();
@@ -91,10 +86,10 @@ public class AttributeController extends BaseController
         continue;
       localIterator.remove();
     }
-//    if (!IIIllIlI(attribute, new Class[0]))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,attribute, new Class[0]))
+      return ERROR_PAGE;
 //    this.attributeService.update(attribute, new String[] { "propertyIndex", "productCategory" });
-//    IIIllIlI(redirectAttributes, IIIlllII);
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -110,7 +105,7 @@ public class AttributeController extends BaseController
   public Message delete(Long[] ids)
   {
     this.attributeService.delete(ids);
-    return Message.success("admin.message.success",null);
+    return ADMIN_SUCCESS;
   }
   
 	@RequestMapping(value={"/attribute"},method=RequestMethod.GET)

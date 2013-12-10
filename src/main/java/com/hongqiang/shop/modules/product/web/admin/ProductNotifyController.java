@@ -50,7 +50,7 @@ public class ProductNotifyController extends BaseController
   public Message delete(Long[] ids)
   {
     this.productNotifyService.delete(ids);
-    return Message.success("admin.message.success",null);
+    return ADMIN_SUCCESS;
   }
   
  @Autowired

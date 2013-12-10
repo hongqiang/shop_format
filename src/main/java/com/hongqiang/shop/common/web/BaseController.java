@@ -26,6 +26,8 @@ import com.hongqiang.shop.common.beanvalidator.BeanValidators;
 import com.hongqiang.shop.common.template.FlashMessageDirective;
 import com.hongqiang.shop.common.utils.DateUtils;
 import com.hongqiang.shop.common.utils.Message;
+import com.hongqiang.shop.common.utils.Setting;
+import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.common.utils.SpringContextHolder;
 import com.hongqiang.shop.modules.sys.entity.Log;
 
@@ -38,8 +40,8 @@ import com.hongqiang.shop.modules.sys.entity.Log;
 public abstract class BaseController {
 	
 	 protected static final String ERROR_PAGE = "/admin/common/error";
-//	  protected static final Message ADMIN_ERROR = Message.error("admin.message.error", new Object[0]);
-//	  protected static final Message ADMIN_SUCCESS = Message.success("admin.message.success", new Object[0]);
+	  protected static final Message ADMIN_ERROR = Message.error("admin.message.error", new Object[0]);
+	  protected static final Message ADMIN_SUCCESS = Message.success("admin.message.success", new Object[0]);
 	  private static final String CONSTRAINT_VIOLATIONS = "constraintViolations";//违反约束的集合
 	
 	/**

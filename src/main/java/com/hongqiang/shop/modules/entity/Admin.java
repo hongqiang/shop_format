@@ -34,7 +34,7 @@ public class Admin extends BaseEntity
   private Date lockedDate;
   private Date loginDate;
   private String loginIp;
-//  private Set<Role> roles = new HashSet<Role>();
+  private Set<Role> roles = new HashSet<Role>();
   private Set<Order> orders = new HashSet<Order>();
 
   @NotEmpty(groups={BaseEntity.Save.class})
@@ -53,7 +53,7 @@ public class Admin extends BaseEntity
 
   @NotEmpty(groups={BaseEntity.Save.class})
   @Pattern(regexp="^[^\\s&\"<>]+$")
-  @Length(min=4, max=20)
+  @Length(min=4, max=40)
   @Column(nullable=false)
   public String getPassword()
   {
@@ -165,18 +165,18 @@ public class Admin extends BaseEntity
     this.loginIp = loginIp;
   }
 
-//  @NotEmpty
-//  @ManyToMany(fetch=FetchType.LAZY)
-//  @JoinTable(name="hq_admin_role")
-//  public Set<Role> getRoles()
-//  {
-//    return this.roles;
-//  }
-//
-//  public void setRoles(Set<Role> roles)
-//  {
-//    this.roles = roles;
-//  }
+  @NotEmpty
+  @ManyToMany(fetch=FetchType.LAZY)
+  @JoinTable(name="hq_admin_role")
+  public Set<Role> getRoles()
+  {
+    return this.roles;
+  }
+
+  public void setRoles(Set<Role> roles)
+  {
+    this.roles = roles;
+  }
 
   @OneToMany(mappedBy="operator", fetch=FetchType.LAZY)
   public Set<Order> getOrders()

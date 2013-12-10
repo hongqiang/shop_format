@@ -55,11 +55,11 @@ public class SpecificationController extends BaseController
         localSpecificationValue.setSpecification(specification);
       }
     }
-//    if (!IIIllIlI(specification, new Class[0]))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,specification, new Class[0]))
+      return ERROR_PAGE;
     specification.setProducts(null);
     this.specificationService.save(specification);
-//    IIIllIlI(redirectAttributes, Message.success("admin.message.success",null));
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -89,10 +89,10 @@ public class SpecificationController extends BaseController
         localSpecificationValue.setSpecification(specification);
       }
     }
-//    if (!IIIllIlI(specification, new Class[0]))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,specification, new Class[0]))
+      return ERROR_PAGE;
 //    this.specificationService.update(specification, new String[] { "products" });
-//    IIIllIlI(redirectAttributes, Message.success("admin.message.success",null));
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -117,7 +117,7 @@ public class SpecificationController extends BaseController
       }
       this.specificationService.delete(ids);
     }
-    return Message.success("admin.message.success",null);
+    return ADMIN_SUCCESS;
   }
   
   @RequestMapping(value={"/dospe"},method=RequestMethod.GET)

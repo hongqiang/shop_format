@@ -37,12 +37,12 @@ public class TagController extends BaseController
   @RequestMapping(value={"/save"}, method=RequestMethod.POST)
   public String save(Tag tag, RedirectAttributes redirectAttributes)
   {
-//    if (!IIIllIlI(tag, new Class[] { BaseEntity.Save.class }))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,tag, new Class[] { BaseEntity.Save.class }))
+      return ERROR_PAGE;
 //    tag.setArticles(null);
     tag.setProducts(null);
     this.tagService.save(tag);
-//    IIIllIlI(redirectAttributes, IIIlllII);
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -57,10 +57,10 @@ public class TagController extends BaseController
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)
   public String update(Tag tag, RedirectAttributes redirectAttributes)
   {
-//    if (!IIIllIlI(tag, new Class[0]))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,tag, new Class[0]))
+      return ERROR_PAGE;
 //    this.tagService.update(tag, new String[] { "type", "articles", "products" });
-//    IIIllIlI(redirectAttributes, IIIlllII);
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -76,7 +76,7 @@ public class TagController extends BaseController
   public Message delete(Long[] ids)
   {
     this.tagService.delete(ids);
-    return Message.success("admin.message.success",null);
+    return ADMIN_SUCCESS;
   }
   
 	@RequestMapping(value={"/dotag"},method=RequestMethod.GET)

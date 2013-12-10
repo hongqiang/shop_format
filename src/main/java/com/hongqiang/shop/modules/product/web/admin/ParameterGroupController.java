@@ -53,10 +53,10 @@ public class ParameterGroupController extends BaseController
         localParameter.setParameterGroup(parameterGroup);
     }
     parameterGroup.setProductCategory((ProductCategory)this.productCategoryService.find(productCategoryId));
-//    if (!IIIllIlI(parameterGroup, new Class[0]))
-//      return "/admin/common/error";
-//    this.parameterGroupService.save(parameterGroup);
-//    IIIllIlI(redirectAttributes, IIIlllII);
+    if (!beanValidator(redirectAttributes,parameterGroup, new Class[0]))
+      return ERROR_PAGE;
+    this.parameterGroupService.save(parameterGroup);
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -81,10 +81,10 @@ public class ParameterGroupController extends BaseController
         localParameter.setParameterGroup(parameterGroup);
     }
     parameterGroup.setProductCategory((ProductCategory)this.productCategoryService.find(productCategoryId));
-//    if (!IIIllIlI(parameterGroup, new Class[0]))
-//      return "/admin/common/error";
+    if (!beanValidator(redirectAttributes,parameterGroup, new Class[0]))
+      return ERROR_PAGE;
     this.parameterGroupService.update(parameterGroup);
-//    IIIllIlI(redirectAttributes, IIIlllII);
+    addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
 
@@ -100,7 +100,7 @@ public class ParameterGroupController extends BaseController
   public Message delete(Long[] ids)
   {
     this.parameterGroupService.delete(ids);
-    return Message.success("admin.message.success",null);
+    return ADMIN_SUCCESS;
   }
   
   @RequestMapping(value={"/dopara"},method=RequestMethod.GET)

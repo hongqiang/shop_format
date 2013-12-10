@@ -22,10 +22,10 @@ public class ProductCategoryController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(ModelMap model) {
 		model.addAttribute("rootProductCategories",this.productCategoryService.findRoots());
-		List <ProductCategory> list = this.productCategoryService.findRoots();
-		for(ProductCategory p:list){
-			System.out.println(p.getName()+","+p.getPath());
-		}
-		return "modules/sys/sysLogin";
+//		List <ProductCategory> list = this.productCategoryService.findRoots();
+//		for(ProductCategory p:list){
+//			System.out.println(p.getName()+","+p.getPath());
+//		}
+		return "/shop/product_category/index";
 	}
 }

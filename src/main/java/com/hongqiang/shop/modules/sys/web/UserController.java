@@ -34,7 +34,7 @@ import com.hongqiang.shop.common.utils.excel.ExportExcel;
 import com.hongqiang.shop.common.utils.excel.ImportExcel;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.sys.entity.Office;
-import com.hongqiang.shop.modules.sys.entity.Role;
+import com.hongqiang.shop.modules.sys.entity.JRole;
 import com.hongqiang.shop.modules.sys.entity.User;
 import com.hongqiang.shop.modules.sys.service.SystemService;
 import com.hongqiang.shop.modules.sys.utils.UserUtils;
@@ -100,9 +100,9 @@ public class UserController extends BaseController {
 			return form(user, model);
 		}
 		// 角色数据有效性验证，过滤不在授权内的角色
-		List<Role> roleList = Lists.newArrayList();
+		List<JRole> roleList = Lists.newArrayList();
 		List<Long> roleIdList = user.getRoleIdList();
-		for (Role r : systemService.findAllRole()){
+		for (JRole r : systemService.findAllRole()){
 			if (roleIdList.contains(r.getId())){
 				roleList.add(r);
 			}

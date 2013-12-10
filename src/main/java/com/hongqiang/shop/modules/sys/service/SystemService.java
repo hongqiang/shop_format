@@ -28,10 +28,10 @@ import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.Encodes;
 import com.hongqiang.shop.common.utils.StringUtils;
 import com.hongqiang.shop.modules.sys.dao.MenuDao;
-import com.hongqiang.shop.modules.sys.dao.RoleDao;
+import com.hongqiang.shop.modules.sys.dao.JRoleDao;
 import com.hongqiang.shop.modules.sys.dao.UserDao;
 import com.hongqiang.shop.modules.sys.entity.Menu;
-import com.hongqiang.shop.modules.sys.entity.Role;
+import com.hongqiang.shop.modules.sys.entity.JRole;
 import com.hongqiang.shop.modules.sys.entity.User;
 import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm;
 import com.hongqiang.shop.modules.sys.utils.UserUtils;
@@ -52,7 +52,7 @@ public class SystemService extends BaseService implements InitializingBean {
 	@Autowired
 	private UserDao userDao;
 	@Autowired
-	private RoleDao roleDao;
+	private JRoleDao roleDao;
 	@Autowired
 	private MenuDao menuDao;
 	@Autowired
@@ -157,27 +157,27 @@ public class SystemService extends BaseService implements InitializingBean {
 	
 	//-- Role Service --//
 	
-	public Role getRole(Long id) {
+	public JRole getRole(Long id) {
 		return roleDao.findOne(id);
 	}
 
-	public Role findRoleByName(String name) {
+	public JRole findRoleByName(String name) {
 		return roleDao.findByName(name);
 	}
 	
-	public List<Role> findAllRole(){
+	public List<JRole> findAllRole(){
 		User user = UserUtils.getUser();
 		DetachedCriteria dc = roleDao.createDetachedCriteria();
 		dc.createAlias("office", "office");
 		dc.createAlias("userList", "userList", JoinType.LEFT_OUTER_JOIN);
 		dc.add(dataScopeFilter(user, "office", "userList"));
-		dc.add(Restrictions.eq(Role.DEL_FLAG, Role.DEL_FLAG_NORMAL));
+		dc.add(Restrictions.eq(JRole.DEL_FLAG, JRole.DEL_FLAG_NORMAL));
 		dc.addOrder(Order.asc("office.code")).addOrder(Order.asc("name"));
 		return roleDao.find(dc);
 	}
 	
 	@Transactional(readOnly = false)
-	public void saveRole(Role role) {
+	public void saveRole(JRole role) {
 		roleDao.clear();
 		roleDao.save(role);
 		systemRealm.clearAllCachedAuthorizationInfo();
@@ -194,10 +194,10 @@ public class SystemService extends BaseService implements InitializingBean {
 	}
 	
 	@Transactional(readOnly = false)
-	public Boolean outUserInRole(Role role, Long userId) {
+	public Boolean outUserInRole(JRole role, Long userId) {
 		User user = userDao.findOne(userId);
 		List<Long> roleIds = user.getRoleIdList();
-		List<Role> roles = user.getRoleList();
+		List<JRole> roles = user.getRoleList();
 		// 
 		if (roleIds.contains(role.getId())) {
 			roles.remove(role);
@@ -208,7 +208,7 @@ public class SystemService extends BaseService implements InitializingBean {
 	}
 	
 	@Transactional(readOnly = false)
-	public User assignUserToRole(Role role, Long userId) {
+	public User assignUserToRole(JRole role, Long userId) {
 		User user = userDao.findOne(userId);
 		List<Long> roleIds = user.getRoleIdList();
 		if (roleIds.contains(role.getId())) {
@@ -266,9 +266,9 @@ public class SystemService extends BaseService implements InitializingBean {
 			List<org.activiti.engine.identity.User> userList = identityService.createUserQuery().list();
 			if (groupList.size() == 0 && userList.size() == 0){
 		        // 同步角色数据
-			 	Iterator<Role> roles = roleDao.findAll().iterator();
+			 	Iterator<JRole> roles = roleDao.findAll().iterator();
 			 	while(roles.hasNext()) {
-			 		Role role = roles.next();
+			 		JRole role = roles.next();
 			 		saveActivitiGroup(role, true);
 			 	}
 			 	// 同步用户数据
@@ -280,7 +280,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		}
 	}
 	
-	private void saveActivitiGroup(Role role, boolean isNew) {
+	private void saveActivitiGroup(JRole role, boolean isNew) {
 		String groupId = role.getEnname();
 		Group group = null;
 		if (!isNew){
@@ -294,7 +294,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		identityService.saveGroup(group);
 	}
 
-	public void deleteActivitiGroup(Role role) {
+	public void deleteActivitiGroup(JRole role) {
 		if(role!=null) {
 			String groupId = role.getEnname();
 			identityService.deleteGroup(groupId);
@@ -323,7 +323,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		identityService.saveUser(activitiUser);
 		// 同步用户角色关联数据
 		for (Long roleId : user.getRoleIdList()) {
-			 Role role = roleDao.findOne(roleId);
+			 JRole role = roleDao.findOne(roleId);
 	            //查询activiti中是否有该权限
 			 	Group group= identityService.createGroupQuery().groupId(role.getEnname()).singleResult();
 	            //不存在该权限，新增

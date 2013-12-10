@@ -60,7 +60,7 @@ public class Menu extends DataEntity {
 	private String permission; // 权限标识
 	
 	private List<Menu> childList = Lists.newArrayList();// 拥有子菜单列表
-	private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
+	private List<JRole> roleList = Lists.newArrayList(); // 拥有角色列表
 
 	public Menu(){
 		super();
@@ -186,11 +186,11 @@ public class Menu extends DataEntity {
 	@OrderBy("id") @Fetch(FetchMode.SUBSELECT)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	public List<Role> getRoleList() {
+	public List<JRole> getRoleList() {
 		return roleList;
 	}
 	
-	public void setRoleList(List<Role> roleList) {
+	public void setRoleList(List<JRole> roleList) {
 		this.roleList = roleList;
 	}
 	

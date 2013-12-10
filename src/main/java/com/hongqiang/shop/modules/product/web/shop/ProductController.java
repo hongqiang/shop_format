@@ -1,48 +1,10 @@
 package com.hongqiang.shop.modules.product.web.shop;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.hongqiang.shop.common.persistence.Page;
-import com.hongqiang.shop.common.utils.Pageable;
-import com.hongqiang.shop.common.utils.ResourceNotFoundException;
-import com.hongqiang.shop.common.web.BaseController;
-import com.hongqiang.shop.modules.entity.Attribute;
-import com.hongqiang.shop.modules.entity.Brand;
-import com.hongqiang.shop.modules.entity.Product;
-import com.hongqiang.shop.modules.entity.ProductCategory;
-import com.hongqiang.shop.modules.entity.Promotion;
-import com.hongqiang.shop.modules.entity.Tag;
-import com.hongqiang.shop.modules.product.dao.BrandDao;
-import com.hongqiang.shop.modules.product.dao.ProductCategoryDao;
-import com.hongqiang.shop.modules.product.dao.ProductDao;
-import com.hongqiang.shop.modules.product.service.BrandService;
-import com.hongqiang.shop.modules.product.service.ProductCategoryService;
-import com.hongqiang.shop.modules.product.service.ProductService;
-
-
-
-
-
-
-
 
 //import net.shopxx.Pageable;
 //import net.shopxx.ResourceNotFoundException;
@@ -59,10 +21,29 @@ import com.hongqiang.shop.modules.product.service.ProductService;
 //import net.shopxx.service.SearchService;
 //import net.shopxx.service.TagService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.util.LZWDecompresser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.entity.Brand;
+import com.hongqiang.shop.modules.entity.Product;
+import com.hongqiang.shop.modules.entity.ProductCategory;
+import com.hongqiang.shop.modules.product.dao.BrandDao;
+import com.hongqiang.shop.modules.product.dao.ProductCategoryDao;
+import com.hongqiang.shop.modules.product.dao.ProductDao;
+import com.hongqiang.shop.modules.product.service.BrandService;
+import com.hongqiang.shop.modules.product.service.ProductCategoryService;
+import com.hongqiang.shop.modules.product.service.ProductService;
+import com.hongqiang.shop.modules.product.service.TagService;
 
 @Controller("shopProductController")
-// @RequestMapping(value = "${frontPath}/product")
+ @RequestMapping(value = "${frontPath}/product")
 public class ProductController extends BaseController {
 	@Autowired
 	private ProductDao productDao;
@@ -85,8 +66,8 @@ public class ProductController extends BaseController {
 //	@Autowired
 //	private PromotionService promotionService;
 //
-//	@Autowired
-//	private TagService tagService;
+	@Autowired
+	private TagService tagService;
 //
 //	@Autowired
 //	private SearchService searchService;

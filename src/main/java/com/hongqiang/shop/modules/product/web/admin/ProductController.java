@@ -53,6 +53,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.common.utils.Setting;
+import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.entity.Attribute;
 import com.hongqiang.shop.modules.entity.Brand;
@@ -68,8 +70,12 @@ import com.hongqiang.shop.modules.entity.Specification;
 import com.hongqiang.shop.modules.entity.SpecificationValue;
 import com.hongqiang.shop.modules.entity.Tag;
 import com.hongqiang.shop.modules.product.service.BrandService;
+import com.hongqiang.shop.modules.product.service.GoodsService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 import com.hongqiang.shop.modules.product.service.ProductService;
+import com.hongqiang.shop.modules.product.service.SpecificationService;
+import com.hongqiang.shop.modules.product.service.SpecificationValueService;
+import com.hongqiang.shop.modules.product.service.TagService;
 
 @Controller("adminProductController")
 @RequestMapping({"/admin/product"})
@@ -82,8 +88,8 @@ public class ProductController extends BaseController
   @Resource(name="productCategoryServiceImpl")
   private ProductCategoryService productCategoryService;
 
-//  @Resource(name="goodsServiceImpl")
-//  private GoodsService goodsService;
+  @Resource(name="goodsServiceImpl")
+  private GoodsService goodsService;
 
   @Resource(name="brandServiceImpl")
   private BrandService brandService;
@@ -91,21 +97,21 @@ public class ProductController extends BaseController
 //  @Resource(name="promotionServiceImpl")
 //  private PromotionService promotionService;
 
-//  @Resource(name="tagServiceImpl")
-//  private TagService tagService;
+  @Resource(name="tagServiceImpl")
+  private TagService tagService;
 //
 //  @Resource(name="memberRankServiceImpl")
 //  private MemberRankService memberRankService;
 //
 //  @Resource(name="productImageServiceImpl")
 //  private ProductImageService productImageService;
-//
-//  @Resource(name="specificationServiceImpl")
-//  private SpecificationService specificationService;
-//
-//  @Resource(name="specificationValueServiceImpl")
-//  private SpecificationValueService specificationValueService;
-//
+
+  @Resource(name="specificationServiceImpl")
+  private SpecificationService specificationService;
+
+  @Resource(name="specificationValueServiceImpl")
+  private SpecificationValueService specificationValueService;
+
 //  @Resource(name="fileServiceImpl")
 //  private FileService fileService;
 
@@ -168,9 +174,9 @@ public class ProductController extends BaseController
 //    product.setBrand((Brand)this.brandService.find(brandId));
 //    product.setTags(new HashSet(this.tagService.findList(tagIds)));
 //    if (!IIIllIlI(product, new Class[0]))
-//      return "/admin/common/error";
+//      return ERROR_PAGE;
 //    if ((StringUtils.isNotEmpty(product.getSn())) && (this.productService.snExists(product.getSn())))
-//      return "/admin/common/error";
+//      return ERROR_PAGE;
 //    if (product.getMarketPrice() == null)
 //    {
 //      localObject1 = IIIllIlI(product.getPrice());
@@ -365,12 +371,12 @@ public class ProductController extends BaseController
 //    product.setBrand((Brand)this.brandService.find(brandId));
 //    product.setTags(new HashSet(this.tagService.findList(tagIds)));
 //    if (!IIIllIlI(product, new Class[0]))
-//      return "/admin/common/error";
+//      return ERROR_PAGE;
 //    localObject1 = (Product)this.productService.find(product.getId());
 //    if (localObject1 == null)
-//      return "/admin/common/error";
+//      return ERROR_PAGE;
 //    if ((StringUtils.isNotEmpty(product.getSn())) && (!this.productService.snUnique(((Product)localObject1).getSn(), product.getSn())))
-//      return "/admin/common/error";
+//      return ERROR_PAGE;
 //    if (product.getMarketPrice() == null)
 //    {
 //      localObject2 = IIIllIlI(product.getPrice());
@@ -452,7 +458,7 @@ public class ProductController extends BaseController
 //            {
 //              localProduct = (Product)this.productService.find(specificationProductIds[j]);
 //              if (localProduct.getGoods() != localObject3)
-//                return "/admin/common/error";
+//                return ERROR_PAGE;
 //              localProduct.setSpecifications(new HashSet());
 //              localProduct.setSpecificationValues(new HashSet());
 //              ((List)localObject4).add(localProduct);

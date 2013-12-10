@@ -68,7 +68,7 @@ public class User extends DataEntity {
 	private String loginIp;	// 最后登陆IP
 	private Date loginDate;	// 最后登陆日期
 	
-	private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
+	private List<JRole> roleList = Lists.newArrayList(); // 拥有角色列表
 
 	public User() {
 		super();
@@ -239,11 +239,11 @@ public class User extends DataEntity {
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@JsonIgnore
 	@ExcelField(title="拥有角色", align=1, sort=800, fieldType=RoleListType.class)
-	public List<Role> getRoleList() {
+	public List<JRole> getRoleList() {
 		return roleList;
 	}
 	
-	public void setRoleList(List<Role> roleList) {
+	public void setRoleList(List<JRole> roleList) {
 		this.roleList = roleList;
 	}
 
@@ -251,7 +251,7 @@ public class User extends DataEntity {
 	@JsonIgnore
 	public List<Long> getRoleIdList() {
 		List<Long> roleIdList = Lists.newArrayList();
-		for (Role role : roleList) {
+		for (JRole role : roleList) {
 			roleIdList.add(role.getId());
 		}
 		return roleIdList;
@@ -261,7 +261,7 @@ public class User extends DataEntity {
 	public void setRoleIdList(List<Long> roleIdList) {
 		roleList = Lists.newArrayList();
 		for (Long roleId : roleIdList) {
-			Role role = new Role();
+			JRole role = new JRole();
 			role.setId(roleId);
 			roleList.add(role);
 		}
