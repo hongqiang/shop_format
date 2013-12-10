@@ -40,6 +40,7 @@ import com.hongqiang.shop.common.persistence.BaseEntity;
 public class Log extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
+	public static final String LOG_CONTENT_ATTRIBUTE_NAME = Log.class.getName() + ".CONTENT";
 	private Long id;			// 日志编号
 	private String type; 		// 日志类型（1：接入日志；2：错误日志）
 	private User createBy;		// 创建者

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<shopxx> 
+<shophq>
 	<setting name="siteName" value="SHOP++商城"/>  
 	<setting name="siteUrl" value="http://localhost:8080/shop"/>  
 	<setting name="logo" value="/shop/upload/image/logo.gif"/>  
@@ -8,7 +8,7 @@
 	<setting name="address" value="湖南长沙经济技术开发区"/>  
 	<setting name="phone" value="400-8888888"/>  
 	<setting name="zipCode" value="400000"/>  
-	<setting name="email" value="service@shopxx.net"/>  
+	<setting name="email" value="service@shophq.net"/>  
 	<setting name="certtext" value="湘ICP备10000000号"/>  
 	<setting name="isSiteEnabled" value="true"/>  
 	<setting name="siteCloseMessage" value="&lt;dl&gt;&lt;dt&gt;网站维护中，暂时无法访问！&lt;/dt&gt;&lt;dd&gt;本网站正在进行系统维护和技术升级，网站暂时无法访问，敬请谅解！&lt;/dd&gt;&lt;/dl&gt;"/>  
@@ -52,8 +52,8 @@
 	<setting name="flashUploadPath" value="/upload/flash/${.now?string('yyyyMM')}/"/>  
 	<setting name="mediaUploadPath" value="/upload/media/${.now?string('yyyyMM')}/"/>  
 	<setting name="fileUploadPath" value="/upload/file/${.now?string('yyyyMM')}/"/>  
-	<setting name="smtpFromMail" value="test@shopxx.net"/>  
-	<setting name="smtpHost" value="smtp.shopxx.net"/>  
+	<setting name="smtpFromMail" value="test@shophq.net"/>  
+	<setting name="smtpHost" value="smtp.shophq.net"/>  
 	<setting name="smtpPort" value="25"/>  
 	<setting name="smtpUsername" value="test"/>  
 	<setting name="smtpPassword" value="test"/>  
@@ -102,4 +102,4 @@
 	<template id="orderPrint" type="print" name="订单打印" templatePath="/admin/print/order.ftl"/>  
 	<template id="productPrint" type="print" name="购物单打印" templatePath="/admin/print/product.ftl"/>  
 	<template id="shippingPrint" type="print" name="配送单打印" templatePath="/admin/print/shipping.ftl"/> 
-</shopxx>
+</shophq>
