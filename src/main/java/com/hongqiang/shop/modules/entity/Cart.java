@@ -1,13 +1,10 @@
 package com.hongqiang.shop.modules.entity;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
-//import java.util.Set<Lnet.shophq.entity.Promotion;>;
-import java.util.TreeSet;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,12 +12,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.hongqiang.shop.common.utils.Setting;
+import com.hongqiang.shop.common.utils.SettingUtils;
+//import java.util.Set<Lnet.shophq.entity.Promotion;>;
 //import net.shophq.Setting;
 //import net.shophq.util.SettingUtils;
-import org.apache.commons.codec.digest.DigestUtils;
 //import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.time.DateUtils;
 //购物车
 @Entity
 @Table(name="hq_cart")

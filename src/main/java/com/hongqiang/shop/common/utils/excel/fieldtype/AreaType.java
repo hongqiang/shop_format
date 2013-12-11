@@ -5,7 +5,7 @@
  */
 package com.hongqiang.shop.common.utils.excel.fieldtype;
 
-import com.hongqiang.shop.modules.sys.entity.Area;
+import com.hongqiang.shop.modules.sys.entity.JArea;
 import com.hongqiang.shop.modules.sys.utils.UserUtils;
 
 /**
@@ -19,7 +19,7 @@ public class AreaType {
 	 * 获取对象值（导入）
 	 */
 	public static Object getValue(String val) {
-		for (Area e : UserUtils.getAreaList()){
+		for (JArea e : UserUtils.getAreaList()){
 			if (val.equals(e.getName())){
 				return e;
 			}
@@ -31,8 +31,8 @@ public class AreaType {
 	 * 获取对象值（导出）
 	 */
 	public static String setValue(Object val) {
-		if (val != null && ((Area)val).getName() != null){
-			return ((Area)val).getName();
+		if (val != null && ((JArea)val).getName() != null){
+			return ((JArea)val).getName();
 		}
 		return "";
 	}

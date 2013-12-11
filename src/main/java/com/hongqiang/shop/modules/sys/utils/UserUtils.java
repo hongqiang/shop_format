@@ -18,11 +18,11 @@ import org.hibernate.criterion.Restrictions;
 import com.google.common.collect.Maps;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.SpringContextHolder;
-import com.hongqiang.shop.modules.sys.dao.AreaDao;
+import com.hongqiang.shop.modules.sys.dao.JAreaDao;
 import com.hongqiang.shop.modules.sys.dao.MenuDao;
 import com.hongqiang.shop.modules.sys.dao.OfficeDao;
 import com.hongqiang.shop.modules.sys.dao.UserDao;
-import com.hongqiang.shop.modules.sys.entity.Area;
+import com.hongqiang.shop.modules.sys.entity.JArea;
 import com.hongqiang.shop.modules.sys.entity.Menu;
 import com.hongqiang.shop.modules.sys.entity.Office;
 import com.hongqiang.shop.modules.sys.entity.User;
@@ -37,7 +37,7 @@ public class UserUtils extends BaseService {
 	
 	private static UserDao userDao = SpringContextHolder.getBean(UserDao.class);
 	private static MenuDao menuDao = SpringContextHolder.getBean(MenuDao.class);
-	private static AreaDao areaDao = SpringContextHolder.getBean(AreaDao.class);
+	private static JAreaDao areaDao = SpringContextHolder.getBean(JAreaDao.class);
 	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
 
 	public static final String CACHE_USER = "user";
@@ -83,9 +83,9 @@ public class UserUtils extends BaseService {
 		return menuList;
 	}
 	
-	public static List<Area> getAreaList(){
+	public static List<JArea> getAreaList(){
 		@SuppressWarnings("unchecked")
-		List<Area> areaList = (List<Area>)getCache(CACHE_AREA_LIST);
+		List<JArea> areaList = (List<JArea>)getCache(CACHE_AREA_LIST);
 		if (areaList == null){
 //			User user = getUser();
 //			if (user.isAdmin()){

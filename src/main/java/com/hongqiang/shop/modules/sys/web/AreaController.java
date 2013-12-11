@@ -25,8 +25,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.web.BaseController;
-import com.hongqiang.shop.modules.sys.entity.Area;
-import com.hongqiang.shop.modules.sys.service.AreaService;
+import com.hongqiang.shop.modules.sys.entity.JArea;
+import com.hongqiang.shop.modules.sys.service.JAreaService;
 import com.hongqiang.shop.modules.sys.utils.UserUtils;
 
 /**
@@ -39,20 +39,20 @@ import com.hongqiang.shop.modules.sys.utils.UserUtils;
 public class AreaController extends BaseController {
 
 	@Autowired
-	private AreaService areaService;
+	private JAreaService areaService;
 	
 	@ModelAttribute("area")
-	public Area get(@RequestParam(required=false) Long id) {
+	public JArea get(@RequestParam(required=false) Long id) {
 		if (id != null){
 			return areaService.get(id);
 		}else{
-			return new Area();
+			return new JArea();
 		}
 	}
 
 	@RequiresPermissions("sys:area:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Area area, Model model) {
+	public String list(JArea area, Model model) {
 //		User user = UserUtils.getUser();
 //		if(user.isAdmin()){
 			area.setId(1L);
@@ -60,16 +60,16 @@ public class AreaController extends BaseController {
 //			area.setId(user.getArea().getId());
 //		}
 		model.addAttribute("area", area);
-		List<Area> list = Lists.newArrayList();
-		List<Area> sourcelist = areaService.findAll();
-		Area.sortList(list, sourcelist, area.getId());
+		List<JArea> list = Lists.newArrayList();
+		List<JArea> sourcelist = areaService.findAll();
+		JArea.sortList(list, sourcelist, area.getId());
         model.addAttribute("list", list);
 		return "modules/sys/areaList";
 	}
 
 	@RequiresPermissions("sys:area:view")
 	@RequestMapping(value = "form")
-	public String form(Area area, Model model) {
+	public String form(JArea area, Model model) {
 		if (area.getParent()==null||area.getParent().getId()==null){
 			area.setParent(UserUtils.getUser().getOffice().getArea());
 		}
@@ -80,7 +80,7 @@ public class AreaController extends BaseController {
 	
 	@RequiresPermissions("sys:area:edit")
 	@RequestMapping(value = "save")
-	public String save(Area area, Model model, RedirectAttributes redirectAttributes) {
+	public String save(JArea area, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, area)){
 			return form(area, model);
 		}
@@ -92,7 +92,7 @@ public class AreaController extends BaseController {
 	@RequiresPermissions("sys:area:edit")
 	@RequestMapping(value = "delete")
 	public String delete(Long id, RedirectAttributes redirectAttributes) {
-		if (Area.isAdmin(id)){
+		if (JArea.isAdmin(id)){
 			addMessage(redirectAttributes, "删除区域失败, 不允许删除顶级区域或编号为空");
 		}else{
 			areaService.delete(id);
@@ -108,9 +108,9 @@ public class AreaController extends BaseController {
 		response.setContentType("application/json; charset=UTF-8");
 		List<Map<String, Object>> mapList = Lists.newArrayList();
 //		User user = UserUtils.getUser();
-		List<Area> list = areaService.findAll();
+		List<JArea> list = areaService.findAll();
 		for (int i=0; i<list.size(); i++){
-			Area e = list.get(i);
+			JArea e = list.get(i);
 			if (extId == null || (extId!=null && !extId.equals(e.getId()) && e.getParentIds().indexOf(","+extId+",")==-1)){
 				Map<String, Object> map = Maps.newHashMap();
 				map.put("id", e.getId());

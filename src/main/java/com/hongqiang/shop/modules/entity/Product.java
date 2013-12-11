@@ -151,7 +151,8 @@ public class Product extends BaseEntity {
 	static {
 		try {
 			// file 要修改
-			File localFile = new ClassPathResource("classpath*:/shophq.xml")
+//			File localFile = new ClassPathResource("classpath*:/shophq.xml")
+			File localFile = new ClassPathResource("shophq.xml")
 					.getFile();
 			Document localDocument = new SAXReader().read(localFile);
 			Element localElement = (Element) localDocument
