@@ -84,7 +84,7 @@ public class DepositController extends BaseController
   {
     Member localMember = this.memberService.getCurrent();
     Pageable localPageable = new Pageable(pageNumber, Integer.valueOf(PAGE_SIZE));
-    model.addAttribute("page", this.depositService.findPage(localMember, localPageable));
+    model.addAttribute("page", this.depositService.findPage(localMember, localPageable));//do it
     return "shop/member/deposit/list";
   }
 }
