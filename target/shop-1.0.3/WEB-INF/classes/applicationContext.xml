@@ -15,6 +15,81 @@
 	
     <!-- 加载配置属性文件 -->
 	<context:property-placeholder ignore-unresolvable="true" location="classpath*:/application.properties" />
+	<context:property-placeholder location="classpath*:/hqshop.properties" ignore-resource-not-found="true" ignore-unresolvable="true" />
+<!-- 	<context:property-placeholder location="classpath*:/shophq.xml" ignore-resource-not-found="true" ignore-unresolvable="true" /> -->
+	
+	<!-- 	配置freeMarker的属性文件 -->
+	<bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPaths" value="${template.loader_path}" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="defaultEncoding">${template.encoding}</prop>
+				<prop key="url_escaping_charset">${url_escaping_charset}</prop>
+				<prop key="locale">${locale}</prop>
+				<prop key="template_update_delay">${template.update_delay}</prop>
+				<prop key="tag_syntax">auto_detect</prop>
+				<prop key="whitespace_stripping">true</prop>
+				<prop key="classic_compatible">true</prop>
+				<prop key="number_format">${template.number_format}</prop>
+				<prop key="boolean_format">${template.boolean_format}</prop>
+				<prop key="datetime_format">${template.datetime_format}</prop>
+				<prop key="date_format">${template.date_format}</prop>
+				<prop key="time_format">${template.time_format}</prop>
+				<prop key="object_wrapper">freemarker.ext.beans.BeansWrapper</prop>
+			</props>
+		</property>
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="systemName" value="${system.name}" />
+				<entry key="systemVersion" value="${system.version}" />
+				<entry key="systemDescription" value="${system.description}" />
+				<entry key="systemShowPowered" value="${system.show_powered}" />
+				<entry key="base" value="#{servletContext.contextPath}" />
+				<entry key="locale" value="${locale}" />
+				<entry key="setting" value="#{T(net.shopxx.util.SettingUtils).get()}" />
+				<entry key="message" value-ref="messageMethod" />
+				<entry key="abbreviate" value-ref="abbreviateMethod" />
+				<entry key="currency" value-ref="currencyMethod" />
+				<entry key="execute_time" value-ref="executeTimeDirective" />
+				<entry key="flash_message" value-ref="flashMessageDirective" />
+				<entry key="pagination" value-ref="paginationDirective" />
+				<entry key="seo" value-ref="seoDirective" />
+				<entry key="ad_position" value-ref="adPositionDirective" />
+				<entry key="member_attribute_list" value-ref="memberAttributeListDirective" />
+				<entry key="navigation_list" value-ref="navigationListDirective" />
+				<entry key="tag_list" value-ref="tagListDirective" />
+				<entry key="friend_link_list" value-ref="friendLinkListDirective" />
+				<entry key="brand_list" value-ref="brandListDirective" />
+				<entry key="article_list" value-ref="articleListDirective" />
+				<entry key="article_category_root_list" value-ref="articleCategoryRootListDirective" />
+				<entry key="article_category_parent_list" value-ref="articleCategoryParentListDirective" />
+				<entry key="article_category_children_list" value-ref="articleCategoryChildrenListDirective" />
+				<entry key="product_list" value-ref="productListDirective" />
+				<entry key="product_category_root_list" value-ref="productCategoryRootListDirective" />
+				<entry key="product_category_parent_list" value-ref="productCategoryParentListDirective" />
+				<entry key="product_category_children_list" value-ref="productCategoryChildrenListDirective" />
+				<entry key="review_list" value-ref="reviewListDirective" />
+				<entry key="consultation_list" value-ref="consultationListDirective" />
+				<entry key="promotion_list" value-ref="promotionListDirective" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="cacheSeconds" value="${message.cache_seconds}" />
+		<property name="useCodeAsDefaultMessage" value="true" />
+		<property name="basenames">
+			<list>
+				<value>${message.common_path}</value>
+				<value>${message.shop_path}</value>
+				<value>${message.admin_path}</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
+		<property name="defaultLocale" value="${locale}" />
+	</bean>
 	
 	<!-- 获取bean工具注入 -->
 	<bean id="springContextHolder" class="com.hongqiang.shop.common.utils.SpringContextHolder" lazy-init="false"/>
