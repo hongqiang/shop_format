@@ -34,6 +34,7 @@ public class ProductNotifyController extends BaseController
     return "/shop/member/product_notify/list";
   }
 
+
   @RequestMapping({"delete"})
   @ResponseBody
   public Message delete(Long id)
@@ -47,4 +48,19 @@ public class ProductNotifyController extends BaseController
     this.productNotifyService.delete(localProductNotify);
     return ADMIN_SUCCESS;
   }
+
+//  @RequestMapping({"delete"})
+//  @ResponseBody
+//  public Message delete(Long id)
+//  {
+//    ProductNotify localProductNotify = (ProductNotify)this.productNotifyService.find(id);
+//    if (localProductNotify == null)
+//      return IIIllIll;
+//    Member localMember = this.memberService.getCurrent();
+//    if (!localMember.getProductNotifies().contains(localProductNotify))
+//      return IIIllIll;
+//    this.productNotifyService.delete(localProductNotify);
+//    return Message.success("admin.message.success",null);
+//  }
+
 }

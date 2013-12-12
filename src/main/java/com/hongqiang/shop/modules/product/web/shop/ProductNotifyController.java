@@ -19,6 +19,7 @@ import com.hongqiang.shop.modules.product.service.ProductService;
 
 @Controller("shopProductNotifyController")
 @RequestMapping({"${frontPath}/product_notify"})
+//@RequestMapping({"/product_notify"})
 public class ProductNotifyController extends BaseController
 {
 
