@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 //消息
 @Entity
-@Table(name="xx_message")
+@Table(name="hq_message")
 public class Message extends BaseEntity
 {
   private static final long serialVersionUID = -5035343536762850722L;

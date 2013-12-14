@@ -21,8 +21,7 @@ public abstract interface TagService {
 
 	public Tag update(Tag tag);
 
-	// //忽视
-	// public Tag update(Tag brand, String[] ignoreProperties);
+	 public Tag update(Tag brand, String[] ignoreProperties);
 
 	public void delete(Long id);
 

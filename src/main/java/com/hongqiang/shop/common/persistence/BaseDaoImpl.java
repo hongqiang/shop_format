@@ -17,14 +17,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
@@ -49,6 +50,7 @@ import org.hibernate.search.query.DatabaseRetrievalMethod;
 import org.hibernate.search.query.ObjectLookupMethod;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.BeanUtils;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.hongqiang.shop.common.utils.Reflections;
@@ -62,6 +64,9 @@ import com.hongqiang.shop.common.utils.StringUtils;
  * @param <T>
  */
 public class BaseDaoImpl<T> implements BaseDao<T> {
+	
+	//忽略的属性集合。更新实体类时，不需要更新的属性集合
+	private static final String[] ignoreBaseProperties = { "id", "createDate", "updateDate" };
 
 	/**
 	 * 获取实体工厂管理对象
@@ -72,7 +77,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	/**
 	 * 实体类类型(由构造方法自动赋值)
 	 */
-	private Class<?> entityClass;
+	private Class<T> entityClass;
 
 	/**
 	 * 构造方法，根据实例类自动获取实体类类型
@@ -128,6 +133,49 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		return null;
 	}
 
+	/**
+	 *根据实体类得到其id
+	 * @param entity
+	 * @return
+	 */
+	   public Long getIdentifier(T entity)
+	   {
+	     Object id= this.entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
+	     return (Long)id;
+	   }
+	   
+	   /**
+	    * 根据id得到实体类
+	    * @param id
+	    * @return
+	    */
+	     public T find(Long id)
+	   {
+	     if (id != null)
+	       return this.entityManager.find(this.entityClass, id);//Find by primary key id and return the T.
+	     return null;
+	   }
+	
+	     /**
+	      * 更新实体类
+	      * @param entity
+	      * @param ignoreProperties 忽略的实体类属性
+	      * @return
+	      */
+	     public T update(T entity, String[] ignoreProperties)
+	     {
+	    	//Check if the instance is a managed entity instance belonging to the current persistence context.
+	       if (!isManaged(entity))
+	         throw new IllegalArgumentException("Entity must not be managed");
+	       T localObject = find(getIdentifier(entity));
+	       if (localObject != null)
+	       {
+	         BeanUtils.copyProperties(entity, localObject, (String[])ArrayUtils.addAll(ignoreProperties, ignoreBaseProperties));
+	          return merge(localObject);
+	       }
+	       return merge(entity);
+	     }
+	     
 	/**
 	 * 从数据库删除实体类
 	 *  Remove the entity instance.

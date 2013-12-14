@@ -16,18 +16,18 @@ import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductNotify;
 import com.hongqiang.shop.modules.product.service.ProductNotifyService;
 import com.hongqiang.shop.modules.product.service.ProductService;
+import com.hongqiang.shop.modules.user.service.MemberService;
 
 @Controller("shopProductNotifyController")
 @RequestMapping({"${frontPath}/product_notify"})
-//@RequestMapping({"/product_notify"})
 public class ProductNotifyController extends BaseController
 {
 
   @Autowired
   private ProductNotifyService productNotifyService;
 
-//  @Autowired
-//  private MemberService memberService;
+  @Autowired
+  private MemberService memberService;
 
   @Autowired
   private ProductService productService;
@@ -36,10 +36,10 @@ public class ProductNotifyController extends BaseController
   @ResponseBody
   public Map<String, String> email()
   {
-//    Member localMember = this.memberService.getCurrent();
-//    Object localObject = localMember != null ? localMember.getEmail() : null;
+    Member localMember = this.memberService.getCurrent();
+    Object localObject = localMember != null ? localMember.getEmail() : null;
     HashMap localHashMap = new HashMap();
-//    localHashMap.put("email", localObject);
+    localHashMap.put("email", localObject);
     return localHashMap;
   }
 
@@ -75,7 +75,7 @@ public class ProductNotifyController extends BaseController
       ProductNotify localProductNotify = new ProductNotify();
       localProductNotify.setEmail(email);
       localProductNotify.setHasSent(Boolean.valueOf(false));
-//      localProductNotify.setMember(this.memberService.getCurrent());
+      localProductNotify.setMember(this.memberService.getCurrent());
       localProductNotify.setProduct(localProduct);
       this.productNotifyService.save(localProductNotify);
 //      localHashMap.put("message", IIIlllII);

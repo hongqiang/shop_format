@@ -81,12 +81,12 @@ public class GoodsServiceImpl extends BaseService
     return (Goods)localObject1;
   }
 
-//  @Transactional
-//  @CacheEvict(value={"product", "productCategory", "review", "consultation"}, allEntries=true)
-//  public Goods update(Goods goods, String[] ignoreProperties)
-//  {
-//    return (Goods)this.goodsDao.update(goods, ignoreProperties);
-//  }
+  @Transactional
+  @CacheEvict(value={"product", "productCategory", "review", "consultation"}, allEntries=true)
+  public Goods update(Goods goods, String[] ignoreProperties)
+  {
+    return (Goods)this.goodsDao.update(goods, ignoreProperties);
+  }
 
   @Transactional
   @CacheEvict(value={"product", "productCategory", "review", "consultation"}, allEntries=true)

@@ -1,6 +1,7 @@
 package com.hongqiang.shop.modules.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -54,8 +56,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.hongqiang.shop.common.utils.BigDecimalNumericFieldBridge;
+import com.hongqiang.shop.common.utils.FreeMarkers;
 
-//import net.shophq.util.FreemarkerUtils;
 
 @Indexed
 @Entity
@@ -150,10 +152,7 @@ public class Product extends BaseEntity {
 
 	static {
 		try {
-			// file 要修改
-//			File localFile = new ClassPathResource("classpath*:/shophq.xml")
-			File localFile = new ClassPathResource("shophq.xml")
-					.getFile();
+			File localFile = new ClassPathResource("shophq.xml").getFile();
 			Document localDocument = new SAXReader().read(localFile);
 			Element localElement = (Element) localDocument
 					.selectSingleNode("/shophq/template[@id='productContent']");
@@ -871,19 +870,16 @@ public class Product extends BaseEntity {
 		this.productNotifies = productNotifies;
 	}
 
-	
-	 @ElementCollection(fetch=FetchType.LAZY)
-	 @CollectionTable(name="hq_product_member_price")
-	 public Map<MemberRank, BigDecimal> getMemberPrice()
-	 {
-	 return this.memberPrice;
-	 }
-	
-	 public void setMemberPrice(Map<MemberRank, BigDecimal> memberPrice)
-	 {
-	 this.memberPrice = memberPrice;
-	 }
-	
+	@ElementCollection(fetch = FetchType.LAZY)
+	@CollectionTable(name = "hq_product_member_price")
+	public Map<MemberRank, BigDecimal> getMemberPrice() {
+		return this.memberPrice;
+	}
+
+	public void setMemberPrice(Map<MemberRank, BigDecimal> memberPrice) {
+		this.memberPrice = memberPrice;
+	}
+
 	@ElementCollection(fetch = FetchType.LAZY)
 	@CollectionTable(name = "hq_product_parameter_value")
 	public Map<Parameter, String> getParameterValue() {
@@ -948,23 +944,22 @@ public class Product extends BaseEntity {
 		return localArrayList;
 	}
 
-//	 @JsonProperty
-//	 @Transient
-//	 public String getPath()
-//	 {
-//	 HashMap localHashMap = new HashMap();
-//	 localHashMap.put("id", getId());
-//	 localHashMap.put("createDate", getCreateDate());
-//	 localHashMap.put("modifyDate", getUpdateDate());
-//	 localHashMap.put("sn", getSn());
-//	 localHashMap.put("name", getName());
-//	 localHashMap.put("fullName", getFullName());
-//	 localHashMap.put("seoTitle", getSeoTitle());
-//	 localHashMap.put("seoKeywords", getSeoKeywords());
-//	 localHashMap.put("seoDescription", getSeoDescription());
-//	 localHashMap.put("productCategory", getProductCategory());
-//	 return FreemarkerUtils.process(staticPath, localHashMap);
-//	 }
+	@JsonProperty
+	@Transient
+	public String getPath() {
+		HashMap<String, Object> localHashMap = new HashMap<String, Object>();
+		localHashMap.put("id", getId());
+		localHashMap.put("createDate", getCreateDate());
+		localHashMap.put("modifyDate", getUpdateDate());
+		localHashMap.put("sn", getSn());
+		localHashMap.put("name", getName());
+		localHashMap.put("fullName", getFullName());
+		localHashMap.put("seoTitle", getSeoTitle());
+		localHashMap.put("seoKeywords", getSeoKeywords());
+		localHashMap.put("seoDescription", getSeoDescription());
+		localHashMap.put("productCategory", getProductCategory());
+		return FreeMarkers.renderString(staticPath, localHashMap);
+	}
 
 	@JsonProperty
 	@Transient
@@ -974,29 +969,27 @@ public class Product extends BaseEntity {
 		return null;
 	}
 
-	// @Transient
-	// public Set<Promotion> getValidPromotions()
-	// {
-	// HashSet<Promotion> localHashSet = new HashSet<Promotion>();
-	// if (getPromotions() != null)
-	// localHashSet.addAll(getPromotions());
-	// if ((getProductCategory() != null) &&
-	// (getProductCategory().getPromotions() != null))
-	// localHashSet.addAll(getProductCategory().getPromotions());
-	// if ((getBrand() != null) && (getBrand().getPromotions() != null))
-	// localHashSet.addAll(getBrand().getPromotions());
-	// TreeSet localTreeSet = new TreeSet();
-	// Iterator localIterator = localHashSet.iterator();
-	// while (localIterator.hasNext())
-	// {
-	// Promotion localPromotion = (Promotion)localIterator.next();
-	// if ((localPromotion == null) || (!localPromotion.hasBegun()) ||
-	// (localPromotion.hasEnded()))
-	// continue;
-	// localTreeSet.add(localPromotion);
-	// }
-	// return localTreeSet;
-	// }
+	@Transient
+	public Set<Promotion> getValidPromotions() {
+		HashSet<Promotion> localHashSet = new HashSet<Promotion>();
+		if (getPromotions() != null)
+			localHashSet.addAll(getPromotions());
+		if ((getProductCategory() != null)
+				&& (getProductCategory().getPromotions() != null))
+			localHashSet.addAll(getProductCategory().getPromotions());
+		if ((getBrand() != null) && (getBrand().getPromotions() != null))
+			localHashSet.addAll(getBrand().getPromotions());
+		Set<Promotion> localTreeSet = new TreeSet<Promotion>();
+		Iterator<Promotion> localIterator = localHashSet.iterator();
+		while (localIterator.hasNext()) {
+			Promotion localPromotion = (Promotion) localIterator.next();
+			if ((localPromotion == null) || (!localPromotion.hasBegun())
+					|| (localPromotion.hasEnded()))
+				continue;
+			localTreeSet.add(localPromotion);
+		}
+		return localTreeSet;
+	}
 
 	@Transient
 	public Integer getAvailableStock() {
@@ -1020,37 +1013,30 @@ public class Product extends BaseEntity {
 
 	@PreRemove
 	public void preRemove() {
-		// Set localSet = getFavoriteMembers();
-		// if (localSet != null)
-		// {
-		// localObject2 = localSet.iterator();
-		// while (((Iterator)localObject2).hasNext())
-		// {
-		// localObject1 = (Member)((Iterator)localObject2).next();
-		// ((Member)localObject1).getFavoriteProducts().remove(this);
-		// }
-		// }
-		// Object localObject1 = getPromotions();
-		// Object localObject3;
-		// if (localObject1 != null)
-		// {
-		// localObject3 = ((Set)localObject1).iterator();
-		// while (((Iterator)localObject3).hasNext())
-		// {
-		// localObject2 = (Promotion)((Iterator)localObject3).next();
-		// ((Promotion)localObject2).getProducts().remove(this);
-		// }
-		// }
-		// Object localObject2 = getOrderItems();
-		// if (localObject2 != null)
-		// {
-		// Iterator localIterator = ((Set)localObject2).iterator();
-		// while (localIterator.hasNext())
-		// {
-		// localObject3 = (OrderItem)localIterator.next();
-		// ((OrderItem)localObject3).setProduct(null);
-		// }
-		// }
+		Set<Member> localSet = getFavoriteMembers();
+		if (localSet != null) {
+			Iterator<Member> localObject2 = localSet.iterator();
+			while (localObject2.hasNext()) {
+				Member localObject1 = (Member) (localObject2).next();
+				localObject1.getFavoriteProducts().remove(this);
+			}
+		}
+		Set<Promotion> localObject1 = getPromotions();
+		if (localObject1 != null) {
+			Iterator<Promotion> localObject3 = (localObject1).iterator();
+			while (localObject3.hasNext()) {
+				Promotion localObject2 = (Promotion) (localObject3).next();
+				localObject2.getProducts().remove(this);
+			}
+		}
+		Set<OrderItem> localObject2 = getOrderItems();
+		if (localObject2 != null) {
+			Iterator<OrderItem> localIterator = localObject2.iterator();
+			while (localIterator.hasNext()) {
+				OrderItem localObject3 = (OrderItem) localIterator.next();
+				localObject3.setProduct(null);
+			}
+		}
 	}
 
 	@PrePersist

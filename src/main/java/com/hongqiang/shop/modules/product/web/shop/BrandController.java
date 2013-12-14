@@ -1,7 +1,6 @@
 package com.hongqiang.shop.modules.product.web.shop;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.hongqiang.shop.common.utils.Pageable;
-//import net.shopxx.Pageable;
 import com.hongqiang.shop.common.utils.ResourceNotFoundException;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.entity.Brand;
@@ -21,7 +19,7 @@ public class BrandController extends BaseController
 {
   private static final int PAGE_NUMBER = 40;
 
-  @Resource(name="brandServiceImpl")
+  @Autowired
   private BrandService brandService;
 
   @RequestMapping(value={"/list/{pageNumber}"}, method=RequestMethod.GET)

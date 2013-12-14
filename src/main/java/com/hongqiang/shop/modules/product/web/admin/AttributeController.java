@@ -2,8 +2,8 @@ package com.hongqiang.shop.modules.product.web.admin;
 
 import java.util.Iterator;
 
-import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,14 +21,14 @@ import com.hongqiang.shop.modules.product.service.AttributeService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 
 @Controller("adminAttributeController")
-@RequestMapping({"/admin/attribute"})
+@RequestMapping({"${adminPath}/attribute"})
 public class AttributeController extends BaseController
 {
 
-  @Resource(name="attributeServiceImpl")
+  @Autowired
   private AttributeService attributeService;
 
-  @Resource(name="productCategoryServiceImpl")
+  @Autowired
   private ProductCategoryService productCategoryService;
 
   @RequestMapping(value={"/add"}, method=RequestMethod.GET)
@@ -88,7 +88,7 @@ public class AttributeController extends BaseController
     }
     if (!beanValidator(redirectAttributes,attribute, new Class[0]))
       return ERROR_PAGE;
-//    this.attributeService.update(attribute, new String[] { "propertyIndex", "productCategory" });
+    this.attributeService.update(attribute, new String[] { "propertyIndex", "productCategory" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
@@ -110,11 +110,16 @@ public class AttributeController extends BaseController
   
 	@RequestMapping(value={"/attribute"},method=RequestMethod.GET)
   	public void doit(){
-		Attribute a = this.attributeService.find(1L);
-		Attribute newa = this.attributeService.find(70L);
+		Attribute a = this.attributeService.find(4L);
+//		Attribute newa = this.attributeService.find(70L);
 		System.out.println("a.name="+a.getName()+", a.property_index="+a.getPropertyIndex()+", a.product_category"+a.getProductCategory());
 		System.out.println("===============================================");
 		
+		a.setName("hello");
+		a.setPropertyIndex(1);
+		this.attributeService.update(a);
+//	    this.attributeService.update(a, new String[] { "propertyIndex", "productCategory" });
+	    System.out.println("a.name="+a.getName()+", a.property_index="+a.getPropertyIndex()+", a.product_category"+a.getProductCategory());
 //		Pageable pageable = new Pageable();
 //		pageable.setPageNumber(1);
 //		pageable.setPageSize(40);
@@ -144,7 +149,7 @@ public class AttributeController extends BaseController
 //		System.out.println("a.name="+a.getName()+", a.property_index="+a.getPropertyIndex()+", a.product_category"+a.getProductCategory());
 //		System.out.println("===============================================");
 		
-		this.attributeService.delete(a);
-		this.attributeService.delete(newa);
+//		this.attributeService.delete(a);
+//		this.attributeService.delete(newa);
 	}
 }

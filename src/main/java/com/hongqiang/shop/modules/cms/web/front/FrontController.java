@@ -28,12 +28,12 @@ import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.servlet.ValidateCodeServlet;
 import com.hongqiang.shop.common.utils.StringUtils;
 import com.hongqiang.shop.common.web.BaseController;
-import com.hongqiang.shop.modules.cms.entity.Article;
+import com.hongqiang.shop.modules.cms.entity.JArticle;
 import com.hongqiang.shop.modules.cms.entity.Category;
 import com.hongqiang.shop.modules.cms.entity.Comment;
 import com.hongqiang.shop.modules.cms.entity.Link;
 import com.hongqiang.shop.modules.cms.entity.Site;
-import com.hongqiang.shop.modules.cms.service.ArticleService;
+import com.hongqiang.shop.modules.cms.service.JArticleService;
 import com.hongqiang.shop.modules.cms.service.CategoryService;
 import com.hongqiang.shop.modules.cms.service.CommentService;
 import com.hongqiang.shop.modules.cms.service.LinkService;
@@ -50,7 +50,7 @@ import com.hongqiang.shop.modules.sys.utils.UserUtils;
 public class FrontController extends BaseController{
 	
 	@Autowired
-	private ArticleService articleService;
+	private JArticleService articleService;
 	@Autowired
 	private LinkService linkService;
 	@Autowired
@@ -109,8 +109,8 @@ public class FrontController extends BaseController{
 			model.addAttribute("category", category);
 			model.addAttribute("categoryList", categoryList);
 			// 获取文章内容
-			Page<Article> page = new Page<Article>(1, 1, -1);
-			Article article = new Article(category);
+			Page<JArticle> page = new Page<JArticle>(1, 1, -1);
+			JArticle article = new JArticle(category);
 			page = articleService.find(page, article, false);
 			if (page.getList().size()>0){
 				article = page.getList().get(0);
@@ -137,12 +137,12 @@ public class FrontController extends BaseController{
 				model.addAttribute("categoryList", categoryList);
 				// 获取内容列表
 				if ("article".equals(category.getModule())){
-					Page<Article> page = new Page<Article>(pageNo, pageSize);
-					page = articleService.find(page, new Article(category), false);
+					Page<JArticle> page = new Page<JArticle>(pageNo, pageSize);
+					page = articleService.find(page, new JArticle(category), false);
 					model.addAttribute("page", page);
 					// 如果第一个子栏目为简介类栏目，则获取该栏目第一篇文章
 					if ("2".equals(category.getShowModes())){
-						Article article = new Article(category);
+						JArticle article = new JArticle(category);
 						if (page.getList().size()>0){
 							article = page.getList().get(0);
 							articleService.updateHitsAddOne(article.getId());
@@ -165,8 +165,8 @@ public class FrontController extends BaseController{
 				for (Category c : categoryList){
 					if (Category.SHOW.equals(c.getInList())){
 						if ("article".equals(c.getModule())){
-							categoryMap.put(c, articleService.find(new Page<Article>(1, 5, -1),
-									new Article(c), false).getList());
+							categoryMap.put(c, articleService.find(new Page<JArticle>(1, 5, -1),
+									new JArticle(c), false).getList());
 						}else if ("link".equals(c.getModule())){
 							categoryMap.put(c, linkService.find(new Page<Link>(1, 5, -1),
 									new Link(c), false).getList());
@@ -200,8 +200,8 @@ public class FrontController extends BaseController{
 				categoryList = categoryService.findByParentId(category.getParent().getId(), category.getSite().getId());
 			}
 			// 获取文章内容
-			Article article = articleService.get(contentId);
-			if (article==null || !Article.DEL_FLAG_NORMAL.equals(article.getDelFlag())){
+			JArticle article = articleService.get(contentId);
+			if (article==null || !JArticle.DEL_FLAG_NORMAL.equals(article.getDelFlag())){
 				return "error/404";
 			}
 			// 文章阅读次数+1
@@ -304,7 +304,7 @@ public class FrontController extends BaseController{
 				}
 			}
 			System.out.println(qStr);
-			Page<Article> page = articleService.search(new Page<Article>(request, response), qStr);
+			Page<JArticle> page = articleService.search(new Page<JArticle>(request, response), qStr);
 			page.setMessage("匹配结果，共耗时 " + (System.currentTimeMillis() - start) + "毫秒。");
 			model.addAttribute("page", page);
 		}

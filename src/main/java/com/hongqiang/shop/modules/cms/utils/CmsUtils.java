@@ -14,11 +14,11 @@ import com.hongqiang.shop.common.mapper.JsonMapper;
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.CacheUtils;
 import com.hongqiang.shop.common.utils.SpringContextHolder;
-import com.hongqiang.shop.modules.cms.entity.Article;
+import com.hongqiang.shop.modules.cms.entity.JArticle;
 import com.hongqiang.shop.modules.cms.entity.Category;
 import com.hongqiang.shop.modules.cms.entity.Link;
 import com.hongqiang.shop.modules.cms.entity.Site;
-import com.hongqiang.shop.modules.cms.service.ArticleService;
+import com.hongqiang.shop.modules.cms.service.JArticleService;
 import com.hongqiang.shop.modules.cms.service.CategoryService;
 import com.hongqiang.shop.modules.cms.service.LinkService;
 import com.hongqiang.shop.modules.cms.service.SiteService;
@@ -32,7 +32,7 @@ public class CmsUtils {
 	
 	private static SiteService siteService = SpringContextHolder.getBean(SiteService.class);
 	private static CategoryService categoryService = SpringContextHolder.getBean(CategoryService.class);
-	private static ArticleService articleService = SpringContextHolder.getBean(ArticleService.class);
+	private static JArticleService articleService = SpringContextHolder.getBean(JArticleService.class);
 	private static LinkService linkService = SpringContextHolder.getBean(LinkService.class);
 
 	private static final String CMS_CACHE = "cmsCache";
@@ -132,7 +132,7 @@ public class CmsUtils {
 	 * @param id 文章编号
 	 * @return
 	 */
-	public static Article getArticle(long articleId){
+	public static JArticle getArticle(long articleId){
 		return articleService.get(articleId);
 	}
 	
@@ -147,9 +147,9 @@ public class CmsUtils {
 	 *          orderBy 排序字符串
 	 * @return
 	 */
-	public static List<Article> getArticleList(long siteId, long categoryId, int number, String param){
-		Page<Article> page = new Page<Article>(1, number, -1);
-		Article article = new Article(new Category(categoryId, new Site(siteId)));
+	public static List<JArticle> getArticleList(long siteId, long categoryId, int number, String param){
+		Page<JArticle> page = new Page<JArticle>(1, number, -1);
+		JArticle article = new JArticle(new Category(categoryId, new Site(siteId)));
 		if (StringUtils.isNotBlank(param)){
 			@SuppressWarnings({ "rawtypes" })
 			Map map = JsonMapper.getInstance().fromJson("{"+param+"}", Map.class);
@@ -157,13 +157,13 @@ public class CmsUtils {
 				article.setPosid(String.valueOf(map.get("posid")));
 			}
 			if (new Integer(1).equals(map.get("image"))){
-				article.setImage(Article.YES);
+				article.setImage(JArticle.YES);
 			}
 			if (StringUtils.isNotBlank((String)map.get("orderBy"))){
 				page.setOrderBy((String)map.get("orderBy"));
 			}
 		}
-		article.setDelFlag(Article.DEL_FLAG_NORMAL);
+		article.setDelFlag(JArticle.DEL_FLAG_NORMAL);
 		page = articleService.find(page, article, false);
 		return page.getList();
 	}

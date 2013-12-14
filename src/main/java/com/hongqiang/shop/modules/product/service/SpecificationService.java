@@ -14,8 +14,7 @@ public abstract interface SpecificationService{
 
 	public Specification update(Specification specification);
 
-	// //忽视
-	// public Specification update(Specification brand, String[] ignoreProperties);
+	 public Specification update(Specification brand, String[] ignoreProperties);
 
 	public void delete(Long id);
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ import com.hongqiang.shop.modules.product.service.TagService;
 public class TagController extends BaseController
 {
 
-  @Resource(name="tagServiceImpl")
+  @Autowired
   private TagService tagService;
 
   @RequestMapping(value={"/add"}, method=RequestMethod.GET)
@@ -59,7 +60,7 @@ public class TagController extends BaseController
   {
     if (!beanValidator(redirectAttributes,tag, new Class[0]))
       return ERROR_PAGE;
-//    this.tagService.update(tag, new String[] { "type", "articles", "products" });
+    this.tagService.update(tag, new String[] { "type", "articles", "products" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }

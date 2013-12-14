@@ -2,6 +2,7 @@ package com.hongqiang.shop.modules.entity;
 
 import java.math.BigDecimal;
 import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,8 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-//import net.shophq.Setting;
-//import net.shophq.util.SettingUtils;
+
+import com.hongqiang.shop.common.utils.Setting;
+import com.hongqiang.shop.common.utils.SettingUtils;
+
 //购物车项
 @Entity
 @Table(name="hq_cart_item")
@@ -73,31 +76,31 @@ public class CartItem extends BaseEntity
     return 0;
   }
 
-//  @Transient
-//  public BigDecimal getUnitPrice()
-//  {
-//    if ((getProduct() != null) && (getProduct().getPrice() != null))
-//    {
-//      Setting localSetting = SettingUtils.get();
-//      if ((getCart() != null) && (getCart().getMember() != null) && (getCart().getMember().getMemberRank() != null))
-//      {
-//        MemberRank localMemberRank = getCart().getMember().getMemberRank();
-//        Map localMap = getProduct().getMemberPrice();
-//        if ((localMap != null) && (!localMap.isEmpty()) && (localMap.containsKey(localMemberRank)))
-//          return localSetting.setScale((BigDecimal)localMap.get(localMemberRank));
-//        if (localMemberRank.getScale() != null)
-//          return localSetting.setScale(getProduct().getPrice().multiply(new BigDecimal(localMemberRank.getScale().doubleValue())));
-//      }
-//      return localSetting.setScale(getProduct().getPrice());
-//    }
-//    return new BigDecimal(0);
-//  }
+  @Transient
+  public BigDecimal getUnitPrice()
+  {
+    if ((getProduct() != null) && (getProduct().getPrice() != null))
+    {
+      Setting localSetting = SettingUtils.get();
+      if ((getCart() != null) && (getCart().getMember() != null) && (getCart().getMember().getMemberRank() != null))
+      {
+        MemberRank localMemberRank = getCart().getMember().getMemberRank();
+        Map<MemberRank, BigDecimal> localMap = getProduct().getMemberPrice();
+        if ((localMap != null) && (!localMap.isEmpty()) && (localMap.containsKey(localMemberRank)))
+          return localSetting.setScale((BigDecimal)localMap.get(localMemberRank));
+        if (localMemberRank.getScale() != null)
+          return localSetting.setScale(getProduct().getPrice().multiply(new BigDecimal(localMemberRank.getScale().doubleValue())));
+      }
+      return localSetting.setScale(getProduct().getPrice());
+    }
+    return new BigDecimal(0);
+  }
 
   @Transient
   public BigDecimal getSubtotal()
   {
-//    if (getQuantity() != null)
-//      return getUnitPrice().multiply(new BigDecimal(getQuantity().intValue()));
+    if (getQuantity() != null)
+      return getUnitPrice().multiply(new BigDecimal(getQuantity().intValue()));
     return new BigDecimal(0);
   }
 

@@ -32,13 +32,6 @@ public class BrandServiceImpl extends BaseService
 	public Brand find(Long id) {
 		return this.brandDao.findById(id);
 	}
-  
-//  //这个地方不会写
-//   @Transactional
-//  @CacheEvict(value={"brand"}, allEntries=true)
-//  public Page<Brand[]> findPage(Page<Brand[]> pageBrand){
-//		return this.brandDao.find(objPage);
-//  }
    
  @Transactional
 @CacheEvict(value={"brand"}, allEntries=true)
@@ -67,13 +60,12 @@ public class BrandServiceImpl extends BaseService
     return (Brand)this.brandDao.merge(brand);
   }
 
-//  //忽视
-//  @Transactional
-//  @CacheEvict(value={"brand"}, allEntries=true)
-//  public Brand update(Brand brand, String[] ignoreProperties)
-//  {
-//    return (Brand)super.update(brand, ignoreProperties);
-//  }
+  @Transactional
+  @CacheEvict(value={"brand"}, allEntries=true)
+  public Brand update(Brand brand, String[] ignoreProperties)
+  {
+    return (Brand)this.brandDao.update(brand, ignoreProperties);
+  }
 
   @Transactional
   @CacheEvict(value={"brand"}, allEntries=true)

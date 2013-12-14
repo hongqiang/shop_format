@@ -51,9 +51,18 @@ public interface BaseDao<T> {
 	//save
 	public  void persist(T paramT);
 
+	//get id
+	public Long getIdentifier(T entity);
+	
+	//get entity
+	 public T find(Long id);
+	
 	//update
 	public  T merge(T paramT);
 
+	//update-igore
+	 public T update(T entity, String[] ignoreProperties);
+	
 	//delete
 	public  void remove(T paramT);
 	

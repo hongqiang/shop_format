@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,10 +20,17 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+
+import net.sf.ehcache.search.expression.Or;
+
 //import net.shophq.Setting;
 //import net.shophq.util.SettingUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.utils.Setting;
+import com.hongqiang.shop.common.utils.SettingUtils;
 
 //团购实体类
 @Entity
@@ -238,49 +246,49 @@ public class Coupon extends BaseEntity
     return (getEndDate() != null) && (new Date().after(getEndDate()));
   }
 
-//  @Transient
-//  public BigDecimal calculatePrice(BigDecimal price)
-//  {
-//    if ((price != null) && (getPriceOperator() != null) && (getPriceValue() != null))
-//    {
-//      Setting localSetting = SettingUtils.get();
-//      if (getPriceOperator() == Coupon.Operator.add)
-//        localBigDecimal = price.add(getPriceValue());
-//      else if (getPriceOperator() == Coupon.Operator.subtract)
-//        localBigDecimal = price.subtract(getPriceValue());
-//      else if (getPriceOperator() == Coupon.Operator.multiply)
-//        localBigDecimal = price.multiply(getPriceValue());
-//      else
-//        localBigDecimal = price.divide(getPriceValue());
-//      BigDecimal localBigDecimal = localSetting.setScale(localBigDecimal);
-//      return localBigDecimal.compareTo(new BigDecimal(0)) > 0 ? localBigDecimal : new BigDecimal(0);
-//    }
-//    return price;
-//  }
+  @Transient
+  public BigDecimal calculatePrice(BigDecimal price)
+  {
+	  BigDecimal localBigDecimal;
+    if ((price != null) && (getPriceOperator() != null) && (getPriceValue() != null))
+    {
+      Setting localSetting = SettingUtils.get();
+      if (getPriceOperator() == Coupon.Operator.add)
+        localBigDecimal = price.add(getPriceValue());
+      else if (getPriceOperator() == Coupon.Operator.subtract)
+        localBigDecimal = price.subtract(getPriceValue());
+      else if (getPriceOperator() == Coupon.Operator.multiply)
+        localBigDecimal = price.multiply(getPriceValue());
+      else
+        localBigDecimal = price.divide(getPriceValue());
+      BigDecimal localBigDecimal2 = localSetting.setScale(localBigDecimal);
+      return localBigDecimal2.compareTo(new BigDecimal(0)) > 0 ? localBigDecimal2 : new BigDecimal(0);
+    }
+    return price;
+  }
 
-//  @PreRemove
-//  public void preRemove()
-//  {
-//    Set localSet = getPromotions();
-//    Object localObject2;
-//    if (localSet != null)
-//    {
-//      localObject2 = localSet.iterator();
-//      while (((Iterator)localObject2).hasNext())
-//      {
-//        localObject1 = (Promotion)((Iterator)localObject2).next();
-//        ((Promotion)localObject1).getCoupons().remove(this);
-//      }
-//    }
-//    Object localObject1 = getOrders();
-//    if (localObject1 != null)
-//    {
-//      Iterator localIterator = ((List)localObject1).iterator();
-//      while (localIterator.hasNext())
-//      {
-//        localObject2 = (Order)localIterator.next();
-//        ((Order)localObject2).getCoupons().remove(this);
-//      }
-//    }
-//  }
+  @PreRemove
+  public void preRemove()
+  {
+    Set<Promotion> localSet = getPromotions();
+    if (localSet != null)
+    {
+    	Iterator<Promotion> localObject2 = localSet.iterator();
+      while (localObject2.hasNext())
+      {
+    	  Promotion localObject1 = (Promotion)(localObject2).next();
+          localObject1.getCoupons().remove(this);
+      }
+    }
+    List<Order> localObject1 = getOrders();
+    if (localObject1 != null)
+    {
+      Iterator<Order> localIterator = localObject1.iterator();
+      while (localIterator.hasNext())
+      {
+    	  Order localObject2 = (Order)localIterator.next();
+          localObject2.getCoupons().remove(this);
+      }
+    }
+  }
 }
