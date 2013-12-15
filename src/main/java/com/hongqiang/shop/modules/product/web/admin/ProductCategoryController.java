@@ -93,7 +93,9 @@ public class ProductCategoryController extends BaseController
         return ERROR_PAGE;
     }
 	//顶级分类和正确的非顶级分类
-    this.productCategoryService.update(productCategory);
+//    this.productCategoryService.update(productCategory);
+    this.productCategoryService.update(productCategory, 
+    		new String[] { "treePath", "grade", "children", "products", "parameterGroups", "attributes", "promotions" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }

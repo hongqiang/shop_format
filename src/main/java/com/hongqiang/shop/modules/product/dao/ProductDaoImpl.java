@@ -50,11 +50,11 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 
 	private static final Pattern pattern = Pattern.compile("\\d*");
 
-	 @Autowired
-	 private GoodsDao goodsDao;
-	
-	 @Autowired
-	 private SnDao snDao;
+//	 @Autowired
+//	 private GoodsDao goodsDao;
+//	
+//	 @Autowired
+//	 private SnDao snDao;
 
 	public boolean snExists(String sn) {
 		if (sn == null)

@@ -90,6 +90,10 @@ public class ProductCategoryServiceImpl extends BaseService implements
 				.merge(productCategory);
 	}
 
+	 public ProductCategory update(ProductCategory productCategory,String[] paramArrayOfString){
+		 return (ProductCategory)this.productCategoryDao.update(productCategory, paramArrayOfString);
+	 }
+	 
 	// Remove the entity instance by id.
 	@Transactional
 	// @CacheEvict(value={"product", "productCategory", "review",

@@ -236,7 +236,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 	
 	protected void addFilter(StringBuilder qlString, List<Filter> filters,List<Object> params ) {
-		Iterator<Filter> localIterator = filters.iterator();
+		if (filters!=null && filters.size() >0) {
+			Iterator<Filter> localIterator = filters.iterator();
 		 while (localIterator.hasNext()){
 	    	  Filter localFilter = (Filter)localIterator.next();
 	          if ((localFilter == null) || (StringUtils.isEmpty(localFilter.getProperty())))
@@ -298,6 +299,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	            qlString.append(" and "+localFilter.getProperty()+" is not null ");
 	          }
 	      }
+		}
 	}
 
 	protected void addFilter(StringBuilder qlString, 
@@ -355,7 +357,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 				qlString.append(" ? DESC");
 			params.add(pageable.getOrderProperty());
 		}
-		if (pageable.getOrders() != null) {
+		if (pageable.getOrders() != null && pageable.getOrders().size() > 0) {
 			if (tag == 0) {
 				qlString.append("order by ");
 			} else {
@@ -508,7 +510,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		addFilter(stringBuilder, filters, parameter);
 		addOrders(stringBuilder, orderList, parameter);
 		qlString = stringBuilder.toString();
-		System.out.println("qlstirng= "+qlString);
+//		System.out.println("qlstirng= "+qlString);
 		if (qlString.indexOf("order by")==-1) {
 			if (OrderEntity.class.isAssignableFrom(this.entityClass)){
 				qlString += "order by order ASC";
@@ -525,27 +527,31 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		}
 		return query.list();
 	}
-	
-//	@SuppressWarnings("unchecked")
-//	public <E> List<E> findList(String qlString, Object[] parameter,
-//			Integer firstResults, Integer MaxResults) {
-//		if (qlString.indexOf("order by")==-1) {
-//			if (OrderEntity.class.isAssignableFrom(this.entityClass)){
-//				qlString += "order by order ASC";
-//			}else {
-//				qlString += "order by createDate DESC";
-//			}
-//		}
-//		Query query = createQueryByList(qlString, parameter);
-//		if (firstResults != null) {
-//			query.setFirstResult(firstResults);
-//		}
-//		if (MaxResults != null) {
-//			query.setMaxResults(MaxResults);
-//		}
-//		return query.list();
-//	}
 
+	public <E> Page<E> findPage(Page<E> page, String qlString, List<Object> parameter,Pageable pageable) {
+		 if (pageable == null)
+			 pageable = new Pageable();
+		 StringBuilder stringBuilder = new StringBuilder(qlString);
+		 addFilter(stringBuilder, pageable, parameter);
+		 addOrders(stringBuilder, pageable, parameter);
+		 qlString = stringBuilder.toString();
+		 if (qlString.indexOf("order by")==-1) {
+				if (OrderEntity.class.isAssignableFrom(this.entityClass)){
+					qlString += "order by order ASC";
+				}else {
+					qlString += "order by createDate DESC";
+				}
+			}
+		 long count = count(stringBuilder, null, parameter);
+		 int i=(int)Math.ceil(count/pageable.getPageSize());
+		 if (i<pageable.getPageNumber()) {
+			pageable.setPageNumber(i);
+		}
+		 page.setPageNo(pageable.getPageNumber());
+		 page.setPageSize(pageable.getPageSize());
+		 return find(page,qlString,parameter.toArray());
+	}
+	
 	/**
 	 * QL 更新
 	 * 

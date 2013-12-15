@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hongqiang.shop.common.test.SpringTransactionalContextTests;
 import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.sys.dao.UserDao;
 import com.hongqiang.shop.modules.sys.entity.User;
 
@@ -42,22 +43,40 @@ public class BaseDaoTest extends SpringTransactionalContextTests {
 			System.out.print(o.get("name")+", "+o.get("office_name")+"\n");
 		}
 		
+//		String valueString = "0001";
+//		Filter filter = new Filter("no", Filter.Operator.eq, valueString);
+//		List<Filter> filters = new ArrayList<Filter>();
+//		filters.add(filter);
+//		String qlString2 = "select u from User u where 1=1";
+//		List<Object> params = new ArrayList<Object>();
+//		List<User> users = userDao.findList(qlString2, params, null, null, filters, null);
+//		System.out.print(	"long count= "+users.size()+"\n");
+//		
+//		StringBuilder stringBuilder = new StringBuilder();
+//		stringBuilder.append("select u from User u where 1=1 ");
+//		
+//		List<Object> paramsList = new ArrayList<Object>();
+//		Long ccLong = userDao.count(stringBuilder,filters,paramsList);
+//		System.out.print(	"long count= "+ccLong+"\n");
+//		System.out.print("============================ =====\n");
+		
 		String valueString = "0001";
 		Filter filter = new Filter("no", Filter.Operator.eq, valueString);
 		List<Filter> filters = new ArrayList<Filter>();
 		filters.add(filter);
+		Pageable pageable = new Pageable();
+		pageable.setPageNumber(1);
+		pageable.setPageSize(40);
+		pageable.setFilters(filters);
 		String qlString2 = "select u from User u where 1=1";
 		List<Object> params = new ArrayList<Object>();
-		List<User> users = userDao.findList(qlString2, params, null, null, filters, null);
-		System.out.print(	"long count= "+users.size()+"\n");
-		
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("select u from User u where 1=1 ");
-		
-		List<Object> paramsList = new ArrayList<Object>();
-		Long ccLong = userDao.count(stringBuilder,filters,paramsList);
-		System.out.print(	"long count= "+ccLong+"\n");
-				
+		Page<User> userPage = new Page<User>(1, 3);
+		userPage =	userDao.findPage(userPage, qlString2, params, pageable);
+		for (User o : userPage.getList()) {
+			System.out.print(o.getName()+", "+o.getOffice().getName()+"\n");
+		}
+		System.out.print("=============ok=========== =====\n");
+		System.out.print("============================ =====\n");
 		System.out.print("===== exe hql, return type: Entity =====\n");
 		qlString = "select u from User u join u.office o where o.id=1";
 		entityPage = userDao.find(entityPage, qlString);
