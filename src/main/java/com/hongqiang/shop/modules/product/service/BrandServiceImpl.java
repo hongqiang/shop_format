@@ -1,22 +1,21 @@
 package com.hongqiang.shop.modules.product.service;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.hongqiang.shop.common.utils.Filter;
-import com.hongqiang.shop.common.utils.Pageable;
-import com.hongqiang.shop.modules.entity.Order;
-import com.hongqiang.shop.modules.product.dao.BrandDao;
-import com.hongqiang.shop.modules.entity.Brand;
-import com.hongqiang.shop.common.persistence.Page;
-import com.hongqiang.shop.common.service.BaseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.service.BaseService;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
+import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.modules.entity.Brand;
+import com.hongqiang.shop.modules.product.dao.BrandDao;
 
 
 @Service
@@ -28,24 +27,45 @@ public class BrandServiceImpl extends BaseService
   private BrandDao brandDao;
 
    @Transactional
-  @CacheEvict(value={"brand"}, allEntries=true)
+  @CacheEvict(value={"brand"})
 	public Brand find(Long id) {
 		return this.brandDao.findById(id);
 	}
    
  @Transactional
-@CacheEvict(value={"brand"}, allEntries=true)
+@CacheEvict(value={"brand"})
    public Page<Brand> findPage(Pageable pageable){
 	   return this.brandDao.findPage(pageable);
    }
-//  //修改
-//  @Transactional(readOnly=true)
-//  @Cacheable({"brand"})
-//  public List<Brand> findList(Integer count, List<Filter> filters, List<Order> orders, String cacheRegion)
-//  {
-//    return this.brandDao.findList(null, count, filters, orders);
-//  }
 
+  @Transactional(readOnly=true)
+  @Cacheable({"brand"})
+  public List<Brand> findList(Integer count, List<Filter> filters, List<Order> orders, String cacheRegion)
+  {
+    return this.brandDao.findList(null, count, filters, orders);
+  }
+
+  @Transactional
+  @CacheEvict(value={"brand"})
+ public List<Brand> findList(Long[] ids){
+	  List<Brand> localArrayList = new ArrayList<Brand>();
+	    if (ids != null)
+	      for (Long id : ids)
+	      {
+	    	  Brand localObject = find(id);
+	        if (localObject == null)
+	          continue;
+	        localArrayList.add(localObject);
+	      }
+	    return localArrayList;
+ }
+ 
+  @Transactional
+  @CacheEvict(value={"brand"})
+ public List<Brand> findAll(){
+	  return this.brandDao.findAll();
+ }
+ 
   @Transactional
   @CacheEvict(value={"brand"}, allEntries=true)
   public void save(Brand brand)

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.entity.Brand;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.service.BrandService;
@@ -34,11 +35,7 @@ public class ProductCategoryController extends BaseController
   public String add(ModelMap model)
   {
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
-//    model.addAttribute("brands", this.brandService.findAll());
-    List <ProductCategory> list = this.productCategoryService.findTree();
-	for(ProductCategory p:list){
-		System.out.println(p.getName()+","+p.getPath());
-	}
+    model.addAttribute("brands", this.brandService.findAll());
     return "/admin/product_category/add";
   }
 
@@ -46,7 +43,7 @@ public class ProductCategoryController extends BaseController
   public String save(ProductCategory productCategory, Long parentId, Long[] brandIds, RedirectAttributes redirectAttributes)
   {
     productCategory.setParent((ProductCategory)this.productCategoryService.find(parentId));
-//    productCategory.setBrands(new HashSet(this.brandService.findList(brandIds)));
+    productCategory.setBrands(new HashSet<Brand>(this.brandService.findList(brandIds)));
     if (!beanValidator(redirectAttributes,productCategory, new Class[0]))
       return ERROR_PAGE;
     productCategory.setTreePath(null);
@@ -56,9 +53,6 @@ public class ProductCategoryController extends BaseController
     productCategory.setParameterGroups(null);
     productCategory.setAttributes(null);
     productCategory.setPromotions(null);
-    
-//     //test
-//		 productCategory.setName("nihao");//测试没问题，相关问题参见《springMVC问题集》的23,24条。
     this.productCategoryService.save(productCategory);
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
@@ -69,7 +63,7 @@ public class ProductCategoryController extends BaseController
   {
     ProductCategory localProductCategory = (ProductCategory)this.productCategoryService.find(id);
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
-//    model.addAttribute("brands", this.brandService.findAll());
+    model.addAttribute("brands", this.brandService.findAll());
     model.addAttribute("productCategory", localProductCategory);
     model.addAttribute("children", this.productCategoryService.findChildren(localProductCategory));
     return "/admin/product_category/edit";
@@ -79,7 +73,7 @@ public class ProductCategoryController extends BaseController
   public String update(ProductCategory productCategory, Long parentId, Long[] brandIds, RedirectAttributes redirectAttributes)
   {
     productCategory.setParent((ProductCategory)this.productCategoryService.find(parentId));
-//    productCategory.setBrands(new HashSet(this.brandService.findList(brandIds)));
+    productCategory.setBrands(new HashSet<Brand>(this.brandService.findList(brandIds)));
     if (!beanValidator(redirectAttributes,productCategory, new Class[0]))
       return ERROR_PAGE;
 	//非顶级分类,异常设置情况跳转到错误
@@ -93,7 +87,6 @@ public class ProductCategoryController extends BaseController
         return ERROR_PAGE;
     }
 	//顶级分类和正确的非顶级分类
-//    this.productCategoryService.update(productCategory);
     this.productCategoryService.update(productCategory, 
     		new String[] { "treePath", "grade", "children", "products", "parameterGroups", "attributes", "promotions" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);

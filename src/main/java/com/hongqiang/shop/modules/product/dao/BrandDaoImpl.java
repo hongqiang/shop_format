@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Brand;
 
@@ -16,8 +18,20 @@ class BrandDaoImpl extends BaseDaoImpl<Brand>  implements BrandDaoCustom{
 	@Override
 	public Page<Brand>  findPage(Pageable pageable){
 		Page<Brand> brandPage = new Page<Brand>(pageable.getPageNumber(),pageable.getPageSize());
-		String qlString = "select brand from Brand brand";
+		String qlString = "select brand from Brand brand where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		return super.findPage(brandPage,  qlString,  parameter, pageable) ;
+	}
+	
+	@Override
+	public  List<Brand> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders){
+		String qlString = "select brand from Brand brand where 1=1 ";
+		List<Object> parameter = new ArrayList<Object>();
+		return super.findList(qlString, parameter, first, count, filters, orders);
+	}
+	
+	@Override
+	public List<Brand> findAll(){
+		return findList(null, null, null, null);
 	}
 }

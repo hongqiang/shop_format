@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
-import com.hongqiang.shop.modules.entity.Order;
 import com.hongqiang.shop.modules.entity.Brand;
 
 public abstract interface BrandService 
@@ -14,10 +14,13 @@ public abstract interface BrandService
 	
 	public Page<Brand> findPage(Pageable pageable);
 
-  //修改
-//  public List<Brand> findList(Integer count, List<Filter> filters, 
-//						List<Order> orders, String cacheRegion);
-
+  public List<Brand> findList(Integer count, List<Filter> filters, 
+						List<Order> orders, String cacheRegion);
+  
+  public List<Brand> findList(Long[] ids);
+  
+  public List<Brand> findAll();
+  
   public void save(Brand brand);
 
   public Brand update(Brand brand);

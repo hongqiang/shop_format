@@ -3,13 +3,13 @@ package com.hongqiang.shop.modules.product.dao;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.Page;
-import com.hongqiang.shop.modules.entity.Brand;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.modules.entity.Brand;
 
 public interface BrandDao extends BrandDaoCustom, CrudRepository<Brand, Long>{
 	public Brand findById(Long id);
@@ -24,8 +24,10 @@ public interface BrandDao extends BrandDaoCustom, CrudRepository<Brand, Long>{
  */
 interface BrandDaoCustom extends BaseDao<Brand> {
 
-
-
 	public Page<Brand>  findPage(Pageable pageable);
+	
+	public  List<Brand> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders);
+	
+	public List<Brand> findAll();
 
 }
