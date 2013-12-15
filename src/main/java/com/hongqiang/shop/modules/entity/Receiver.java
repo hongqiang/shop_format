@@ -25,7 +25,7 @@ public class Receiver extends BaseEntity
   private String zipCode;// 邮编
   private String phone;// 电话
   private Boolean isDefault;// 是否默认
-//  private Area area;//地区
+  private Area area;//地区
   private Member member;// 会员
 
   @JsonProperty
@@ -109,17 +109,17 @@ public class Receiver extends BaseEntity
     this.isDefault = isDefault;
   }
 
-//  @NotNull
-//  @ManyToOne(fetch=FetchType.LAZY)
-//  public Area getArea()
-//  {
-//    return this.area;
-//  }
-//
-//  public void setArea(Area area)
-//  {
-//    this.area = area;
-//  }
+  @NotNull
+  @ManyToOne(fetch=FetchType.LAZY)
+  public Area getArea()
+  {
+    return this.area;
+  }
+
+  public void setArea(Area area)
+  {
+    this.area = area;
+  }
 
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(nullable=false, updatable=false)
@@ -136,14 +136,14 @@ public class Receiver extends BaseEntity
   @PrePersist
   public void prePersist()
   {
-//    if (getArea() != null)
-//      setAreaName(getArea().getFullName());
+    if (getArea() != null)
+      setAreaName(getArea().getFullName());
   }
 
   @PreUpdate
   public void preUpdate()
   {
-//    if (getArea() != null)
-//      setAreaName(getArea().getFullName());
+    if (getArea() != null)
+      setAreaName(getArea().getFullName());
   }
 }

@@ -44,7 +44,7 @@ import com.hongqiang.shop.common.persistence.DataEntity;
 @Table(name = "sys_role")
 @DynamicInsert @DynamicUpdate
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Role extends DataEntity {
+public class JRole extends DataEntity {
 	
 	private static final long serialVersionUID = 1L;
 	private Long id;	 	// 编号
@@ -67,12 +67,12 @@ public class Role extends DataEntity {
 	public static final String DATA_SCOPE_SELF = "8";
 	public static final String DATA_SCOPE_CUSTOM = "9";
 	
-	public Role() {
+	public JRole() {
 		super();
 		this.dataScope = DATA_SCOPE_CUSTOM;
 	}
 
-	public Role(Long id, String name) {
+	public JRole(Long id, String name) {
 		this();
 		this.id = id;
 		this.name = name;

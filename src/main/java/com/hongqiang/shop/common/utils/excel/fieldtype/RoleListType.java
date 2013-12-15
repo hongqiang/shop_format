@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import com.google.common.collect.Lists;
 import com.hongqiang.shop.common.utils.Collections3;
 import com.hongqiang.shop.common.utils.SpringContextHolder;
-import com.hongqiang.shop.modules.sys.entity.Role;
+import com.hongqiang.shop.modules.sys.entity.JRole;
 import com.hongqiang.shop.modules.sys.service.SystemService;
 
 /**
@@ -28,10 +28,10 @@ public class RoleListType {
 	 * 获取对象值（导入）
 	 */
 	public static Object getValue(String val) {
-		List<Role> roleList = Lists.newArrayList();
-		List<Role> allRoleList = systemService.findAllRole();
+		List<JRole> roleList = Lists.newArrayList();
+		List<JRole> allRoleList = systemService.findAllRole();
 		for (String s : StringUtils.split(val, ",")){
-			for (Role e : allRoleList){
+			for (JRole e : allRoleList){
 				if (e.getName().equals(s)){
 					roleList.add(e);
 				}
@@ -46,7 +46,7 @@ public class RoleListType {
 	public static String setValue(Object val) {
 		if (val != null){
 			@SuppressWarnings("unchecked")
-			List<Role> roleList = (List<Role>)val;
+			List<JRole> roleList = (List<JRole>)val;
 			return Collections3.extractToString(roleList, "name", ", ");
 		}
 		return "";

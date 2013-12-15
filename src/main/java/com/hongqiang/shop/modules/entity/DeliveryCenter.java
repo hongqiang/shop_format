@@ -25,7 +25,7 @@ public class DeliveryCenter extends BaseEntity
   private String mobile;
   private String memo;
   private Boolean isDefault;
-//  private Area area;
+  private Area area;
 
   @NotEmpty
   @Length(max=200)
@@ -133,29 +133,29 @@ public class DeliveryCenter extends BaseEntity
     this.isDefault = isDefault;
   }
 
-//  @NotNull
-//  @ManyToOne(fetch=FetchType.LAZY)
-//  public Area getArea()
-//  {
-//    return this.area;
-//  }
-//
-//  public void setArea(Area area)
-//  {
-//    this.area = area;
-//  }
-//
-//  @PrePersist
-//  public void prePersist()
-//  {
-//    if (getArea() != null)
-//      setAreaName(getArea().getFullName());
-//  }
+  @NotNull
+  @ManyToOne(fetch=FetchType.LAZY)
+  public Area getArea()
+  {
+    return this.area;
+  }
+
+  public void setArea(Area area)
+  {
+    this.area = area;
+  }
+
+  @PrePersist
+  public void prePersist()
+  {
+    if (getArea() != null)
+      setAreaName(getArea().getFullName());
+  }
 
   @PreUpdate
   public void preUpdate()
   {
-//    if (getArea() != null)
-//      setAreaName(getArea().getFullName());
+    if (getArea() != null)
+      setAreaName(getArea().getFullName());
   }
 }

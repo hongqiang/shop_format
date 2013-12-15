@@ -82,7 +82,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		Principal principal = (Principal) getAvailablePrincipal(principals);
-		User user = getSystemService().getUserByLoginName(principal.getLoginName());
+		User user = getSystemService().getUserByLoginName(principal.getUsername());
 		if (user != null) {
 			UserUtils.putCache("user", user);
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
@@ -149,13 +149,13 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		private static final long serialVersionUID = 1L;
 		
 		private Long id;
-		private String loginName;
+		private String username;
 		private String name;
 		private Map<String, Object> cacheMap;
 
 		public Principal(User user) {
 			this.id = user.getId();
-			this.loginName = user.getLoginName();
+			this.username = user.getLoginName();
 			this.name = user.getName();
 		}
 
@@ -163,8 +163,8 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			return id;
 		}
 
-		public String getLoginName() {
-			return loginName;
+		public String getUsername() {
+			return username;
 		}
 
 		public String getName() {

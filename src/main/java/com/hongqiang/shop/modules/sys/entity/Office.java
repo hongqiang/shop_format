@@ -48,7 +48,7 @@ public class Office extends DataEntity {
 	private Long id;		// 编号
 	private Office parent;	// 父级编号
 	private String parentIds; // 所有父级编号
-	private Area area;		// 归属区域
+	private JArea area;		// 归属区域
 	private String code; 	// 机构编码
 	private String name; 	// 机构名称
 	private String type; 	// 机构类型（1：公司；2：部门；3：小组）
@@ -109,11 +109,11 @@ public class Office extends DataEntity {
 	@JoinColumn(name="area_id")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@NotNull
-	public Area getArea() {
+	public JArea getArea() {
 		return area;
 	}
 
-	public void setArea(Area area) {
+	public void setArea(JArea area) {
 		this.area = area;
 	}
 

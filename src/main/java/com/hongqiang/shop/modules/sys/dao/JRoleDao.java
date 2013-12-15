@@ -12,20 +12,20 @@ import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.modules.sys.entity.Role;
+import com.hongqiang.shop.modules.sys.entity.JRole;
 
 /**
  * 角色DAO接口
  * @author ThinkGem
  * @version 2013-05-15
  */
-public interface RoleDao extends RoleDaoCustom, CrudRepository<Role, Long> {
+public interface JRoleDao extends JRoleDaoCustom, CrudRepository<JRole, Long> {
 	
-	@Query("from Role where name = ?1 and delFlag = '" + Role.DEL_FLAG_NORMAL + "'")
-	public Role findByName(String name);
+	@Query("from Role where name = ?1 and delFlag = '" + JRole.DEL_FLAG_NORMAL + "'")
+	public JRole findByName(String name);
 
 	@Modifying
-	@Query("update Role set delFlag='" + Role.DEL_FLAG_DELETE + "' where id = ?1")
+	@Query("update Role set delFlag='" + JRole.DEL_FLAG_DELETE + "' where id = ?1")
 	public int deleteById(Long id);
 
 //	@Query("from Role where delFlag='" + Role.DEL_FLAG_NORMAL + "' order by name")
@@ -41,7 +41,7 @@ public interface RoleDao extends RoleDaoCustom, CrudRepository<Role, Long> {
  * DAO自定义接口
  * @author ThinkGem
  */
-interface RoleDaoCustom extends BaseDao<Role> {
+interface JRoleDaoCustom extends BaseDao<JRole> {
 	
 //	void deleteWithReference(Long id);
 
@@ -52,7 +52,7 @@ interface RoleDaoCustom extends BaseDao<Role> {
  * @author ThinkGem
  */
 @Repository
-class RoleDaoImpl extends BaseDaoImpl<Role> implements RoleDaoCustom {
+class JRoleDaoImpl extends BaseDaoImpl<JRole> implements JRoleDaoCustom {
 
 //	private static final String QUERY_USER_BY_GROUPID = "select u from User u left join u.roleList g where g.id=?";
 //

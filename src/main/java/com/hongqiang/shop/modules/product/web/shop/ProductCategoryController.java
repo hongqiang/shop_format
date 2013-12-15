@@ -23,9 +23,11 @@ public class ProductCategoryController extends BaseController {
 	public String index(ModelMap model) {
 		model.addAttribute("rootProductCategories",this.productCategoryService.findRoots());
 		List <ProductCategory> list = this.productCategoryService.findRoots();
-		for(ProductCategory p:list){
-			System.out.println(p.getName()+","+p.getPath());
-		}
-		return "modules/product/front/productCategory";
+//		List <ProductCategory> list = this.productCategoryService.findRoots();
+//		for(ProductCategory p:list){
+//			System.out.println(p.getName()+","+p.getPath());
+//		}
+		return "/shop/product_category/index";
+
 	}
 }

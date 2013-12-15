@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,10 +27,14 @@ import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 //import net.shophq.Setting;
 //import net.shophq.util.SettingUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.utils.Setting;
+import com.hongqiang.shop.common.utils.SettingUtils;
 //订单实体类
 @Entity
 @Table(name="hq_order")
@@ -61,7 +66,7 @@ public class Order extends BaseEntity
   private Boolean isAllocatedStock;//
   private String paymentMethodName;//付款方式名称
   private String shippingMethodName;//送货方式名称
-//  private Area area;//地区码
+  private Area area;//地区码
   private PaymentMethod paymentMethod;//付款方式
   private ShippingMethod shippingMethod;//送货方式
   private Admin operator;//操作员
@@ -375,17 +380,17 @@ public enum ShippingStatus
     this.shippingMethodName = shippingMethodName;
   }
 
-//  @NotNull
-//  @ManyToOne(fetch=FetchType.LAZY)
-//  public Area getArea()
-//  {
-//    return this.area;
-//  }
-//
-//  public void setArea(Area area)
-//  {
-//    this.area = area;
-//  }
+  @NotNull
+  @ManyToOne(fetch=FetchType.LAZY)
+  public Area getArea()
+  {
+    return this.area;
+  }
+
+  public void setArea(Area area)
+  {
+    this.area = area;
+  }
 
   @NotNull
   @ManyToOne(fetch=FetchType.LAZY)
@@ -694,38 +699,38 @@ public enum ShippingStatus
     return (getLockExpire() != null) && (new Date().before(getLockExpire())) && (getOperator() != operator);
   }
 
-//  @Transient
-//  public BigDecimal calculateTax()
-//  {
-//    Setting localSetting = SettingUtils.get();
-//    BigDecimal localBigDecimal;
-//    if (localSetting.getIsTaxPriceEnabled().booleanValue())
-//      localBigDecimal = getPrice().subtract(getDiscount()).multiply(new BigDecimal(localSetting.getTaxRate().toString()));
-//    else
-//      localBigDecimal = new BigDecimal(0);
-//    return localSetting.setScale(localBigDecimal);
-//  }
+  @Transient
+  public BigDecimal calculateTax()
+  {
+    Setting localSetting = SettingUtils.get();
+    BigDecimal localBigDecimal;
+    if (localSetting.getIsTaxPriceEnabled().booleanValue())
+      localBigDecimal = getPrice().subtract(getDiscount()).multiply(new BigDecimal(localSetting.getTaxRate().toString()));
+    else
+      localBigDecimal = new BigDecimal(0);
+    return localSetting.setScale(localBigDecimal);
+  }
 
   @PrePersist
   public void prePersist()
   {
-//    if (getArea() != null)
-//      setAreaName(getArea().getFullName());
-//    if (getPaymentMethod() != null)
-//      setPaymentMethodName(getPaymentMethod().getName());
-//    if (getShippingMethod() != null)
-//      setShippingMethodName(getShippingMethod().getName());
+    if (getArea() != null)
+      setAreaName(getArea().getFullName());
+    if (getPaymentMethod() != null)
+      setPaymentMethodName(getPaymentMethod().getName());
+    if (getShippingMethod() != null)
+      setShippingMethodName(getShippingMethod().getName());
   }
 
   @PreUpdate
   public void preUpdate()
   {
-//    if (getArea() != null)
-//      setAreaName(getArea().getFullName());
-//    if (getPaymentMethod() != null)
-//      setPaymentMethodName(getPaymentMethod().getName());
-//    if (getShippingMethod() != null)
-//      setShippingMethodName(getShippingMethod().getName());
+    if (getArea() != null)
+      setAreaName(getArea().getFullName());
+    if (getPaymentMethod() != null)
+      setPaymentMethodName(getPaymentMethod().getName());
+    if (getShippingMethod() != null)
+      setShippingMethodName(getShippingMethod().getName());
   }
 
   @PreRemove

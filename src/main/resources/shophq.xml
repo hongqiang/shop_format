@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<shophq>
+<shophq> 
 	<setting name="siteName" value="SHOP++商城"/>  
 	<setting name="siteUrl" value="http://localhost:8080/shop"/>  
 	<setting name="logo" value="/shop/upload/image/logo.gif"/>  

@@ -42,24 +42,24 @@ import com.hongqiang.shop.common.persistence.DataEntity;
 @Table(name = "sys_area")
 @DynamicInsert @DynamicUpdate
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Area extends DataEntity {
+public class JArea extends DataEntity {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;		// 编号
-	private Area parent;	// 父级编号
+	private JArea parent;	// 父级编号
 	private String parentIds; // 所有父级编号
 	private String code; 	// 区域编码
 	private String name; 	// 区域名称
 	private String type; 	// 区域类型（1：国家；2：省份、直辖市；3：地市；4：区县）
 	
 	private List<Office> officeList = Lists.newArrayList(); // 部门列表
-	private List<Area> childList = Lists.newArrayList();	// 拥有子区域列表
+	private List<JArea> childList = Lists.newArrayList();	// 拥有子区域列表
 
-	public Area(){
+	public JArea(){
 		super();
 	}
 	
-	public Area(Long id){
+	public JArea(Long id){
 		this();
 		this.id = id;
 	}
@@ -80,11 +80,11 @@ public class Area extends DataEntity {
 	@JoinColumn(name="parent_id")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@NotNull
-	public Area getParent() {
+	public JArea getParent() {
 		return parent;
 	}
 
-	public void setParent(Area parent) {
+	public void setParent(JArea parent) {
 		this.parent = parent;
 	}
 
@@ -142,24 +142,24 @@ public class Area extends DataEntity {
 	@OrderBy(value="code")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	public List<Area> getChildList() {
+	public List<JArea> getChildList() {
 		return childList;
 	}
 
-	public void setChildList(List<Area> childList) {
+	public void setChildList(List<JArea> childList) {
 		this.childList = childList;
 	}
 
 	@Transient
-	public static void sortList(List<Area> list, List<Area> sourcelist, Long parentId){
+	public static void sortList(List<JArea> list, List<JArea> sourcelist, Long parentId){
 		for (int i=0; i<sourcelist.size(); i++){
-			Area e = sourcelist.get(i);
+			JArea e = sourcelist.get(i);
 			if (e.getParent()!=null && e.getParent().getId()!=null
 					&& e.getParent().getId().equals(parentId)){
 				list.add(e);
 				// 判断是否还有子节点, 有则继续获取子节点
 				for (int j=0; j<sourcelist.size(); j++){
-					Area childe = sourcelist.get(j);
+					JArea childe = sourcelist.get(j);
 					if (childe.getParent()!=null && childe.getParent().getId()!=null
 							&& childe.getParent().getId().equals(e.getId())){
 						sortList(list, sourcelist, e.getId());

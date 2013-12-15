@@ -151,7 +151,8 @@ public class Product extends BaseEntity {
 	static {
 		try {
 			// file 要修改
-			File localFile = new ClassPathResource("classpath:/shophq.xml")
+//			File localFile = new ClassPathResource("classpath*:/shophq.xml")
+			File localFile = new ClassPathResource("shophq.xml")
 					.getFile();
 			Document localDocument = new SAXReader().read(localFile);
 			Element localElement = (Element) localDocument
@@ -870,19 +871,19 @@ public class Product extends BaseEntity {
 		this.productNotifies = productNotifies;
 	}
 
-	//
-	// @ElementCollection(fetch=FetchType.LAZY)
-	// @CollectionTable(name="hq_product_member_price")
-	// public Map<MemberRank, BigDecimal> getMemberPrice()
-	// {
-	// return this.memberPrice;
-	// }
-	//
-	// public void setMemberPrice(Map<MemberRank, BigDecimal> memberPrice)
-	// {
-	// this.memberPrice = memberPrice;
-	// }
-	//
+	
+	 @ElementCollection(fetch=FetchType.LAZY)
+	 @CollectionTable(name="hq_product_member_price")
+	 public Map<MemberRank, BigDecimal> getMemberPrice()
+	 {
+	 return this.memberPrice;
+	 }
+	
+	 public void setMemberPrice(Map<MemberRank, BigDecimal> memberPrice)
+	 {
+	 this.memberPrice = memberPrice;
+	 }
+	
 	@ElementCollection(fetch = FetchType.LAZY)
 	@CollectionTable(name = "hq_product_parameter_value")
 	public Map<Parameter, String> getParameterValue() {
@@ -947,23 +948,23 @@ public class Product extends BaseEntity {
 		return localArrayList;
 	}
 
-	// @JsonProperty
-	// @Transient
-	// public String getPath()
-	// {
-	// HashMap localHashMap = new HashMap();
-	// localHashMap.put("id", getId());
-	// localHashMap.put("createDate", getCreateDate());
-	// localHashMap.put("modifyDate", getUpdateDate());
-	// localHashMap.put("sn", getSn());
-	// localHashMap.put("name", getName());
-	// localHashMap.put("fullName", getFullName());
-	// localHashMap.put("seoTitle", getSeoTitle());
-	// localHashMap.put("seoKeywords", getSeoKeywords());
-	// localHashMap.put("seoDescription", getSeoDescription());
-	// localHashMap.put("productCategory", getProductCategory());
-	// return FreemarkerUtils.process(staticPath, localHashMap);
-	// }
+//	 @JsonProperty
+//	 @Transient
+//	 public String getPath()
+//	 {
+//	 HashMap localHashMap = new HashMap();
+//	 localHashMap.put("id", getId());
+//	 localHashMap.put("createDate", getCreateDate());
+//	 localHashMap.put("modifyDate", getUpdateDate());
+//	 localHashMap.put("sn", getSn());
+//	 localHashMap.put("name", getName());
+//	 localHashMap.put("fullName", getFullName());
+//	 localHashMap.put("seoTitle", getSeoTitle());
+//	 localHashMap.put("seoKeywords", getSeoKeywords());
+//	 localHashMap.put("seoDescription", getSeoDescription());
+//	 localHashMap.put("productCategory", getProductCategory());
+//	 return FreemarkerUtils.process(staticPath, localHashMap);
+//	 }
 
 	@JsonProperty
 	@Transient

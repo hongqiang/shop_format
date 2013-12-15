@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -23,13 +24,17 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
 //import net.shophq.interceptor.MemberInterceptor;
 //import net.shophq.util.JsonUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.interceptor.MemberInterceptor;
+import com.hongqiang.shop.common.utils.JsonUtils;
+import com.hongqiang.shop.common.utils.StringUtils;
 
 //会员实体类
 @Entity
@@ -37,7 +42,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class Member extends BaseEntity
 {
   private static final long serialVersionUID = 1533130686714725835L;
-//  public static final String PRINCIPAL_ATTRIBUTE_NAME = MemberInterceptor.class.getName() + ".PRINCIPAL";
+  public static final String PRINCIPAL_ATTRIBUTE_NAME = MemberInterceptor.class.getName() + ".PRINCIPAL";
   public static final String USERNAME_COOKIE_NAME = "username";
   public static final int ATTRIBUTE_VALUE_PROPERTY_COUNT = 10;
   public static final String ATTRIBUTE_VALUE_PROPERTY_NAME_PREFIX = "attributeValue";
@@ -74,7 +79,7 @@ public class Member extends BaseEntity
   private String attributeValue8;
   private String attributeValue9;
   private SafeKey safeKey;//密码找回Key
-//  private Area area;//区域
+  private Area area;//区域
   private MemberRank memberRank;//会员等级
   private Cart cart;//购物车
   private Set<Order> orders = new HashSet<Order>();//订单
@@ -443,16 +448,16 @@ public class Member extends BaseEntity
     this.safeKey = safeKey;
   }
 
-//  @ManyToOne(fetch=FetchType.LAZY)
-//  public Area getArea()
-//  {
-//    return this.area;
-//  }
-//
-//  public void setArea(Area area)
-//  {
-//    this.area = area;
-//  }
+  @ManyToOne(fetch=FetchType.LAZY)
+  public Area getArea()
+  {
+    return this.area;
+  }
+
+  public void setArea(Area area)
+  {
+    this.area = area;
+  }
 
   @NotNull
   @ManyToOne(fetch=FetchType.LAZY)
@@ -604,138 +609,137 @@ public class Member extends BaseEntity
     this.outMessages = outMessages;
   }
 
-//  @Transient
-//  public Object getAttributeValue(MemberAttribute memberAttribute)
-//  {
-//    if (memberAttribute != null)
-//    {
-//      if (memberAttribute.getType() == MemberAttribute.Type.name)
-//        return getName();
-//      if (memberAttribute.getType() == MemberAttribute.Type.gender)
-//        return getGender();
-//      if (memberAttribute.getType() == MemberAttribute.Type.birth)
-//        return getBirth();
-//      if (memberAttribute.getType() == MemberAttribute.Type.area)
-//        return getArea();
-//      if (memberAttribute.getType() == MemberAttribute.Type.address)
-//        return getAddress();
-//      if (memberAttribute.getType() == MemberAttribute.Type.zipCode)
-//        return getZipCode();
-//      if (memberAttribute.getType() == MemberAttribute.Type.phone)
-//        return getPhone();
-//      if (memberAttribute.getType() == MemberAttribute.Type.mobile)
-//        return getMobile();
-//      if (memberAttribute.getType() == MemberAttribute.Type.checkbox)
-//      {
-//        if (memberAttribute.getPropertyIndex() != null)
-//          try
-//          {
-//            String str1 = "attributeValue" + memberAttribute.getPropertyIndex();
-//            String str3 = (String)PropertyUtils.getProperty(this, str1);
-//            if (str3 == null)
-//              break label262;
-////            return JsonUtils.toObject(str3, List.class);
-//            return null;
-//          }
-//          catch (IllegalAccessException localIllegalAccessException2)
-//          {
-//            localIllegalAccessException2.printStackTrace();
-//          }
-//          catch (InvocationTargetException localInvocationTargetException2)
-//          {
-//            localInvocationTargetException2.printStackTrace();
-//          }
-//          catch (NoSuchMethodException localNoSuchMethodException2)
-//          {
-//            localNoSuchMethodException2.printStackTrace();
-//          }
-//      }
-//      else if (memberAttribute.getPropertyIndex() != null)
-//        try
-//        {
-//          String str2 = "attributeValue" + memberAttribute.getPropertyIndex();
-//          return (String)PropertyUtils.getProperty(this, str2);
-//        }
-//        catch (IllegalAccessException localIllegalAccessException3)
-//        {
-//          localIllegalAccessException3.printStackTrace();
-//        }
-//        catch (InvocationTargetException localInvocationTargetException3)
-//        {
-//          localInvocationTargetException3.printStackTrace();
-//        }
-//        catch (NoSuchMethodException localNoSuchMethodException3)
-//        {
-//          localNoSuchMethodException3.printStackTrace();
-//        }
-//    }
-//    label262: return null;
-//  }
-//
-//  @Transient
-//  public void setAttributeValue(MemberAttribute memberAttribute, Object attributeValue)
-//  {
-//    if (memberAttribute != null)
-//    {
-//      if (((attributeValue instanceof String)) && (StringUtils.isEmpty((String)attributeValue)))
-//        attributeValue = null;
-//      if ((memberAttribute.getType() == MemberAttribute.Type.name) && (((attributeValue instanceof String)) || (attributeValue == null)))
-//        setName((String)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.gender) && (((attributeValue instanceof Member.Gender)) || (attributeValue == null)))
-//        setGender((Member.Gender)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.birth) && (((attributeValue instanceof Date)) || (attributeValue == null)))
-//        setBirth((Date)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.area) && (((attributeValue instanceof Area)) || (attributeValue == null)))
-//        setArea((Area)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.address) && (((attributeValue instanceof String)) || (attributeValue == null)))
-//        setAddress((String)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.zipCode) && (((attributeValue instanceof String)) || (attributeValue == null)))
-//        setZipCode((String)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.phone) && (((attributeValue instanceof String)) || (attributeValue == null)))
-//        setPhone((String)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.mobile) && (((attributeValue instanceof String)) || (attributeValue == null)))
-//        setMobile((String)attributeValue);
-//      else if ((memberAttribute.getType() == MemberAttribute.Type.checkbox) && (((attributeValue instanceof List)) || (attributeValue == null)))
-//      {
-//        if ((memberAttribute.getPropertyIndex() != null) && ((attributeValue == null) || ((memberAttribute.getOptions() != null) && (memberAttribute.getOptions().containsAll((List)attributeValue)))))
-//          try
-//          {
-//            String str1 = "attributeValue" + memberAttribute.getPropertyIndex();
-////            PropertyUtils.setProperty(this, str1, JsonUtils.toJson(attributeValue));
-//          }
-//          catch (IllegalAccessException localIllegalAccessException2)
-//          {
-//            localIllegalAccessException2.printStackTrace();
-//          }
-//          catch (InvocationTargetException localInvocationTargetException2)
-//          {
-//            localInvocationTargetException2.printStackTrace();
-//          }
-//          catch (NoSuchMethodException localNoSuchMethodException2)
-//          {
-//            localNoSuchMethodException2.printStackTrace();
-//          }
-//      }
-//      else if (memberAttribute.getPropertyIndex() != null)
-//        try
-//        {
-//          String str2 = "attributeValue" + memberAttribute.getPropertyIndex();
-//          PropertyUtils.setProperty(this, str2, attributeValue);
-//        }
-//        catch (IllegalAccessException localIllegalAccessException3)
-//        {
-//          localIllegalAccessException3.printStackTrace();
-//        }
-//        catch (InvocationTargetException localInvocationTargetException3)
-//        {
-//          localInvocationTargetException3.printStackTrace();
-//        }
-//        catch (NoSuchMethodException localNoSuchMethodException3)
-//        {
-//          localNoSuchMethodException3.printStackTrace();
-//        }
-//    }
-//  }
+  @Transient
+  public Object getAttributeValue(MemberAttribute memberAttribute)
+  {
+    if (memberAttribute != null)
+    {
+      if (memberAttribute.getType() == MemberAttribute.Type.name)
+        return getName();
+      if (memberAttribute.getType() == MemberAttribute.Type.gender)
+        return getGender();
+      if (memberAttribute.getType() == MemberAttribute.Type.birth)
+        return getBirth();
+      if (memberAttribute.getType() == MemberAttribute.Type.area)
+        return getArea();
+      if (memberAttribute.getType() == MemberAttribute.Type.address)
+        return getAddress();
+      if (memberAttribute.getType() == MemberAttribute.Type.zipCode)
+        return getZipCode();
+      if (memberAttribute.getType() == MemberAttribute.Type.phone)
+        return getPhone();
+      if (memberAttribute.getType() == MemberAttribute.Type.mobile)
+        return getMobile();
+      if (memberAttribute.getType() == MemberAttribute.Type.checkbox)
+      {
+        if (memberAttribute.getPropertyIndex() != null)
+          try
+          {
+            String str1 = "attributeValue" + memberAttribute.getPropertyIndex();
+            String str3 = (String)PropertyUtils.getProperty(this, str1);
+            if (str3 == null)
+            	return null;
+            return JsonUtils.toObject(str3, List.class);
+          }
+          catch (IllegalAccessException localIllegalAccessException2)
+          {
+            localIllegalAccessException2.printStackTrace();
+          }
+          catch (InvocationTargetException localInvocationTargetException2)
+          {
+            localInvocationTargetException2.printStackTrace();
+          }
+          catch (NoSuchMethodException localNoSuchMethodException2)
+          {
+            localNoSuchMethodException2.printStackTrace();
+          }
+      }
+      else if (memberAttribute.getPropertyIndex() != null)
+        try
+        {
+          String str2 = "attributeValue" + memberAttribute.getPropertyIndex();
+          return (String)PropertyUtils.getProperty(this, str2);
+        }
+        catch (IllegalAccessException localIllegalAccessException3)
+        {
+          localIllegalAccessException3.printStackTrace();
+        }
+        catch (InvocationTargetException localInvocationTargetException3)
+        {
+          localInvocationTargetException3.printStackTrace();
+        }
+        catch (NoSuchMethodException localNoSuchMethodException3)
+        {
+          localNoSuchMethodException3.printStackTrace();
+        }
+    }
+    return null;
+  }
+
+  @Transient
+  public void setAttributeValue(MemberAttribute memberAttribute, Object attributeValue)
+  {
+    if (memberAttribute != null)
+    {
+      if (((attributeValue instanceof String)) && (StringUtils.isEmpty((String)attributeValue)))
+        attributeValue = null;
+      if ((memberAttribute.getType() == MemberAttribute.Type.name) && (((attributeValue instanceof String)) || (attributeValue == null)))
+        setName((String)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.gender) && (((attributeValue instanceof Member.Gender)) || (attributeValue == null)))
+        setGender((Member.Gender)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.birth) && (((attributeValue instanceof Date)) || (attributeValue == null)))
+        setBirth((Date)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.area) && (((attributeValue instanceof Area)) || (attributeValue == null)))
+        setArea((Area)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.address) && (((attributeValue instanceof String)) || (attributeValue == null)))
+        setAddress((String)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.zipCode) && (((attributeValue instanceof String)) || (attributeValue == null)))
+        setZipCode((String)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.phone) && (((attributeValue instanceof String)) || (attributeValue == null)))
+        setPhone((String)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.mobile) && (((attributeValue instanceof String)) || (attributeValue == null)))
+        setMobile((String)attributeValue);
+      else if ((memberAttribute.getType() == MemberAttribute.Type.checkbox) && (((attributeValue instanceof List)) || (attributeValue == null)))
+      {
+        if ((memberAttribute.getPropertyIndex() != null) && ((attributeValue == null) || ((memberAttribute.getOptions() != null) && (memberAttribute.getOptions().containsAll((List)attributeValue)))))
+          try
+          {
+            String str1 = "attributeValue" + memberAttribute.getPropertyIndex();
+            PropertyUtils.setProperty(this, str1, JsonUtils.toJson(attributeValue));
+          }
+          catch (IllegalAccessException localIllegalAccessException2)
+          {
+            localIllegalAccessException2.printStackTrace();
+          }
+          catch (InvocationTargetException localInvocationTargetException2)
+          {
+            localInvocationTargetException2.printStackTrace();
+          }
+          catch (NoSuchMethodException localNoSuchMethodException2)
+          {
+            localNoSuchMethodException2.printStackTrace();
+          }
+      }
+      else if (memberAttribute.getPropertyIndex() != null)
+        try
+        {
+          String str2 = "attributeValue" + memberAttribute.getPropertyIndex();
+          PropertyUtils.setProperty(this, str2, attributeValue);
+        }
+        catch (IllegalAccessException localIllegalAccessException3)
+        {
+          localIllegalAccessException3.printStackTrace();
+        }
+        catch (InvocationTargetException localInvocationTargetException3)
+        {
+          localInvocationTargetException3.printStackTrace();
+        }
+        catch (NoSuchMethodException localNoSuchMethodException3)
+        {
+          localNoSuchMethodException3.printStackTrace();
+        }
+    }
+  }
 
   @Transient
   public void removeAttributeValue()
@@ -743,7 +747,7 @@ public class Member extends BaseEntity
     setName(null);
     setGender(null);
     setBirth(null);
-//    setArea(null);
+    setArea(null);
     setAddress(null);
     setZipCode(null);
     setPhone(null);

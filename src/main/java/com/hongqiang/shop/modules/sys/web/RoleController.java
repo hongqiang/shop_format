@@ -26,7 +26,7 @@ import com.google.common.collect.Maps;
 import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.sys.entity.Office;
-import com.hongqiang.shop.modules.sys.entity.Role;
+import com.hongqiang.shop.modules.sys.entity.JRole;
 import com.hongqiang.shop.modules.sys.entity.User;
 import com.hongqiang.shop.modules.sys.service.OfficeService;
 import com.hongqiang.shop.modules.sys.service.SystemService;
@@ -51,25 +51,25 @@ public class RoleController extends BaseController {
 	private OfficeService officeService;
 	
 	@ModelAttribute("role")
-	public Role get(@RequestParam(required=false) Long id) {
+	public JRole get(@RequestParam(required=false) Long id) {
 		if (id != null){
 			return systemService.getRole(id);
 		}else{
-			return new Role();
+			return new JRole();
 		}
 	}
 	
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Role role, Model model) {
-		List<Role> list = systemService.findAllRole();
+	public String list(JRole role, Model model) {
+		List<JRole> list = systemService.findAllRole();
 		model.addAttribute("list", list);
 		return "modules/sys/roleList";
 	}
 
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = "form")
-	public String form(Role role, Model model) {
+	public String form(JRole role, Model model) {
 		if (role.getOffice()==null){
 			role.setOffice(UserUtils.getUser().getOffice());
 		}
@@ -82,7 +82,7 @@ public class RoleController extends BaseController {
 	
 	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value = "save")
-	public String save(Role role, Model model, String oldName, RedirectAttributes redirectAttributes) {
+	public String save(JRole role, Model model, String oldName, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, role)){
 			return form(role, model);
 		}
@@ -98,7 +98,7 @@ public class RoleController extends BaseController {
 	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value = "delete")
 	public String delete(@RequestParam Long id, RedirectAttributes redirectAttributes) {
-		if (Role.isAdmin(id)){
+		if (JRole.isAdmin(id)){
 			addMessage(redirectAttributes, "删除角色失败, 不允许内置角色或编号空");
 //		}else if (UserUtils.getUser().getRoleIdList().contains(id)){
 //			addMessage(redirectAttributes, "删除角色失败, 不能删除当前用户所在角色");
@@ -111,7 +111,7 @@ public class RoleController extends BaseController {
 	
 	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value = "assign")
-	public String assign(Role role, Model model) {
+	public String assign(JRole role, Model model) {
 		List<User> users = role.getUserList();
 		model.addAttribute("users", users);
 		return "modules/sys/roleAssign";
@@ -119,7 +119,7 @@ public class RoleController extends BaseController {
 	
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = "usertorole")
-	public String selectUserToRole(Role role, Model model) {
+	public String selectUserToRole(JRole role, Model model) {
 		model.addAttribute("role", role);
 		model.addAttribute("selectIds", role.getUserIds());
 		model.addAttribute("officeList", officeService.findAll());
@@ -147,7 +147,7 @@ public class RoleController extends BaseController {
 	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value = "outrole")
 	public String outrole(Long userId, Long roleId, RedirectAttributes redirectAttributes) {
-		Role role = systemService.getRole(roleId);
+		JRole role = systemService.getRole(roleId);
 		User user = systemService.getUser(userId);
 		if (user.equals(UserUtils.getUser())) {
 			addMessage(redirectAttributes, "无法从角色【" + role.getName() + "】中移除用户【" + user.getName() + "】自己！");
@@ -164,7 +164,7 @@ public class RoleController extends BaseController {
 	
 	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value = "assignrole")
-	public String assignRole(Role role, Long[] idsArr, RedirectAttributes redirectAttributes) {
+	public String assignRole(JRole role, Long[] idsArr, RedirectAttributes redirectAttributes) {
 		StringBuilder msg = new StringBuilder();
 		int newNum = 0;
 		for (int i = 0; i < idsArr.length; i++) {

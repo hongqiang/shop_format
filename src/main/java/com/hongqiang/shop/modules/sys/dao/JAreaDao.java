@@ -14,26 +14,26 @@ import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.modules.sys.entity.Area;
+import com.hongqiang.shop.modules.sys.entity.JArea;
 
 /**
  * 区域DAO接口
  * @author ThinkGem
  * @version 2013-01-15
  */
-public interface AreaDao extends AreaDaoCustom, CrudRepository<Area, Long> {
+public interface JAreaDao extends JAreaDaoCustom, CrudRepository<JArea, Long> {
 
 	@Modifying
-	@Query("update Area set delFlag='" + Area.DEL_FLAG_DELETE + "' where id = ?1 or parentIds like ?2")
+	@Query("update JArea set delFlag='" + JArea.DEL_FLAG_DELETE + "' where id = ?1 or parentIds like ?2")
 	public int deleteById(Long id, String likeParentIds);
 	
-	public List<Area> findByParentIdsLike(String parentIds);
+	public List<JArea> findByParentIdsLike(String parentIds);
 
-	@Query("from Area where delFlag='" + Area.DEL_FLAG_NORMAL + "' order by code")
-	public List<Area> findAllList();
+	@Query("from JArea where delFlag='" + JArea.DEL_FLAG_NORMAL + "' order by code")
+	public List<JArea> findAllList();
 	
-	@Query("from Area where (id=?1 or parent.id=?1 or parentIds like ?2) and delFlag='" + Area.DEL_FLAG_NORMAL + "' order by code")
-	public List<Area> findAllChild(Long parentId, String likeParentIds);
+	@Query("from JArea where (id=?1 or parent.id=?1 or parentIds like ?2) and delFlag='" + JArea.DEL_FLAG_NORMAL + "' order by code")
+	public List<JArea> findAllChild(Long parentId, String likeParentIds);
 	
 }
 
@@ -41,7 +41,7 @@ public interface AreaDao extends AreaDaoCustom, CrudRepository<Area, Long> {
  * DAO自定义接口
  * @author ThinkGem
  */
-interface AreaDaoCustom extends BaseDao<Area> {
+interface JAreaDaoCustom extends BaseDao<JArea> {
 
 }
 
@@ -50,6 +50,6 @@ interface AreaDaoCustom extends BaseDao<Area> {
  * @author ThinkGem
  */
 @Repository
-class AreaDaoImpl extends BaseDaoImpl<Area> implements AreaDaoCustom {
+class JAreaDaoImpl extends BaseDaoImpl<JArea> implements JAreaDaoCustom {
 
 }
