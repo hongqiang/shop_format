@@ -31,7 +31,7 @@ public class ProductCategoryServiceImpl extends BaseService implements
 	}
 
 	@Transactional(readOnly = true)
-	@Cacheable({"productCategory"})
+	 @Cacheable({"productCategory"})
 	public List<ProductCategory> findRoots(Integer count, String cacheRegion) {
 		return this.productCategoryDao.findRoots(count);
 	}

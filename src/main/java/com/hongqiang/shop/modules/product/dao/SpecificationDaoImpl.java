@@ -1,5 +1,8 @@
 package com.hongqiang.shop.modules.product.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
@@ -13,7 +16,8 @@ public class SpecificationDaoImpl extends BaseDaoImpl<Specification>
   	@Override
 	public Page<Specification>  findPage(Pageable pageable){
 		Page<Specification> brandPage = new Page<Specification>(pageable.getPageNumber(),pageable.getPageSize());
-		String qlString = "select specification from Specification specification";
-		return super.find(brandPage, qlString);
+		String qlString = "select specification from Specification specification where 1=1 ";
+		List<Object> parameter = new ArrayList<Object>();
+		return super.findPage(brandPage,  qlString,  parameter, pageable) ;
 	}
 }
