@@ -29,6 +29,7 @@
 		    		</c:choose>
 		    		<li class="${requestScope.category.id eq category.id||fn:indexOf(requestScope.category.parentIds,category.id) ge 1?'active':''}"><a href="${url}" target="${category.target}"><span>${category.name}</span></a></li>
 		    	</c:if></c:forEach>
+		    	<li class="${empty category.id?'active':''}"><a href="${ctx}/product_category"><span>商品分类</span></a></li>
 		    	<li id="themeSwitch" class="dropdown">
 			       	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="主题切换"><i class="icon-th-large"></i></a>
 				    <ul class="dropdown-menu">

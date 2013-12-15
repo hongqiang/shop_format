@@ -26,6 +26,6 @@ public class ProductCategoryController extends BaseController {
 		for(ProductCategory p:list){
 			System.out.println(p.getName()+","+p.getPath());
 		}
-		return "modules/sys/sysLogin";
+		return "modules/product/front/productCategory";
 	}
 }

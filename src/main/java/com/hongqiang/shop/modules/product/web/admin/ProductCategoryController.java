@@ -110,7 +110,7 @@ public class ProductCategoryController extends BaseController
   public String list(ModelMap model)
   {
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
-    return "/admin/product_category/list";
+    return "modules/product/list";
   }
 
 //  @RequestMapping(value={"/delete"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})

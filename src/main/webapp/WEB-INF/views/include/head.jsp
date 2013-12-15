@@ -14,3 +14,5 @@
 <script src="${ctxStatic}/common/mustache.min.js" type="text/javascript"></script>
 <link href="${ctxStatic}/common/jeesite.min.css" type="text/css" rel="stylesheet" />
 <script src="${ctxStatic}/common/jeesite.min.js" type="text/javascript"></script>
+<link href="${ctxStatic}/common/common.css" type="text/css" rel="stylesheet" />
+<link href="${ctxStatic}/common/product_category.css" type="text/css" rel="stylesheet" />
