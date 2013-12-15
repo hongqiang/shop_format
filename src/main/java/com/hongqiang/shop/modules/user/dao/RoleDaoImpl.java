@@ -23,6 +23,6 @@ public class RoleDaoImpl extends BaseDaoImpl<Role>
 	@Override
 	public List<Role> findList(){
 		String qlString = "select role from Role role";
-		return this.findList(qlString,null,null,null);
+		return this.findList(qlString,null,null,null,null,null);
 	}
 }

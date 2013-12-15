@@ -8,6 +8,7 @@ package com.hongqiang.shop.common.persistence;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.ejb.criteria.predicate.ComparisonPredicate.ComparisonOperator;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
@@ -59,8 +61,10 @@ import org.springframework.beans.BeanUtils;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.utils.Reflections;
 import com.hongqiang.shop.common.utils.StringUtils;
+import com.hongqiang.shop.modules.entity.OrderEntity;
 
 /**
  * DAO支持类实现
@@ -230,129 +234,165 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		if ((entity != null) && (lockModeType != null))
 			this.entityManager.lock(entity, lockModeType);
 	}
-
-	private Root<T> getRoot(CriteriaQuery<T> paramCriteriaQuery) {
-		if (paramCriteriaQuery != null)
-			return getRoot(paramCriteriaQuery,
-					paramCriteriaQuery.getResultType());
-		return null;
+	
+	protected void addFilter(StringBuilder qlString, List<Filter> filters,List<Object> params ) {
+		if (filters!=null && filters.size() >0) {
+			Iterator<Filter> localIterator = filters.iterator();
+		 while (localIterator.hasNext()){
+	    	  Filter localFilter = (Filter)localIterator.next();
+	          if ((localFilter == null) || (StringUtils.isEmpty(localFilter.getProperty())))
+	            continue;
+	          if ((localFilter.getOperator() == Filter.Operator.eq) && (localFilter.getValue() != null)){
+	        	  if ((localFilter.getIgnoreCase() != null) && (localFilter.getIgnoreCase().booleanValue()) 
+	        			  && ((localFilter.getValue() instanceof String))){
+	        		  qlString.append(" and "+localFilter.getProperty()+" = ? ");
+	        		  params.add(((String)localFilter.getValue()).toLowerCase());
+	        	  }
+	                else{
+	                	qlString.append(" and "+localFilter.getProperty()+" = ? ");
+		        		  params.add(localFilter.getValue());
+	                }
+	          }
+	          else if ((localFilter.getOperator() == Filter.Operator.ne) && (localFilter.getValue() != null)){
+	            if ((localFilter.getIgnoreCase() != null) 
+	            		&& (localFilter.getIgnoreCase().booleanValue())
+	            		&& ((localFilter.getValue() instanceof String))){
+	            	qlString.append(" and "+localFilter.getProperty()+" <> ? ");
+	        		  params.add(((String)localFilter.getValue()).toLowerCase());
+	            }
+	            else{
+	            	  qlString.append(" and "+localFilter.getProperty()+" <> ? ");
+	        		  params.add(localFilter.getValue());
+	            }
+	          }
+	          else if ((localFilter.getOperator() == Filter.Operator.gt) && (localFilter.getValue() != null)){
+	        	  qlString.append(" and "+localFilter.getProperty()+" > ? ");
+       		  params.add((Number)localFilter.getValue());
+	          }
+	          else if ((localFilter.getOperator() == Filter.Operator.lt) && (localFilter.getValue() != null)) {
+	        	  qlString.append(" and "+localFilter.getProperty()+" < ? ");
+       		  params.add((Number)localFilter.getValue());
+	          }
+	          else if ((localFilter.getOperator() == Filter.Operator.ge) && (localFilter.getValue() != null)){
+	        	  qlString.append(" and "+localFilter.getProperty()+" >= ? ");
+       		  params.add((Number)localFilter.getValue());
+	          }
+	          else if ((localFilter.getOperator() == Filter.Operator.le) && (localFilter.getValue() != null)){
+	        	  qlString.append(" and "+localFilter.getProperty()+" <= ? ");
+       		  params.add((Number)localFilter.getValue());
+	          }
+	          else if ((localFilter.getOperator() == Filter.Operator.like) && (localFilter.getValue() != null)
+	        		  && ((localFilter.getValue() instanceof String))){
+	        	  qlString.append(" and "+localFilter.getProperty()+" like ? ");
+       		  params.add((String)localFilter.getValue());
+	          }
+	          else if ((localFilter.getOperator() == Filter.Operator.in) && (localFilter.getValue() != null)) {
+	        	  qlString.append(" and "+localFilter.getProperty()+" in (?) ");
+       		  params.add(new Object[] { localFilter.getValue() });
+	          }
+	          else if (localFilter.getOperator() == Filter.Operator.isNull) {
+	        	  qlString.append(" and "+localFilter.getProperty()+" is null ");
+	          }
+	          else {
+	            if (localFilter.getOperator() != Filter.Operator.isNotNull)
+	              continue;
+	            qlString.append(" and "+localFilter.getProperty()+" is not null ");
+	          }
+	      }
+		}
 	}
 
-	private Root<T> getRoot(CriteriaQuery<?> paramCriteriaQuery,
-			Class<T> paramClass) {
-		if ((paramCriteriaQuery != null)
-				&& (paramCriteriaQuery.getRoots() != null)
-				&& (paramClass != null)) {
-			Iterator localIterator = paramCriteriaQuery.getRoots().iterator();
+	protected void addFilter(StringBuilder qlString, 
+			Pageable pageable, List<Object> params) {
+		if ((StringUtils.isNotEmpty(pageable.getSearchProperty())) 
+				&& (StringUtils.isNotEmpty(pageable.getSearchValue()))){
+			qlString.append(" and "+pageable.getSearchProperty()+" like ?");
+			params.add("%" + pageable.getSearchValue() + "%");
+		}
+		if (pageable.getFilters() != null)
+	    {
+	     addFilter(qlString, pageable.getFilters(), params);
+	    }
+	}
+		      
+	protected void addOrders(StringBuilder qlString,
+			List<com.hongqiang.shop.common.utils.Order> orderList,
+			List<Object> params) {
+		if (orderList!=null && orderList.size() > 0) {
+			qlString.append("order by ");
+			Iterator<com.hongqiang.shop.common.utils.Order> localIterator = orderList
+					.iterator();
 			while (localIterator.hasNext()) {
-				Root<T> localRoot = (Root<T>) localIterator.next();
-				if (paramClass.equals(localRoot.getJavaType()))
-					return (Root<T>) localRoot.as(paramClass);
+				com.hongqiang.shop.common.utils.Order localOrder = (com.hongqiang.shop.common.utils.Order) localIterator
+						.next();
+				if (localOrder.getDirection() == com.hongqiang.shop.common.utils.Order.Direction.asc) {
+					qlString.append(" ? ASC,");
+					params.add(localOrder.getProperty());
+				} else {
+					if (localOrder.getDirection() != com.hongqiang.shop.common.utils.Order.Direction.desc)
+						continue;
+					qlString.append(" ? DESC,");
+					params.add(localOrder.getProperty());
+				}
+			}
+			if (qlString.charAt(qlString.length() - 1) == ',') {
+				qlString.deleteCharAt(qlString.length() - 1);
 			}
 		}
-		return null;
+	}
+	
+	protected void addOrders(StringBuilder qlString, 
+			Pageable pageable, List<Object> params) {
+		int tag = 0;
+		if ((StringUtils.isNotEmpty(pageable.getOrderProperty()))
+				&& (pageable.getOrderDirection() != null)) {
+			tag = 1;
+			qlString.append("order by ");
+			if (pageable.getOrderDirection() ==
+					com.hongqiang.shop.common.utils.Order.Direction.asc) {
+				qlString.append(" ? ASC");
+				params.add(pageable.getOrderProperty());
+			} else if (pageable.getOrderDirection() == 
+					com.hongqiang.shop.common.utils.Order.Direction.asc)
+				qlString.append(" ? DESC");
+			params.add(pageable.getOrderProperty());
+		}
+		if (pageable.getOrders() != null && pageable.getOrders().size() > 0) {
+			if (tag == 0) {
+				qlString.append("order by ");
+			} else {
+				qlString.append(" , ");
+			}
+			Iterator<com.hongqiang.shop.common.utils.Order> localIterator = pageable
+					.getOrders().iterator();
+			while (localIterator.hasNext()) {
+				com.hongqiang.shop.common.utils.Order localOrder =
+						(com.hongqiang.shop.common.utils.Order) localIterator.next();
+				if (localOrder.getDirection() == 
+						com.hongqiang.shop.common.utils.Order.Direction.asc) {
+					qlString.append(" ? ASC,");
+					params.add(localOrder.getProperty());
+				} else {
+					if (localOrder.getDirection() != 
+							com.hongqiang.shop.common.utils.Order.Direction.desc)
+						continue;
+					qlString.append(" ? DESC,");
+					params.add(localOrder.getProperty());
+				}
+			}
+			if (qlString.charAt(qlString.length() - 1) == ',') {
+				qlString.deleteCharAt(qlString.length() - 1);
+			}
+		}
 	}
 
-//	private void entityClass(CriteriaQuery<T> paramCriteriaQuery,
-//			List<Filter> paramList) {
-//		if ((paramCriteriaQuery == null) || (paramList == null)
-//				|| (paramList.isEmpty()))
-//			return;
-//		Root<T> localRoot = getRoot(paramCriteriaQuery);
-//		if (localRoot == null)
-//			return;
-//		CriteriaBuilder localCriteriaBuilder = this.entityManager
-//				.getCriteriaBuilder();
-//		Predicate localPredicate = paramCriteriaQuery.getRestriction() != null ? paramCriteriaQuery
-//				.getRestriction() : localCriteriaBuilder.conjunction();
-//		Iterator<Filter> localIterator = paramList.iterator();
-//		while (localIterator.hasNext()) {
-//			Filter localFilter = (Filter) localIterator.next();
-//			if ((localFilter == null)
-//					|| (StringUtils.isEmpty(localFilter.getProperty())))
-//				continue;
-//			if ((localFilter.getOperator() == Filter.Operator.eq)
-//					&& (localFilter.getValue() != null)) {
-//				if ((localFilter.getIgnoreCase() != null)
-//						&& (localFilter.getIgnoreCase().booleanValue())
-//						&& ((localFilter.getValue() instanceof String)))
-//					localPredicate = localCriteriaBuilder.and(localPredicate,
-//							localCriteriaBuilder.equal(localCriteriaBuilder
-//									.lower(localRoot.get(localFilter
-//											.getProperty())),
-//									((String) localFilter.getValue())
-//											.toLowerCase()));
-//				else
-//					localPredicate = localCriteriaBuilder.and(localPredicate,
-//							localCriteriaBuilder.equal(
-//									localRoot.get(localFilter.getProperty()),
-//									localFilter.getValue()));
-//			} else if ((localFilter.getOperator() == Filter.Operator.ne)
-//					&& (localFilter.getValue() != null)) {
-//				if ((localFilter.getIgnoreCase() != null)
-//						&& (localFilter.getIgnoreCase().booleanValue())
-//						&& ((localFilter.getValue() instanceof String)))
-//					localPredicate = localCriteriaBuilder.and(localPredicate,
-//							localCriteriaBuilder.notEqual(localCriteriaBuilder
-//									.lower(localRoot.get(localFilter
-//											.getProperty())),
-//									((String) localFilter.getValue())
-//											.toLowerCase()));
-//				else
-//					localPredicate = localCriteriaBuilder.and(localPredicate,
-//							localCriteriaBuilder.notEqual(
-//									localRoot.get(localFilter.getProperty()),
-//									localFilter.getValue()));
-//			} else if ((localFilter.getOperator() == Filter.Operator.gt)
-//					&& (localFilter.getValue() != null)) {
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localCriteriaBuilder.gt(
-//								localRoot.get(localFilter.getProperty()),
-//								(Number) localFilter.getValue()));
-//			} else if ((localFilter.getOperator() == Filter.Operator.lt)
-//					&& (localFilter.getValue() != null)) {
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localCriteriaBuilder.lt(
-//								localRoot.get(localFilter.getProperty()),
-//								(Number) localFilter.getValue()));
-//			} else if ((localFilter.getOperator() == Filter.Operator.ge)
-//					&& (localFilter.getValue() != null)) {
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localCriteriaBuilder.ge(
-//								localRoot.get(localFilter.getProperty()),
-//								(Number) localFilter.getValue()));
-//			} else if ((localFilter.getOperator() == Filter.Operator.le)
-//					&& (localFilter.getValue() != null)) {
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localCriteriaBuilder.le(
-//								localRoot.get(localFilter.getProperty()),
-//								(Number) localFilter.getValue()));
-//			} else if ((localFilter.getOperator() == Filter.Operator.like)
-//					&& (localFilter.getValue() != null)
-//					&& ((localFilter.getValue() instanceof String))) {
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localCriteriaBuilder.like(
-//								localRoot.get(localFilter.getProperty()),
-//								(String) localFilter.getValue()));
-//			} else if ((localFilter.getOperator() == Filter.Operator.in)
-//					&& (localFilter.getValue() != null)) {
-//				localPredicate = localCriteriaBuilder.and(
-//						localPredicate,
-//						localRoot.get(localFilter.getProperty()).in(
-//								new Object[] { localFilter.getValue() }));
-//			} else if (localFilter.getOperator() == Filter.Operator.isNull) {
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localRoot.get(localFilter.getProperty()).isNull());
-//			} else {
-//				if (localFilter.getOperator() != Filter.Operator.isNotNull)
-//					continue;
-//				localPredicate = localCriteriaBuilder.and(localPredicate,
-//						localRoot.get(localFilter.getProperty()).isNotNull());
-//			}
-//		}
-//		paramCriteriaQuery.where(localPredicate);
-//	}
-
+	@SuppressWarnings("unchecked")
+	public Long count(StringBuilder qlString, List<Filter> filters, List<Object> params) {
+		addFilter(qlString, filters, params);
+		Query query = createQuery(qlString.toString(), params.toArray());
+		List<Object> list = query.list();
+		return new Long((long)list.size());
+	}
 	// -------------- QL Query --------------
 
 	/**
@@ -462,9 +502,23 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> List<E> findList(String qlString, Object[] parameter,
-			Integer firstResults, Integer MaxResults) {
-		Query query = createQueryByList(qlString, parameter);
+	public <E> List<E> findList(String qlString, List<Object> parameter,
+			Integer firstResults, Integer MaxResults, List<Filter> filters,
+			List<com.hongqiang.shop.common.utils.Order> orderList) {
+		StringBuilder stringBuilder = new StringBuilder(qlString);
+		
+		addFilter(stringBuilder, filters, parameter);
+		addOrders(stringBuilder, orderList, parameter);
+		qlString = stringBuilder.toString();
+//		System.out.println("qlstirng= "+qlString);
+		if (qlString.indexOf("order by")==-1) {
+			if (OrderEntity.class.isAssignableFrom(this.entityClass)){
+				qlString += "order by order ASC";
+			}else {
+				qlString += "order by createDate DESC";
+			}
+		}
+		Query query = createQueryByList(qlString, parameter.toArray());
 		if (firstResults != null) {
 			query.setFirstResult(firstResults);
 		}
@@ -474,6 +528,30 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		return query.list();
 	}
 
+	public <E> Page<E> findPage(Page<E> page, String qlString, List<Object> parameter,Pageable pageable) {
+		 if (pageable == null)
+			 pageable = new Pageable();
+		 StringBuilder stringBuilder = new StringBuilder(qlString);
+		 addFilter(stringBuilder, pageable, parameter);
+		 addOrders(stringBuilder, pageable, parameter);
+		 qlString = stringBuilder.toString();
+		 if (qlString.indexOf("order by")==-1) {
+				if (OrderEntity.class.isAssignableFrom(this.entityClass)){
+					qlString += "order by order ASC";
+				}else {
+					qlString += "order by createDate DESC";
+				}
+			}
+		 long count = count(stringBuilder, null, parameter);
+		 int i=(int)Math.ceil(count/pageable.getPageSize());
+		 if (i<pageable.getPageNumber()) {
+			pageable.setPageNumber(i);
+		}
+		 page.setPageNo(pageable.getPageNumber());
+		 page.setPageSize(pageable.getPageSize());
+		 return find(page,qlString,parameter.toArray());
+	}
+	
 	/**
 	 * QL 更新
 	 * 

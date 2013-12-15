@@ -23,7 +23,7 @@ public class ProductCategoryController extends BaseController {
 //		for(ProductCategory p:list){
 //			System.out.println(p.getName()+","+p.getPath());
 //		}
-		return "modules/product/font/productCategory";
+		return "modules/product/front/productCategory";
 
 	}
 }

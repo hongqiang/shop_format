@@ -65,6 +65,8 @@ public  interface ProductCategoryService
   
   public ProductCategory update(ProductCategory productCategory);
   
+  public ProductCategory update(ProductCategory productCategory,String[] paramArrayOfString);
+  
   public void delete(Long id);
   
   public void delete(Long[] ids);
