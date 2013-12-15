@@ -36,7 +36,7 @@ public class ProductCategoryController extends BaseController
   {
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
     model.addAttribute("brands", this.brandService.findAll());
-    return "/admin/product_category/add";
+    return "modules/product/admin/add";
   }
 
   @RequestMapping(value={"/save"}, method=RequestMethod.POST)
@@ -55,7 +55,7 @@ public class ProductCategoryController extends BaseController
     productCategory.setPromotions(null);
     this.productCategoryService.save(productCategory);
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:list.jhtml";
+    return "redirect:list";
   }
 
   @RequestMapping(value={"/edit"}, method=RequestMethod.GET)
@@ -66,7 +66,7 @@ public class ProductCategoryController extends BaseController
     model.addAttribute("brands", this.brandService.findAll());
     model.addAttribute("productCategory", localProductCategory);
     model.addAttribute("children", this.productCategoryService.findChildren(localProductCategory));
-    return "/admin/product_category/edit";
+    return "modules/product/admin/edit";
   }
 
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)
@@ -90,7 +90,7 @@ public class ProductCategoryController extends BaseController
     this.productCategoryService.update(productCategory, 
     		new String[] { "treePath", "grade", "children", "products", "parameterGroups", "attributes", "promotions" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:list.jhtml";
+    return "redirect:list";
   }
 
   @RequestMapping(value={"/list"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
