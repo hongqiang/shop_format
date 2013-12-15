@@ -20,6 +20,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.transform.ResultTransformer;
 
+import com.hongqiang.shop.common.utils.Filter;
+
 /**
  * DAO支持接口
  * @author ThinkGem
@@ -75,6 +77,8 @@ public interface BaseDao<T> {
 
 	public  void lock(T paramT, LockModeType paramLockModeType);
 	
+	public Long count(StringBuilder qlString, List<Filter> filters, List<Object> params);
+	
 	// -------------- QL Query --------------
 
 	/**
@@ -103,7 +107,10 @@ public interface BaseDao<T> {
      * @param MaxResults 限制最大结果数
      * @return
      */
-    public <E> List<E> findList(String qlString, Object[] parameter,Integer firstResults, Integer MaxResults);
+//    public <E> List<E> findList(String qlString, Object[] parameter,Integer firstResults, Integer MaxResults);
+    public <E> List<E> findList(String qlString, List<Object> parameter,
+			Integer firstResults, Integer MaxResults, List<Filter> filters,
+			List<com.hongqiang.shop.common.utils.Order> orderList);
     
     /**
 	 * QL 查询

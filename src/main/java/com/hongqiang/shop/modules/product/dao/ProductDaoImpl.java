@@ -20,6 +20,7 @@ import javax.persistence.FlushModeType;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -49,11 +50,11 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 
 	private static final Pattern pattern = Pattern.compile("\\d*");
 
-	// @Resource(name = "goodsDaoImpl")
-	// private GoodsDao goodsDao;
-	//
-	// @Resource(name = "snDaoImpl")
-	// private SnDao snDao;
+	 @Autowired
+	 private GoodsDao goodsDao;
+	
+	 @Autowired
+	 private SnDao snDao;
 
 	public boolean snExists(String sn) {
 		if (sn == null)
@@ -87,7 +88,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			params.add(isGift);
 		}
 		sqlString += " order by product.isTop DESC, product.updateDate DESC ";
-		return this.findList(sqlString, params.toArray(), null, count);
+		return this.findList(sqlString, params, null, count,null,null);
 	}
 
 	@Override
@@ -223,7 +224,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			params.add(endDate);
 		}
 		sqlString += " order by product.isTop DESC, product.updateDate DESC ";
-		return this.findList(sqlString, params.toArray(), first, count);
+		return this.findList(sqlString, params, first, count,null,null);
 	}
 
 	@Override
@@ -238,7 +239,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			sqlString += " and product not in (?) ";
 			params.add(excludes);
 		}
-		return this.findList(sqlString, params.toArray(), null, null);
+		return this.findList(sqlString, params, null, null,null,null);
 	}
 
 	
