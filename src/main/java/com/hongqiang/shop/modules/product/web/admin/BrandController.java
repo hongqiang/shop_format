@@ -1,34 +1,27 @@
 package com.hongqiang.shop.modules.product.web.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
-import com.hongqiang.shop.modules.entity.Brand;
-import com.hongqiang.shop.modules.entity.Brand.Type;
-import com.hongqiang.shop.modules.product.service.BrandService;
 import com.hongqiang.shop.common.web.BaseController;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.xwpf.usermodel.BreakClear;
-import org.hibernate.mapping.Array;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.hongqiang.shop.modules.entity.Brand;
+import com.hongqiang.shop.modules.product.service.BrandService;
 
 @Controller("adminBrandController")
 @RequestMapping({"${adminPath}/brand"})
 public class BrandController extends BaseController
 {
 
-  @Resource(name="brandServiceImpl")
+  @Autowired
   private BrandService brandService;
 
   @RequestMapping(value={"/add"}, method=RequestMethod.GET)
@@ -72,7 +65,7 @@ public class BrandController extends BaseController
       brand.setLogo(null);
     else if (StringUtils.isEmpty(brand.getLogo()))
       return ERROR_PAGE;
-//    this.brandService.update(brand, new String[] { "products", "productCategories", "promotions" });
+    this.brandService.update(brand, new String[] { "products", "productCategories", "promotions" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }

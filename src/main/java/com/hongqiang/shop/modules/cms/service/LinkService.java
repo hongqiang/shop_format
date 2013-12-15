@@ -25,7 +25,7 @@ import com.hongqiang.shop.common.utils.CacheUtils;
 import com.hongqiang.shop.common.utils.StringUtils;
 import com.hongqiang.shop.modules.cms.dao.CategoryDao;
 import com.hongqiang.shop.modules.cms.dao.LinkDao;
-import com.hongqiang.shop.modules.cms.entity.Article;
+import com.hongqiang.shop.modules.cms.entity.JArticle;
 import com.hongqiang.shop.modules.cms.entity.Category;
 import com.hongqiang.shop.modules.cms.entity.Link;
 import com.hongqiang.shop.modules.cms.entity.Site;
@@ -100,8 +100,8 @@ public class LinkService extends BaseService {
 		// 如果栏目不需要审核，则将该内容设为发布状态
 		if (link.getCategory()!=null&&link.getCategory().getId()!=null){
 			Category category = categoryDao.findOne(link.getCategory().getId());
-			if (!Article.YES.equals(category.getIsAudit())){
-				link.setDelFlag(Article.DEL_FLAG_NORMAL);
+			if (!JArticle.YES.equals(category.getIsAudit())){
+				link.setDelFlag(JArticle.DEL_FLAG_NORMAL);
 			}
 		}
 		linkDao.clear();

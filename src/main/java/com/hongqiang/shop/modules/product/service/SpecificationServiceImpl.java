@@ -1,6 +1,7 @@
 package com.hongqiang.shop.modules.product.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,23 +29,25 @@ public class SpecificationServiceImpl extends BaseService
    }
 
   @Transactional
+  @CacheEvict(value={"specification"}, allEntries=true)
   public void save(Specification specification)
   {
     this.specificationDao.persist(specification);
   }
 
   @Transactional
+  @CacheEvict(value={"specification"}, allEntries=true)
   public Specification update(Specification specification)
   {
     return (Specification)this.specificationDao.merge(specification);
   }
 
-//  @Transactional
-//  @CacheEvict(value={"specification"}, allEntries=true)
-//  public Specification update(Specification specification, String[] ignoreProperties)
-//  {
-//    return (Specification)this.specificationDao.update(specification, ignoreProperties);
-//  }
+  @Transactional
+  @CacheEvict(value={"specification"}, allEntries=true)
+  public Specification update(Specification specification, String[] ignoreProperties)
+  {
+    return (Specification)this.specificationDao.update(specification, ignoreProperties);
+  }
 
   @Transactional
   public void delete(Long id)

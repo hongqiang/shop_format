@@ -9,7 +9,7 @@ public abstract interface GoodsService
 
   public Goods update(Goods goods);
 
-//  public Goods update(Goods goods, String[] ignoreProperties);
+  public Goods update(Goods goods, String[] ignoreProperties);
 
   public void delete(Long id);
 

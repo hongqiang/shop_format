@@ -8,6 +8,7 @@ package com.hongqiang.shop.common.persistence;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -16,15 +17,20 @@ import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
@@ -49,8 +55,10 @@ import org.hibernate.search.query.DatabaseRetrievalMethod;
 import org.hibernate.search.query.ObjectLookupMethod;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.BeanUtils;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Reflections;
 import com.hongqiang.shop.common.utils.StringUtils;
 
@@ -63,6 +71,10 @@ import com.hongqiang.shop.common.utils.StringUtils;
  */
 public class BaseDaoImpl<T> implements BaseDao<T> {
 
+	// 忽略的属性集合。更新实体类时，不需要更新的属性集合
+	private static final String[] ignoreBaseProperties = { "id", "createDate",
+			"updateDate" };
+
 	/**
 	 * 获取实体工厂管理对象
 	 */
@@ -72,7 +84,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	/**
 	 * 实体类类型(由构造方法自动赋值)
 	 */
-	private Class<?> entityClass;
+	private Class<T> entityClass;
 
 	/**
 	 * 构造方法，根据实例类自动获取实体类类型
@@ -110,8 +122,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	/**
-	 * 保存实体类
-	 *  Make an instance managed and persistent.
+	 * 保存实体类 Make an instance managed and persistent.
 	 */
 	public void persist(T entity) {
 		if (entity != null)
@@ -119,8 +130,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	/**
-	 * 更新实体类
-	 * Merge the state of the given entity into the current persistence context.
+	 * 更新实体类 Merge the state of the given entity into the current persistence
+	 * context.
 	 */
 	public T merge(T entity) {
 		if (entity != null)
@@ -129,8 +140,58 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	/**
-	 * 从数据库删除实体类
-	 *  Remove the entity instance.
+	 * 根据实体类得到其id
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public Long getIdentifier(T entity) {
+		Object id = this.entityManager.getEntityManagerFactory()
+				.getPersistenceUnitUtil().getIdentifier(entity);
+		return (Long) id;
+	}
+
+	/**
+	 * 根据id得到实体类
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public T find(Long id) {
+		if (id != null)
+			return this.entityManager.find(this.entityClass, id);// Find by
+																	// primary
+																	// key id
+																	// and
+																	// return
+																	// the T.
+		return null;
+	}
+
+	/**
+	 * 更新实体类
+	 * 
+	 * @param entity
+	 * @param ignoreProperties
+	 *            忽略的实体类属性
+	 * @return
+	 */
+	public T update(T entity, String[] ignoreProperties) {
+		// Check if the instance is a managed entity instance belonging to the
+		// current persistence context.
+		if (!isManaged(entity))
+			throw new IllegalArgumentException("Entity must not be managed");
+		T localObject = find(getIdentifier(entity));
+		if (localObject != null) {
+			BeanUtils.copyProperties(entity, localObject, (String[]) ArrayUtils
+					.addAll(ignoreProperties, ignoreBaseProperties));
+			return merge(localObject);
+		}
+		return merge(entity);
+	}
+
+	/**
+	 * 从数据库删除实体类 Remove the entity instance.
 	 */
 	public void remove(T entity) {
 		if (entity != null)
@@ -138,8 +199,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	/**
-	 * 为数据库刷新实体类
-	 *  Refresh the state of the instance from the database, overwriting changes made to the entity, if any.
+	 * 为数据库刷新实体类 Refresh the state of the instance from the database,
+	 * overwriting changes made to the entity, if any.
 	 */
 	public void refresh(T entity) {
 		if (entity != null)
@@ -154,19 +215,143 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	/**
-	 *  Remove the given entity from the persistence context, causing a managed entity to become detached.
+	 * Remove the given entity from the persistence context, causing a managed
+	 * entity to become detached.
 	 */
 	public void detach(T entity) {
 		this.entityManager.detach(entity);
 	}
 
 	/**
-	 *  Lock an entity instance that is contained in the persistence context with the specified lock mode type.
+	 * Lock an entity instance that is contained in the persistence context with
+	 * the specified lock mode type.
 	 */
 	public void lock(T entity, LockModeType lockModeType) {
 		if ((entity != null) && (lockModeType != null))
 			this.entityManager.lock(entity, lockModeType);
 	}
+
+	private Root<T> getRoot(CriteriaQuery<T> paramCriteriaQuery) {
+		if (paramCriteriaQuery != null)
+			return getRoot(paramCriteriaQuery,
+					paramCriteriaQuery.getResultType());
+		return null;
+	}
+
+	private Root<T> getRoot(CriteriaQuery<?> paramCriteriaQuery,
+			Class<T> paramClass) {
+		if ((paramCriteriaQuery != null)
+				&& (paramCriteriaQuery.getRoots() != null)
+				&& (paramClass != null)) {
+			Iterator localIterator = paramCriteriaQuery.getRoots().iterator();
+			while (localIterator.hasNext()) {
+				Root<T> localRoot = (Root<T>) localIterator.next();
+				if (paramClass.equals(localRoot.getJavaType()))
+					return (Root<T>) localRoot.as(paramClass);
+			}
+		}
+		return null;
+	}
+
+//	private void entityClass(CriteriaQuery<T> paramCriteriaQuery,
+//			List<Filter> paramList) {
+//		if ((paramCriteriaQuery == null) || (paramList == null)
+//				|| (paramList.isEmpty()))
+//			return;
+//		Root<T> localRoot = getRoot(paramCriteriaQuery);
+//		if (localRoot == null)
+//			return;
+//		CriteriaBuilder localCriteriaBuilder = this.entityManager
+//				.getCriteriaBuilder();
+//		Predicate localPredicate = paramCriteriaQuery.getRestriction() != null ? paramCriteriaQuery
+//				.getRestriction() : localCriteriaBuilder.conjunction();
+//		Iterator<Filter> localIterator = paramList.iterator();
+//		while (localIterator.hasNext()) {
+//			Filter localFilter = (Filter) localIterator.next();
+//			if ((localFilter == null)
+//					|| (StringUtils.isEmpty(localFilter.getProperty())))
+//				continue;
+//			if ((localFilter.getOperator() == Filter.Operator.eq)
+//					&& (localFilter.getValue() != null)) {
+//				if ((localFilter.getIgnoreCase() != null)
+//						&& (localFilter.getIgnoreCase().booleanValue())
+//						&& ((localFilter.getValue() instanceof String)))
+//					localPredicate = localCriteriaBuilder.and(localPredicate,
+//							localCriteriaBuilder.equal(localCriteriaBuilder
+//									.lower(localRoot.get(localFilter
+//											.getProperty())),
+//									((String) localFilter.getValue())
+//											.toLowerCase()));
+//				else
+//					localPredicate = localCriteriaBuilder.and(localPredicate,
+//							localCriteriaBuilder.equal(
+//									localRoot.get(localFilter.getProperty()),
+//									localFilter.getValue()));
+//			} else if ((localFilter.getOperator() == Filter.Operator.ne)
+//					&& (localFilter.getValue() != null)) {
+//				if ((localFilter.getIgnoreCase() != null)
+//						&& (localFilter.getIgnoreCase().booleanValue())
+//						&& ((localFilter.getValue() instanceof String)))
+//					localPredicate = localCriteriaBuilder.and(localPredicate,
+//							localCriteriaBuilder.notEqual(localCriteriaBuilder
+//									.lower(localRoot.get(localFilter
+//											.getProperty())),
+//									((String) localFilter.getValue())
+//											.toLowerCase()));
+//				else
+//					localPredicate = localCriteriaBuilder.and(localPredicate,
+//							localCriteriaBuilder.notEqual(
+//									localRoot.get(localFilter.getProperty()),
+//									localFilter.getValue()));
+//			} else if ((localFilter.getOperator() == Filter.Operator.gt)
+//					&& (localFilter.getValue() != null)) {
+//				localPredicate = localCriteriaBuilder.and(localPredicate,
+//						localCriteriaBuilder.gt(
+//								localRoot.get(localFilter.getProperty()),
+//								(Number) localFilter.getValue()));
+//			} else if ((localFilter.getOperator() == Filter.Operator.lt)
+//					&& (localFilter.getValue() != null)) {
+//				localPredicate = localCriteriaBuilder.and(localPredicate,
+//						localCriteriaBuilder.lt(
+//								localRoot.get(localFilter.getProperty()),
+//								(Number) localFilter.getValue()));
+//			} else if ((localFilter.getOperator() == Filter.Operator.ge)
+//					&& (localFilter.getValue() != null)) {
+//				localPredicate = localCriteriaBuilder.and(localPredicate,
+//						localCriteriaBuilder.ge(
+//								localRoot.get(localFilter.getProperty()),
+//								(Number) localFilter.getValue()));
+//			} else if ((localFilter.getOperator() == Filter.Operator.le)
+//					&& (localFilter.getValue() != null)) {
+//				localPredicate = localCriteriaBuilder.and(localPredicate,
+//						localCriteriaBuilder.le(
+//								localRoot.get(localFilter.getProperty()),
+//								(Number) localFilter.getValue()));
+//			} else if ((localFilter.getOperator() == Filter.Operator.like)
+//					&& (localFilter.getValue() != null)
+//					&& ((localFilter.getValue() instanceof String))) {
+//				localPredicate = localCriteriaBuilder.and(localPredicate,
+//						localCriteriaBuilder.like(
+//								localRoot.get(localFilter.getProperty()),
+//								(String) localFilter.getValue()));
+//			} else if ((localFilter.getOperator() == Filter.Operator.in)
+//					&& (localFilter.getValue() != null)) {
+//				localPredicate = localCriteriaBuilder.and(
+//						localPredicate,
+//						localRoot.get(localFilter.getProperty()).in(
+//								new Object[] { localFilter.getValue() }));
+//			} else if (localFilter.getOperator() == Filter.Operator.isNull) {
+//				localPredicate = localCriteriaBuilder.and(localPredicate,
+//						localRoot.get(localFilter.getProperty()).isNull());
+//			} else {
+//				if (localFilter.getOperator() != Filter.Operator.isNotNull)
+//					continue;
+//				localPredicate = localCriteriaBuilder.and(localPredicate,
+//						localRoot.get(localFilter.getProperty()).isNotNull());
+//			}
+//		}
+//		paramCriteriaQuery.where(localPredicate);
+//	}
 
 	// -------------- QL Query --------------
 
@@ -221,7 +406,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> Page<E> findPage(Page<E> page, String qlString, Object[] parameter) {
+	public <E> Page<E> findPage(Page<E> page, String qlString,
+			Object[] parameter) {
 		// get count
 		if (!page.isDisabled() && !page.isNotCount()) {
 			String countQlString = "select count(*) "
@@ -253,8 +439,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		page.setList(query.list());
 		return page;
 	}
-	
-	
+
 	/**
 	 * QL 查询
 	 * 
@@ -267,7 +452,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		Query query = createQuery(qlString, parameter);
 		return query.list();
 	}
-	
+
 	/**
 	 * QL 查询
 	 * 
@@ -277,13 +462,14 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> List<E> findList(String qlString, Object[] parameter,Integer firstResults, Integer MaxResults){
+	public <E> List<E> findList(String qlString, Object[] parameter,
+			Integer firstResults, Integer MaxResults) {
 		Query query = createQueryByList(qlString, parameter);
-		if(firstResults!=null){
+		if (firstResults != null) {
 			query.setFirstResult(firstResults);
 		}
-		if(MaxResults!=null){
-			 query.setMaxResults(MaxResults); 
+		if (MaxResults != null) {
+			query.setMaxResults(MaxResults);
 		}
 		return query.list();
 	}

@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,8 +18,6 @@ import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.service.BrandService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
-//import net.shopxx.Message;
-//import net.shopxx.service.BrandService;
 
 @Controller("adminProductCategoryController")
 @RequestMapping({"${adminPath}/product_category"})
@@ -31,7 +27,7 @@ public class ProductCategoryController extends BaseController
 	@Autowired
   private ProductCategoryService productCategoryService;
 
-  @Resource(name="brandServiceImpl")
+	@Autowired
   private BrandService brandService;
 
   @RequestMapping(value={"/add"}, method=RequestMethod.GET)

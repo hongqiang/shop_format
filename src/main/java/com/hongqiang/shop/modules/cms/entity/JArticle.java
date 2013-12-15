@@ -51,7 +51,7 @@ import com.hongqiang.shop.common.persistence.DataEntity;
 @DynamicInsert @DynamicUpdate
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Indexed @Analyzer(impl = IKAnalyzer.class)
-public class Article extends DataEntity {
+public class JArticle extends DataEntity {
 	
 	private static final long serialVersionUID = 1L;
 	private Long id;		// 编号
@@ -66,21 +66,21 @@ public class Article extends DataEntity {
 	private Integer hits;	// 点击数
 	private String posid;	// 推荐位，多选（1：首页焦点图；2：栏目页文章推荐；）
 
-	private ArticleData articleData;	//文章副表
+	private JArticleData articleData;	//文章副表
     
-	public Article() {
+	public JArticle() {
 		super();
 		this.weight = 0;
 		this.hits = 0;
 		this.posid = "";
 	}
 
-	public Article(Long id){
+	public JArticle(Long id){
 		this();
 		this.id = id;
 	}
 	
-	public Article(Category category){
+	public JArticle(Category category){
 		this();
 		this.category = category;
 	}
@@ -194,11 +194,11 @@ public class Article extends DataEntity {
 	@OneToOne(mappedBy="article",cascade=CascadeType.ALL,optional=false) 
 	@IndexedEmbedded
 	@Valid
-	public ArticleData getArticleData() {
+	public JArticleData getArticleData() {
 		return articleData;
 	}
 
-	public void setArticleData(ArticleData articleData) {
+	public void setArticleData(JArticleData articleData) {
 		this.articleData = articleData;
 	}
 

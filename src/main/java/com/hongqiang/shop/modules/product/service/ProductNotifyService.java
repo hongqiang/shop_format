@@ -14,8 +14,7 @@ public abstract interface ProductNotifyService {
 
 	public ProductNotify update(ProductNotify productNotify);
 
-	// //忽视
-	// public ProductNotify update(ProductNotify brand, String[] ignoreProperties);
+	 public ProductNotify update(ProductNotify brand, String[] ignoreProperties);
 
 	public void delete(Long id);
 

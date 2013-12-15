@@ -38,8 +38,9 @@ public class ProductNotifyServiceImpl extends BaseService
 		return (ProductNotify)this.productNotifyDao.merge(productNotify);
 	}
 
-	// //忽视
-	// public ProductNotify update(ProductNotify brand, String[] ignoreProperties);
+	 public ProductNotify update(ProductNotify productNotify, String[] ignoreProperties){
+		 return (ProductNotify)this.productNotifyDao.update(productNotify,ignoreProperties);
+	 }
 
 	@Transactional
 	public void delete(Long id){

@@ -46,8 +46,10 @@ public class AttributeServiceImpl extends BaseService
 	return (Attribute)this.attributeDao.merge(attribute);
   }
 
-//  //忽视
-//  public AttributeService update(AttributeService AttributeService, String[] ignoreProperties);
+  @Transactional
+  public Attribute update(Attribute attribute, String[] ignoreProperties){
+	  return (Attribute)this.attributeDao.update(attribute, ignoreProperties);
+  }
 
 @Transactional
   public void delete(Long id){

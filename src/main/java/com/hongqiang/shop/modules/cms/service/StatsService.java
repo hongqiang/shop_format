@@ -17,8 +17,8 @@ import com.google.common.collect.Lists;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.DateUtils;
 import com.hongqiang.shop.common.utils.StringUtils;
-import com.hongqiang.shop.modules.cms.dao.ArticleDao;
-import com.hongqiang.shop.modules.cms.entity.Article;
+import com.hongqiang.shop.modules.cms.dao.JArticleDao;
+import com.hongqiang.shop.modules.cms.entity.JArticle;
 import com.hongqiang.shop.modules.cms.entity.Site;
 
 /**
@@ -31,7 +31,7 @@ import com.hongqiang.shop.modules.cms.entity.Site;
 public class StatsService extends BaseService {
 
 	@Autowired
-	private ArticleDao articleDao;
+	private JArticleDao articleDao;
 	
 	public List<Map<String, Object>> article(Map<String, Object> paramMap) {
 		
@@ -73,7 +73,7 @@ public class StatsService extends BaseService {
 		ps.add(DateUtils.addDays(endDate, 1));
 
 		ql.append(" and c.delFlag = ?");
-		ps.add(Article.DEL_FLAG_NORMAL);
+		ps.add(JArticle.DEL_FLAG_NORMAL);
 		
 		ql.append(" group by cp.sort, cp.id, c.sort, c.id");
 		ql.append(" order by cp.sort, cp.id, c.sort, c.id");

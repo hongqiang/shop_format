@@ -21,5 +21,5 @@ public abstract interface ParameterDao extends ParameterDaoCustom, CrudRepositor
  */
 interface ParameterDaoCustom extends BaseDao<Parameter> {
 
-	  public abstract List<Parameter> findList(ParameterGroup paramParameterGroup, Set<Parameter> paramSet);
+	  public abstract List<Parameter> findList(ParameterGroup parameterGroup, Set<Parameter> excludes);
 }

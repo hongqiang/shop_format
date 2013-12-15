@@ -22,7 +22,7 @@ public class Tag extends OrderEntity
   private Type type;
   private String icon;
   private String memo;
-//  private Set<Article> articles = new HashSet<Article>();
+  private Set<Article> articles = new HashSet<Article>();
   private Set<Product> products = new HashSet<Product>();
 
   public enum Type
@@ -77,16 +77,16 @@ public class Tag extends OrderEntity
     this.memo = memo;
   }
 
-//  @ManyToMany(mappedBy="tags", fetch=FetchType.LAZY)
-//  public Set<Article> getArticles()
-//  {
-//    return this.articles;
-//  }
-//
-//  public void setArticles(Set<Article> articles)
-//  {
-//    this.articles = articles;
-//  }
+  @ManyToMany(mappedBy="tags", fetch=FetchType.LAZY)
+  public Set<Article> getArticles()
+  {
+    return this.articles;
+  }
+
+  public void setArticles(Set<Article> articles)
+  {
+    this.articles = articles;
+  }
 
   @ManyToMany(mappedBy="tags", fetch=FetchType.LAZY)
   public Set<Product> getProducts()
@@ -102,26 +102,25 @@ public class Tag extends OrderEntity
   @PreRemove
   public void preRemove()
   {
-//    Set localSet = getArticles();
-//    Object localObject2;
-//    if (localSet != null)
-//    {
-//      localObject2 = localSet.iterator();
-//      while (((Iterator)localObject2).hasNext())
-//      {
-//        localObject1 = (Article)((Iterator)localObject2).next();
-//        ((Article)localObject1).getTags().remove(this);
-//      }
-//    }
-//    Object localObject1 = getProducts();
-//    if (localObject1 != null)
-//    {
-//      Iterator localIterator = ((Set)localObject1).iterator();
-//      while (localIterator.hasNext())
-//      {
-//        localObject2 = (Product)localIterator.next();
-//        ((Product)localObject2).getTags().remove(this);
-//      }
-//    }
+    Set<Article> localSet = getArticles();
+    if (localSet != null)
+    {
+    	Iterator<Article>localObject2 = localSet.iterator();
+      while (localObject2.hasNext())
+      {
+    	  Article localObject1 = (Article)localObject2.next();
+        localObject1.getTags().remove(this);
+      }
+    }
+    Set<Product> localObject1 = getProducts();
+    if (localObject1 != null)
+    {
+      Iterator<Product> localIterator = localObject1.iterator();
+      while (localIterator.hasNext())
+      {
+    	  Product localObject2 = (Product)localIterator.next();
+    	  localObject2.getTags().remove(this);
+      }
+    }
   }
 }

@@ -36,7 +36,7 @@ import com.hongqiang.shop.common.persistence.BaseEntity;
 @Table(name = "cms_article_data")
 @DynamicInsert @DynamicUpdate
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class ArticleData extends BaseEntity {
+public class JArticleData extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;		// 编号
@@ -45,14 +45,14 @@ public class ArticleData extends BaseEntity {
 	private String relation;// 相关文章
 	private String allowComment;// 是否允许评论
 
-	private Article article;
+	private JArticle article;
 	
-	public ArticleData() {
+	public JArticleData() {
 		super();
 		this.allowComment = YES;
 	}
 	
-	public ArticleData(Long id){
+	public JArticleData(Long id){
 		this();
 		this.id = id;
 	}
@@ -108,11 +108,11 @@ public class ArticleData extends BaseEntity {
 
 	@OneToOne(cascade={CascadeType.PERSIST,CascadeType.MERGE},optional=false)  
 	@PrimaryKeyJoinColumn  
-	public Article getArticle() {
+	public JArticle getArticle() {
 		return article;
 	}
 
-	public void setArticle(Article article) {
+	public void setArticle(JArticle article) {
 		this.article = article;
 	}
 

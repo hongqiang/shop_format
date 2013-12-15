@@ -30,9 +30,9 @@ import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.CacheUtils;
 import com.hongqiang.shop.common.utils.StringUtils;
-import com.hongqiang.shop.modules.cms.dao.ArticleDao;
+import com.hongqiang.shop.modules.cms.dao.JArticleDao;
 import com.hongqiang.shop.modules.cms.dao.CategoryDao;
-import com.hongqiang.shop.modules.cms.entity.Article;
+import com.hongqiang.shop.modules.cms.entity.JArticle;
 import com.hongqiang.shop.modules.cms.entity.Category;
 import com.hongqiang.shop.modules.cms.entity.Site;
 import com.hongqiang.shop.modules.sys.utils.UserUtils;
@@ -44,18 +44,18 @@ import com.hongqiang.shop.modules.sys.utils.UserUtils;
  */
 @Service
 @Transactional(readOnly = true)
-public class ArticleService extends BaseService {
+public class JArticleService extends BaseService {
 
 	@Autowired
-	private ArticleDao articleDao;
+	private JArticleDao articleDao;
 	@Autowired
 	private CategoryDao categoryDao;
 	
-	public Article get(Long id) {
+	public JArticle get(Long id) {
 		return articleDao.findOne(id);
 	}
 	
-	public Page<Article> find(Page<Article> page, Article article, boolean isDataScopeFilter) {
+	public Page<JArticle> find(Page<JArticle> page, JArticle article, boolean isDataScopeFilter) {
 		// 更新过期的权重，间隔为“6”个小时
 		Date updateExpiredWeightDate =  (Date)CacheUtils.get("updateExpiredWeightDateByArticle");
 		if (updateExpiredWeightDate == null || (updateExpiredWeightDate != null 
@@ -86,7 +86,7 @@ public class ArticleService extends BaseService {
 		if (StringUtils.isNotEmpty(article.getPosid())){
 			dc.add(Restrictions.like("posid", "%,"+article.getPosid()+",%"));
 		}
-		if (StringUtils.isNotEmpty(article.getImage())&&Article.YES.equals(article.getImage())){
+		if (StringUtils.isNotEmpty(article.getImage())&&JArticle.YES.equals(article.getImage())){
 			dc.add(Restrictions.and(Restrictions.isNotNull("image"),Restrictions.ne("image","")));
 		}
 		if (article.getCreateBy()!=null && article.getCreateBy().getId()>0){
@@ -96,7 +96,7 @@ public class ArticleService extends BaseService {
 			dc.createAlias("category.office", "categoryOffice").createAlias("createBy", "createBy");
 			dc.add(dataScopeFilter(UserUtils.getUser(), "categoryOffice", "createBy"));
 		}
-		dc.add(Restrictions.eq(Article.DEL_FLAG, article.getDelFlag()));
+		dc.add(Restrictions.eq(JArticle.DEL_FLAG, article.getDelFlag()));
 		if (StringUtils.isBlank(page.getOrderBy())){
 			dc.addOrder(Order.desc("weight"));
 			dc.addOrder(Order.desc("updateDate"));
@@ -105,20 +105,20 @@ public class ArticleService extends BaseService {
 	}
 
 	@Transactional(readOnly = false)
-	public void save(Article article) {
+	public void save(JArticle article) {
 		if (article.getArticleData().getContent()!=null){
 			article.getArticleData().setContent(StringEscapeUtils.unescapeHtml4(
 					article.getArticleData().getContent()));
 		}
 		// 如果没有审核权限，则将当前内容改为待审核状态
 		if (!SecurityUtils.getSubject().isPermitted("cms:article:audit")){
-			article.setDelFlag(Article.DEL_FLAG_AUDIT);
+			article.setDelFlag(JArticle.DEL_FLAG_AUDIT);
 		}
 		// 如果栏目不需要审核，则将该内容设为发布状态
 		if (article.getCategory()!=null&&article.getCategory().getId()!=null){
 			Category category = categoryDao.findOne(article.getCategory().getId());
-			if (!Article.YES.equals(category.getIsAudit())){
-				article.setDelFlag(Article.DEL_FLAG_NORMAL);
+			if (!JArticle.YES.equals(category.getIsAudit())){
+				article.setDelFlag(JArticle.DEL_FLAG_NORMAL);
 			}
 		}
 		article.setUpdateBy(UserUtils.getUser());
@@ -131,8 +131,8 @@ public class ArticleService extends BaseService {
 	public void delete(Long id, Boolean isRe) {
 //		articleDao.updateDelFlag(id, isRe!=null&&isRe?Article.DEL_FLAG_NORMAL:Article.DEL_FLAG_DELETE);
 		// 使用下面方法，以便更新索引。
-		Article article = articleDao.findOne(id);
-		article.setDelFlag(isRe!=null&&isRe?Article.DEL_FLAG_NORMAL:Article.DEL_FLAG_DELETE);
+		JArticle article = articleDao.findOne(id);
+		article.setDelFlag(isRe!=null&&isRe?JArticle.DEL_FLAG_NORMAL:JArticle.DEL_FLAG_DELETE);
 		articleDao.save(article);
 	}
 	
@@ -144,8 +144,8 @@ public class ArticleService extends BaseService {
 		List<Object[]> list = Lists.newArrayList();
 		Long[] idss = (Long[])ConvertUtils.convert(StringUtils.split(ids,","), Long.class);
 		if (idss.length>0){
-			List<Article> l = articleDao.findByIdIn(idss);
-			for (Article e : l){
+			List<JArticle> l = articleDao.findByIdIn(idss);
+			for (JArticle e : l){
 				list.add(new Object[]{e.getCategory().getId(),e.getId(),StringUtils.abbr(e.getTitle(),50)});
 			}
 		}
@@ -170,13 +170,13 @@ public class ArticleService extends BaseService {
 	/**
 	 * 全文检索
 	 */
-	public Page<Article> search(Page<Article> page, String q){
+	public Page<JArticle> search(Page<JArticle> page, String q){
 		
 		// 设置查询条件
 		BooleanQuery query = articleDao.getFullTextQuery(q, "title","keywords","description","articleData.content");
 		// 设置过滤条件
 		BooleanQuery queryFilter = articleDao.getFullTextQuery(new BooleanClause(
-				new TermQuery(new Term(Article.DEL_FLAG, Article.DEL_FLAG_NORMAL)), Occur.MUST));
+				new TermQuery(new Term(JArticle.DEL_FLAG, JArticle.DEL_FLAG_NORMAL)), Occur.MUST));
 		// 设置排序（默认相识度排序）
 		Sort sort = null;//new Sort(new SortField("updateDate", SortField.DOC, true));
 		// 全文检索

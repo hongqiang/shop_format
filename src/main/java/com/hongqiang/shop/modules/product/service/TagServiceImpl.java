@@ -62,12 +62,12 @@ public class TagServiceImpl extends BaseService
     return (Tag)this.tagDao.merge(tag);
   }
 
-//  @Transactional
-//  @CacheEvict(value={"tag"}, allEntries=true)
-//  public Tag update(Tag tag, String[] ignoreProperties)
-//  {
-//    return (Tag)this.tagDao.update(tag, ignoreProperties);
-//  }
+  @Transactional
+  @CacheEvict(value={"tag"}, allEntries=true)
+  public Tag update(Tag tag, String[] ignoreProperties)
+  {
+    return (Tag)this.tagDao.update(tag, ignoreProperties);
+  }
 
   @Transactional
   @CacheEvict(value={"tag"}, allEntries=true)

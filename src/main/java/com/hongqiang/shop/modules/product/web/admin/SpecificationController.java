@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -91,7 +89,7 @@ public class SpecificationController extends BaseController
     }
     if (!beanValidator(redirectAttributes,specification, new Class[0]))
       return ERROR_PAGE;
-//    this.specificationService.update(specification, new String[] { "products" });
+    this.specificationService.update(specification, new String[] { "products" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }

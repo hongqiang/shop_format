@@ -9,9 +9,8 @@ public abstract interface SpecificationValueService {
 
 	public SpecificationValue update(SpecificationValue specificationValue);
 
-	// //忽视
-	// public SpecificationValue update(SpecificationValue brand, String[]
-	// ignoreProperties);
+	 public SpecificationValue update(SpecificationValue brand, String[]
+	 ignoreProperties);
 
 	public void delete(Long id);
 

@@ -12,7 +12,6 @@ public abstract interface BrandService
 {
 	public Brand find(Long id);
 	
-//	public Page<Brand[]> findPage(Page<Brand[]> pageBrand);
 	public Page<Brand> findPage(Pageable pageable);
 
   //修改
@@ -23,8 +22,7 @@ public abstract interface BrandService
 
   public Brand update(Brand brand);
 
-//  //忽视
-//  public Brand update(Brand brand, String[] ignoreProperties);
+  public Brand update(Brand brand, String[] ignoreProperties);
 
   public void delete(Long id);
 

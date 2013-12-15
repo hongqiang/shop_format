@@ -1,3 +1,4 @@
+package com.hongqiang.shop.modules.cms.web;
 ///**
 // * Copyright &copy; 2012-2013 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
 // *

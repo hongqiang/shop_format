@@ -27,19 +27,19 @@ public class Goods extends BaseEntity
     this.products = products;
   }
 
-//  @Transient
-//  public Set<SpecificationValue> getSpecificationValues()
-//  {
-//    HashSet<SpecificationValue> localHashSet = new HashSet<SpecificationValue>();
-//    if (localHashSet != null)
-//    {
-//      Iterator<SpecificationValue> localIterator = localHashSet.iterator();
-//      while (localIterator.hasNext())
-//      {
-//        Product localProduct = (Product)localIterator.next();
-//        localHashSet.addAll(localProduct.getSpecificationValues());
-//      }
-//    }
-//    return localHashSet;
-//  }
+  @Transient
+  public Set<SpecificationValue> getSpecificationValues()
+  {
+    HashSet<SpecificationValue> localHashSet = new HashSet<SpecificationValue>();
+    if (getProducts() != null)
+    {
+      Iterator<Product> localIterator = getProducts().iterator();
+      while (localIterator.hasNext())
+      {
+        Product localProduct = (Product)localIterator.next();
+        localHashSet.addAll(localProduct.getSpecificationValues());
+      }
+    }
+    return localHashSet;
+  }
 }

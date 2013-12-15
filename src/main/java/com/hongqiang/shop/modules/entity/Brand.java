@@ -18,157 +18,132 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="hq_brand")
-public class Brand extends OrderEntity
-{
-  private static final long serialVersionUID = -6109590619136943215L;
-  private static final String filePath = "/brand/content";
-  private String name;// 商标名称
-  private Type type;//商标类型
-  private String logo;// Logo
-  private String url;// 网址
-  private String introduction;// 介绍
-  private Set<Product> products = new HashSet<Product>();// 商品
-  private Set<ProductCategory> productCategories = new HashSet<ProductCategory>();// 商品类别
-  private Set<Promotion> promotions = new HashSet<Promotion>();//促销
+@Table(name = "hq_brand")
+public class Brand extends OrderEntity {
+	private static final long serialVersionUID = -6109590619136943215L;
+	private static final String filePath = "/brand/content";
+	private String name;// 商标名称
+	private Type type;// 商标类型
+	private String logo;// Logo
+	private String url;// 网址
+	private String introduction;// 介绍
+	private Set<Product> products = new HashSet<Product>();// 商品
+	private Set<ProductCategory> productCategories = new HashSet<ProductCategory>();// 商品类别
+	private Set<Promotion> promotions = new HashSet<Promotion>();// 促销
 
-  public enum Type{
-	text,image;
-}
-  
-  @NotEmpty
-  @Length(max=200)
-  @Column(nullable=false)
-  public String getName()
-  {
-    return this.name;
-  }
+	public enum Type {
+		text, image;
+	}
 
-  public void setName(String name)
-  {
-    this.name = name;
-  }
+	@NotEmpty
+	@Length(max = 200)
+	@Column(nullable = false)
+	public String getName() {
+		return this.name;
+	}
 
-  @NotNull
-  @Column(nullable=false)
-  public Brand.Type getType()
-  {
-    return this.type;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  public void setType(Brand.Type type)
-  {
-    this.type = type;
-  }
+	@NotNull
+	@Column(nullable = false)
+	public Brand.Type getType() {
+		return this.type;
+	}
 
-  @Length(max=200)
-  public String getLogo()
-  {
-    return this.logo;
-  }
+	public void setType(Brand.Type type) {
+		this.type = type;
+	}
 
-  public void setLogo(String logo)
-  {
-    this.logo = logo;
-  }
+	@Length(max = 200)
+	public String getLogo() {
+		return this.logo;
+	}
 
-  @Length(max=200)
-  public String getUrl()
-  {
-    return this.url;
-  }
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
 
-  public void setUrl(String url)
-  {
-    this.url = url;
-  }
+	@Length(max = 200)
+	public String getUrl() {
+		return this.url;
+	}
 
-  @Lob
-  public String getIntroduction()
-  {
-    return this.introduction;
-  }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-  public void setIntroduction(String introduction)
-  {
-    this.introduction = introduction;
-  }
+	@Lob
+	public String getIntroduction() {
+		return this.introduction;
+	}
 
-  @OneToMany(mappedBy="brand", fetch=FetchType.LAZY)
-  public Set<Product> getProducts()
-  {
-    return this.products;
-  }
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
+	}
 
-  public void setProducts(Set<Product> products)
-  {
-    this.products = products;
-  }
+	@OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
+	public Set<Product> getProducts() {
+		return this.products;
+	}
 
-  @ManyToMany(mappedBy="brands", fetch=FetchType.LAZY)
-  @OrderBy("order asc")
-  public Set<ProductCategory> getProductCategories()
-  {
-    return this.productCategories;
-  }
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
 
-  public void setProductCategories(Set<ProductCategory> productCategories)
-  {
-    this.productCategories = productCategories;
-  }
+	@ManyToMany(mappedBy = "brands", fetch = FetchType.LAZY)
+	@OrderBy("order asc")
+	public Set<ProductCategory> getProductCategories() {
+		return this.productCategories;
+	}
 
-  @ManyToMany(mappedBy="brands", fetch=FetchType.LAZY)
-  public Set<Promotion> getPromotions()
-  {
-    return this.promotions;
-  }
+	public void setProductCategories(Set<ProductCategory> productCategories) {
+		this.productCategories = productCategories;
+	}
 
-  public void setPromotions(Set<Promotion> promotions)
-  {
-    this.promotions = promotions;
-  }
+	@ManyToMany(mappedBy = "brands", fetch = FetchType.LAZY)
+	public Set<Promotion> getPromotions() {
+		return this.promotions;
+	}
 
-  @Transient
-  public String getPath()
-  {
-    if (getId() != null)
-      return filePath + getId() + fileSuffix;
-    return null;
-  }
+	public void setPromotions(Set<Promotion> promotions) {
+		this.promotions = promotions;
+	}
 
-  @PreRemove
-  public void preRemove()
-  {
-//    Set localSet = getProducts();
-//    if (localSet != null)
-//    {
-//      localObject2 = localSet.iterator();
-//      while (((Iterator)localObject2).hasNext())
-//      {
-//        localObject1 = (Product)((Iterator)localObject2).next();
-//        ((Product)localObject1).setBrand(null);
-//      }
-//    }
-//    Object localObject1 = getProductCategories();
-//    Object localObject3;
-//    if (localObject1 != null)
-//    {
-//      localObject3 = ((Set)localObject1).iterator();
-//      while (((Iterator)localObject3).hasNext())
-//      {
-//        localObject2 = (ProductCategory)((Iterator)localObject3).next();
-//        ((ProductCategory)localObject2).getBrands().remove(this);
-//      }
-//    }
-//    Object localObject2 = getPromotions();
-//    if (localObject2 != null)
-//    {
-//      Iterator localIterator = ((Set)localObject2).iterator();
-//      while (localIterator.hasNext())
-//      {
-//        localObject3 = (Promotion)localIterator.next();
-//        ((Promotion)localObject3).getBrands().remove(this);
-//      }
-//    }
-  }
+	@Transient
+	public String getPath() {
+		if (getId() != null)
+			return filePath + getId() + fileSuffix;
+		return null;
+	}
+
+	@PreRemove
+	public void preRemove() {
+		Set<Product> localSet = getProducts();
+		if (localSet != null) {
+			Iterator<Product> localObject2 = localSet.iterator();
+			while (localObject2.hasNext()) {
+				Product localObject1 = (Product) (localObject2).next();
+				localObject1.setBrand(null);
+			}
+		}
+		Set<ProductCategory> localObject1 = getProductCategories();
+		if (localObject1 != null) {
+			Iterator<ProductCategory> localObject3 = localObject1.iterator();
+			while (localObject3.hasNext()) {
+				ProductCategory localObject2 = (ProductCategory) (localObject3)
+						.next();
+				localObject2.getBrands().remove(this);
+			}
+		}
+		Set<Promotion> localObject2 = getPromotions();
+		if (localObject2 != null) {
+			Iterator<Promotion> localIterator = localObject2.iterator();
+			while (localIterator.hasNext()) {
+				Promotion localObject3 = (Promotion) localIterator.next();
+				localObject3.getBrands().remove(this);
+			}
+		}
+	}
 }

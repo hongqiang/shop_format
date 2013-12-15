@@ -6,17 +6,15 @@ import com.hongqiang.shop.modules.entity.Attribute;
 
 public abstract interface AttributeService 
 {
-		public Attribute find(Long id);
+	public Attribute find(Long id);
 	
 	public Page<Attribute> findPage(Pageable pageable);
-
 
   public void save(Attribute attribute);
 
   public Attribute update(Attribute attribute);
 
-//  //忽视
-//  public Attribute update(Attribute attribute, String[] ignoreProperties);
+  public Attribute update(Attribute attribute, String[] ignoreProperties);
 
   public void delete(Long id);
 

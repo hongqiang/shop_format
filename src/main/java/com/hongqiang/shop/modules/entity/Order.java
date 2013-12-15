@@ -41,7 +41,7 @@ import com.hongqiang.shop.common.utils.SettingUtils;
 public class Order extends BaseEntity
 {
   private static final long serialVersionUID = 8370942500343156156L;
-  //private static final String IIIllIlI = " ";
+  private static final String ORDER_STRING = " ";
   private String sn;// 订单编号
   private OrderStatus orderStatus;// 订单状态
   private PaymentStatus paymentStatus;// 支付状态
@@ -559,7 +559,7 @@ public enum ShippingStatus
         OrderItem localOrderItem = (OrderItem)localIterator.next();
         if ((localOrderItem == null) || (localOrderItem.getFullName() == null))
           continue;
-        localStringBuffer.append(" ").append(localOrderItem.getFullName());
+        localStringBuffer.append(ORDER_STRING).append(localOrderItem.getFullName());
       }
       if (localStringBuffer.length() > 0)
         localStringBuffer.deleteCharAt(0);
