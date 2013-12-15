@@ -163,12 +163,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	 */
 	public T find(Long id) {
 		if (id != null)
-			return this.entityManager.find(this.entityClass, id);// Find by
-																	// primary
-																	// key id
-																	// and
-																	// return
-																	// the T.
+			return this.entityManager.find(this.entityClass, id);// Find by id
 		return null;
 	}
 
@@ -183,7 +178,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	public T update(T entity, String[] ignoreProperties) {
 		// Check if the instance is a managed entity instance belonging to the
 		// current persistence context.
-		if (!isManaged(entity))
+		if (isManaged(entity))
 			throw new IllegalArgumentException("Entity must not be managed");
 		T localObject = find(getIdentifier(entity));
 		if (localObject != null) {
