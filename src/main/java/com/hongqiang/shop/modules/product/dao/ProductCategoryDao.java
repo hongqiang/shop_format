@@ -34,7 +34,7 @@ interface ProductCategoryDaoCustom extends BaseDao<ProductCategory> {
 	 * @return 所有顶级商品分类集合
 	 * 
 	 */
-	List<ProductCategory> findRoots(Integer paramInteger);
+	public List<ProductCategory> findRoots(Integer paramInteger);
 
 	/**
 	 * 根据ProductCategory对象，获取他的所有父类集合;
@@ -46,7 +46,7 @@ interface ProductCategoryDaoCustom extends BaseDao<ProductCategory> {
 	 * @return 所有父类集合
 	 * 
 	 */
-	List<ProductCategory> findParents(ProductCategory paramProductCategory,
+	public List<ProductCategory> findParents(ProductCategory paramProductCategory,
 			Integer paramInteger);
 
 	/**
@@ -59,6 +59,12 @@ interface ProductCategoryDaoCustom extends BaseDao<ProductCategory> {
 	 * @return 所有子类集合
 	 * 
 	 */
-	List<ProductCategory> findChildren(ProductCategory paramProductCategory,
+	public List<ProductCategory> findChildren(ProductCategory paramProductCategory,
 			Integer paramInteger);
+	
+	public void persist(ProductCategory productCategory);
+	
+	public ProductCategory merge(ProductCategory productCategory);
+	
+	public void remove(ProductCategory productCategory);
 }

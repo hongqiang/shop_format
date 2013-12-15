@@ -41,12 +41,12 @@ public class TagServiceImpl extends BaseService
     return this.tagDao.findList(type);
   }
 
-//  @Transactional(readOnly=true)
-//  @Cacheable({"tag"})
-//  public List<Tag> findList(Integer count, List<Filter> filters, List<Order> orders, String cacheRegion)
-//  {
-//    return this.tagDao.findList(null, count, filters, orders);
-//  }
+  @Transactional(readOnly=true)
+  @Cacheable({"tag"})
+  public List<Tag> findList(Integer count, List<Filter> filters, List<Order> orders, String cacheRegion)
+  {
+    return this.tagDao.findList(null, count, filters, orders);
+  }
 
   @Transactional
   @CacheEvict(value={"tag"}, allEntries=true)

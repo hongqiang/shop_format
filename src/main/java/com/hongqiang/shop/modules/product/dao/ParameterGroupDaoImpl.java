@@ -1,5 +1,6 @@
 package com.hongqiang.shop.modules.product.dao;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +27,8 @@ public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup>
 	public Page<ParameterGroup> findPage(Pageable pageable){
 		Page<ParameterGroup> parameterGroupPage = new Page<ParameterGroup>(pageable.getPageNumber(),pageable.getPageSize());
 		String qlString = "select parameterGroup from ParameterGroup parameterGroup";
-		return super.find(parameterGroupPage, qlString);
+		List<Object> parameter = new ArrayList<Object>();
+		return super.findPage(parameterGroupPage,  qlString,  parameter, pageable) ;
 	}
 	
 	public ParameterGroup merge(ParameterGroup parameterGroup) {

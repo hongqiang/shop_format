@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Tag;
 
@@ -25,7 +27,6 @@ interface TagDaoCustom extends BaseDao<Tag> {
 
 	public List<Tag> findList(Tag.Type paramType);
 
-	// public abstract List<Tag> findList(Integer paramInteger, List<Filter>
-	// paramList, List<Order> paramList1, String paramString);
+	 public  List<Tag> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders);
 
 }

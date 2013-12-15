@@ -36,7 +36,7 @@ public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
 				hasSent);
 		Page<ProductNotify> productPage = new Page<ProductNotify>(
 				pageable.getPageNumber(), pageable.getPageSize());
-		return this.findPage(productPage, sqlString, params.toArray());// 测试这样是否可行，如果不行，需要重写该函数
+		return super.findPage(productPage,  sqlString,  params, pageable) ;
 	}
 
 	public Long count(Member member, Boolean isMarketable,

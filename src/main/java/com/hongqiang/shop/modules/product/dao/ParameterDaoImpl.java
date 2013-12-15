@@ -19,14 +19,14 @@ public class ParameterDaoImpl extends BaseDaoImpl<Parameter>
 	  String sqlString = "select DISTINCT parameter from Parameter parameter where 1=1 ";
 	  List<Object> params = new ArrayList<Object>();
 	  if (parameterGroup != null){
-		  System.out.print("wo zai zheli "+parameterGroup.getName()+", "+parameterGroup.getProductCategory()+"\n");
+//		  System.out.print("wo zai zheli "+parameterGroup.getName()+", "+parameterGroup.getProductCategory()+"\n");
 		  sqlString += " and parameter.parameterGroup = ? ";
 		  params.add(parameterGroup);
 	  }
 	  if ((excludes != null) && (!excludes.isEmpty())){
-		  System.out.print("wo zai zheli ");
+//		  System.out.print("wo zai zheli ");
 			for (Parameter op : excludes) {
-				System.out.print(op.getName()+", "+op.getParameterGroup()+"\n");
+//				System.out.print(op.getName()+", "+op.getParameterGroup()+"\n");
 				params.add(op.getId().intValue());
 			}
 			sqlString += " and parameter not in (";
@@ -39,8 +39,8 @@ public class ParameterDaoImpl extends BaseDaoImpl<Parameter>
 //		  sqlString += " and parameter.id not in (?)";
 ////		  params.add(excludes);
 	  }
-	  System.out.print("sql="+sqlString+"\n");
+//	  System.out.print("sql="+sqlString+"\n");
 	  return super.find(sqlString,params.toArray());
-//	  return super.find(sqlString,new Object[]{parameterGroup,params});
+	  
   }
 }

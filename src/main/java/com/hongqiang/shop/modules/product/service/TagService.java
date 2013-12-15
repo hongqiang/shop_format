@@ -3,6 +3,8 @@ package com.hongqiang.shop.modules.product.service;
 import java.util.List;
 
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Tag;
 
@@ -12,10 +14,10 @@ public abstract interface TagService {
 
 	public Page<Tag> findPage(Pageable pageable);
 
-	public abstract List<Tag> findList(Tag.Type paramType);
+	public  List<Tag> findList(Tag.Type paramType);
 
-	// public abstract List<Tag> findList(Integer paramInteger, List<Filter>
-	// paramList, List<Order> paramList1, String paramString);
+	 public  List<Tag> findList(Integer paramInteger, List<Filter>
+	 paramList, List<Order> paramList1, String paramString);
 
 	public void save(Tag tag);
 
