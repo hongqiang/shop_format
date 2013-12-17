@@ -37,6 +37,9 @@ public class Global {
 	public static String getFrontPath() {
 		return getConfig("frontPath");
 	}
+	public static String getMemberPath() {
+		return getConfig("memberPath");
+	}
 	public static String getUrlSuffix() {
 		return getConfig("urlSuffix");
 	}

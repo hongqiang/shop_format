@@ -47,7 +47,7 @@
 				<entry key="systemShowPowered" value="${system.show_powered}" />
 				<entry key="base" value="#{servletContext.contextPath}" />
 				<entry key="locale" value="${locale}" />
-				<entry key="setting" value="#{T(net.shopxx.util.SettingUtils).get()}" />
+				<entry key="setting" value="#{T(com.hongqiang.shop.common.utils..SettingUtils).get()}" />
 				<entry key="message" value-ref="messageMethod" />
 				<entry key="abbreviate" value-ref="abbreviateMethod" />
 				<entry key="currency" value-ref="currencyMethod" />
