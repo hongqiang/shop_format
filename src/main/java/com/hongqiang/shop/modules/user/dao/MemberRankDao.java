@@ -1,11 +1,14 @@
 package com.hongqiang.shop.modules.user.dao;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberRank;
 
@@ -37,4 +40,8 @@ interface MemberRankDaoCustom extends BaseDao<MemberRank> {
   public MemberRank merge(MemberRank memberRank);
   
   public void remove(MemberRank memberRank);
+  
+  public  List<MemberRank> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders);
+	
+	public List<MemberRank> findAll();
 }

@@ -2,6 +2,8 @@ package com.hongqiang.shop.modules.product.service;
 
 import java.util.List;
 
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.modules.entity.ProductCategory;
 
 public  interface ProductCategoryService  
@@ -60,6 +62,12 @@ public  interface ProductCategoryService
   public  List<ProductCategory> findChildren(ProductCategory paramProductCategory, Integer paramInteger);
 
   public  List<ProductCategory> findChildren(ProductCategory paramProductCategory, Integer paramInteger, String paramString);
+  
+public List<ProductCategory> findList(Integer count, List<Filter> filters,List<Order> orders, String cacheRegion);
+  
+  public List<ProductCategory> findList(Long[] ids);
+  
+  public List<ProductCategory> findAll();
 
   public void save(ProductCategory productCategory);
   

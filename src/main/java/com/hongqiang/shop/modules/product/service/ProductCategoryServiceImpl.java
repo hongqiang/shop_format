@@ -1,5 +1,6 @@
 package com.hongqiang.shop.modules.product.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hongqiang.shop.common.service.BaseService;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.dao.ProductCategoryDao;
 
@@ -77,6 +80,34 @@ public class ProductCategoryServiceImpl extends BaseService implements
 		return this.productCategoryDao.findChildren(productCategory, count);
 	}
 
+	@Transactional(readOnly = true)
+	 @Cacheable({"productCategory"})
+	public List<ProductCategory> findList(Integer count, List<Filter> filters,List<Order> orders, String cacheRegion){
+		return this.productCategoryDao.findList(null, count, filters, orders);
+	}
+	  
+	@Transactional(readOnly = true)
+	 @Cacheable({"productCategory"})
+	  public List<ProductCategory> findList(Long[] ids){
+		 List<ProductCategory> localArrayList = new ArrayList<ProductCategory>();
+		    if (ids != null){
+		      for (Long id : ids)
+		      {
+		    	  ProductCategory localObject = find(id);
+		        if (localObject == null)
+		          continue;
+		        localArrayList.add(localObject);
+		      }
+		    }
+		    return localArrayList;
+		}
+	  
+	@Transactional(readOnly = true)
+	 @Cacheable({"productCategory"})
+	  public List<ProductCategory> findAll(){
+			return this.productCategoryDao.findAll();
+		}
+	
 	@Transactional
 	 @CacheEvict(value={"product", "productCategory", "review",
 	 "consultation"}, allEntries=true)

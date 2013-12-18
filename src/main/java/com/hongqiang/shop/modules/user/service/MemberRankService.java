@@ -1,8 +1,11 @@
 package com.hongqiang.shop.modules.user.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberRank;
 
@@ -22,6 +25,12 @@ public interface MemberRankService{
   public MemberRank find(Long id); 
 
   public Page<MemberRank> findPage(Pageable pageable);
+  
+public List<MemberRank> findList(Integer count, List<Filter> filters,List<Order> orders);
+  
+  public List<MemberRank> findList(Long[] ids);
+  
+  public List<MemberRank> findAll();
   
   public void save(MemberRank memberRank);
   

@@ -1,14 +1,20 @@
 package com.hongqiang.shop.modules.account.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.account.dao.CouponDao;
 import com.hongqiang.shop.modules.entity.Coupon;
+
 
 @Service
 public class CouponServiceImpl extends BaseService implements CouponService {
@@ -31,6 +37,29 @@ public class CouponServiceImpl extends BaseService implements CouponService {
 	@Transactional
 	public Page<Coupon> findPage(Pageable pageable) {
 		return this.couponDao.findPage(pageable);
+	}
+
+	@Transactional
+	public List<Coupon> findList(Long[] ids) {
+		List<Coupon> localArrayList = new ArrayList<Coupon>();
+		if (ids != null)
+			for (Long id : ids) {
+				Coupon localObject = find(id);
+				if (localObject == null)
+					continue;
+				localArrayList.add(localObject);
+			}
+		return localArrayList;
+	}
+
+	@Transactional(readOnly = true)
+	public List<Coupon> findList(Integer count, List<Filter> filters,List<Order> orders) {
+		return this.couponDao.findList(null, count, filters, orders);
+	}
+
+	@Transactional
+	public List<Coupon> findAll() {
+		return this.couponDao.findAll();
 	}
 
 	@Transactional
