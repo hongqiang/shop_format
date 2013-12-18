@@ -1,11 +1,17 @@
 package com.hongqiang.shop.modules.shipping.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.ShippingMethod;
 import com.hongqiang.shop.modules.shipping.dao.ShippingMethodDao;
@@ -17,16 +23,40 @@ public class ShippingMethodServiceImpl extends BaseService
   @Autowired
   private ShippingMethodDao shippingMethodDao;
 
-   @Transactional
+   @Transactional(readOnly = true)
 	public ShippingMethod find(Long id) {
 		return this.shippingMethodDao.find(id);
 	}
    
- @Transactional
+ @Transactional(readOnly = true)
    public Page<ShippingMethod> findPage(Pageable pageable){
 	   return this.shippingMethodDao.findPage(pageable);
    }
    
+ @Transactional(readOnly = true)
+ public List<ShippingMethod> findList(Long[] ids){
+	 List<ShippingMethod> shippingMethods = new ArrayList<ShippingMethod>();
+	 List<Long> localIds = Arrays.asList(ids);
+	  if (ids != null){
+			for (Long id : localIds){
+				ShippingMethod shippingMethod =this.shippingMethodDao.find(id);
+				shippingMethods.add(shippingMethod);
+			}
+	  }
+	  return shippingMethods;		
+ }
+
+ @Transactional(readOnly = true)
+	public List<ShippingMethod> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders){
+	 return this.shippingMethodDao.findList(first, count, filters, orders);
+ }
+
+ @Transactional(readOnly = true)
+	public List<ShippingMethod> findAll(){
+	 return this.shippingMethodDao.findAll();
+ }
+ 
     @Transactional
    public Long count(){
 	return this.shippingMethodDao.count();

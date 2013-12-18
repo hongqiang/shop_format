@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.ShippingMethod;
 
@@ -20,10 +22,21 @@ public class ShippingMethodDaoImpl extends BaseDaoImpl<ShippingMethod>
 				pageable.getPageNumber(), pageable.getPageSize());
 		String qlString = "select shippingMethod from ShippingMethod shippingMethod where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super
-				.findPage(shippingMethodPage, qlString, parameter, pageable);
+		return super.findPage(shippingMethodPage, qlString, parameter, pageable);
 	}
 
+	@Override
+	public  List<ShippingMethod> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders){
+		String qlString = "select shippingMethod from ShippingMethod shippingMethod where 1=1 ";
+		List<Object> parameter = new ArrayList<Object>();
+		return super.findList(qlString, parameter, first, count, filters, orders);
+	}
+	
+	@Override
+	public List<ShippingMethod> findAll(){
+		return findList(null, null, null, null);
+	}
+	
 	// @Override
 	// public Long count(){
 	// String qlString =
