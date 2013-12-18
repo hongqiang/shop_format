@@ -20,7 +20,7 @@ class BrandDaoImpl extends BaseDaoImpl<Brand>  implements BrandDaoCustom{
 		Page<Brand> brandPage = new Page<Brand>(pageable.getPageNumber(),pageable.getPageSize());
 		String qlString = "select brand from Brand brand where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(brandPage,  qlString,  parameter, pageable) ;
+		return super.findPage(brandPage,  qlString,  parameter, pageable);
 	}
 	
 	@Override

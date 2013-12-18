@@ -42,11 +42,11 @@ public class ProductNotifyController extends BaseController
   {
     ProductNotify localProductNotify = (ProductNotify)this.productNotifyService.find(id);
     if (localProductNotify == null)
-      return ADMIN_ERROR;
+      return SHOP_ERROR;
     Member localMember = this.memberService.getCurrent();
     if (!localMember.getProductNotifies().contains(localProductNotify))
-      return ADMIN_ERROR;
+      return SHOP_ERROR;
     this.productNotifyService.delete(localProductNotify);
-    return ADMIN_SUCCESS;
+    return SHOP_SUCCESS;
   }
 }
