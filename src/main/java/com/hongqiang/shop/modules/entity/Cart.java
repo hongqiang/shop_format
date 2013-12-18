@@ -17,7 +17,6 @@ import javax.persistence.Transient;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.springframework.cglib.core.Predicate;
 
 import com.hongqiang.shop.common.utils.DateUtils;
 import com.hongqiang.shop.common.utils.Setting;
@@ -28,16 +27,6 @@ import com.hongqiang.shop.common.utils.SettingUtils;
 @Table(name="hq_cart")
 public class Cart extends BaseEntity
 {
-//class CartEvaluate
-//  implements Predicate
-//{
-//  public boolean evaluate(Object object)
-//  {
-//    GiftItem localGiftItem = (GiftItem)object;
-//    return (localGiftItem != null) && (localGiftItem.getGift().equals(this.member.getGift()));
-//  }
-//}
-
   private static final long serialVersionUID = -6565967051825794561L;
   public static final int TIMEOUT = 604800;
   public static final Integer MAX_PRODUCT_COUNT = Integer.valueOf(100);
@@ -193,13 +182,20 @@ public class Cart extends BaseEntity
       Iterator<GiftItem> localIterator2 = localPromotion.getGiftItems().iterator();
       while (localIterator2.hasNext())
       {
+    	GiftItem localGiftItem = null;
         GiftItem localGiftItem1 = (GiftItem)localIterator2.next();
-//        GiftItem localGiftItem2 = (GiftItem)CollectionUtils.find(localHashSet, new CartEvaluate(this, localGiftItem1));
-//        if (localGiftItem2 != null)
-//          localGiftItem2.setQuantity(Integer.valueOf(localGiftItem2.getQuantity().intValue() + localGiftItem1.getQuantity().intValue()));
-//        else
-//          localHashSet.add(localGiftItem1);
-        localHashSet.add(localGiftItem1);
+        for (GiftItem giftItem : localHashSet) {
+        	if (giftItem.getGift().equals(localGiftItem1.getGift())) {			
+				localGiftItem = giftItem;
+				break;
+			}
+		}
+        if (localGiftItem != null) {
+        	localGiftItem.setQuantity(Integer.valueOf(localGiftItem.getQuantity().intValue() + localGiftItem1.getQuantity().intValue()));
+		}
+        else {
+        	localHashSet.add(localGiftItem1);
+		}
       }
     }
     return localHashSet;
