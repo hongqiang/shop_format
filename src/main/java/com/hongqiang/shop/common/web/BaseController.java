@@ -128,21 +128,21 @@ public abstract class BaseController {
 			redirectAttributes.addFlashAttribute(FlashMessageDirective.FLASH_MESSAGE_ATTRIBUTE_NAME, messages);
 	}
 	
-//	 protected String addMessage(BigDecimal paramBigDecimal, boolean paramBoolean1, boolean paramBoolean2)
-//	  {
-//	    Setting localSetting = SettingUtils.get();
-//	    String str = localSetting.setScale(paramBigDecimal).toString();
-//	    if (paramBoolean1)
-//	      str = localSetting.getCurrencySign() + str;
-//	    if (paramBoolean2)
-//	      str = str + localSetting.getCurrencyUnit();
-//	    return str;
-//	  }
+	 protected String addMessage(BigDecimal paramBigDecimal, boolean paramBoolean1, boolean paramBoolean2)
+	  {
+	    Setting localSetting = SettingUtils.get();
+	    String str = localSetting.setScale(paramBigDecimal).toString();
+	    if (paramBoolean1)
+	      str = localSetting.getCurrencySign() + str;
+	    if (paramBoolean2)
+	      str = str + localSetting.getCurrencyUnit();
+	    return str;
+	  }
 
-//	  protected String addMessage(String paramString, Object[] paramArrayOfObject)
-//	  {
-//	    return SpringContextHolder.getMessage(paramString, paramArrayOfObject);
-//	  }
+	  protected String addMessage(String paramString, Object[] paramArrayOfObject)
+	  {
+	    return SpringContextHolder.getMessage(paramString, paramArrayOfObject);
+	  }
 	
 	  protected void addMessage(String paramString)
 	  {
