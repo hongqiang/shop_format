@@ -436,7 +436,19 @@
 			<artifactId>jackson-module-jaxb-annotations</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
-
+		<!-- apache ftp -->
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>2.2</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- 阿里云 -->
+		<dependency>
+			<groupId>com.aliyun.openservices</groupId>
+			<artifactId>aliyun-openservices</artifactId>
+			<version>1.2.1</version>
+		</dependency>
 		<!-- pojo copy -->
 		<dependency>
 			<groupId>net.sf.dozer</groupId>
