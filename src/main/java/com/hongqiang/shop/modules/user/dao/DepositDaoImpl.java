@@ -21,18 +21,18 @@ public class DepositDaoImpl extends BaseDaoImpl<Deposit>
     if (member == null){
 		return new Page<Deposit>(0,0);
 	}
-      //return new Page(Collections.emptyList(), 0L, pageable);//这里应该要修改
 	Page<Deposit> depositPage = new Page<Deposit>(pageable.getPageNumber(),pageable.getPageSize());
 	String sqlString = "select deposit from Deposit deposit where deposit.member = ?";
 	List<Object> params = new ArrayList<Object>();
 	params.add(member);
-	return super.find(depositPage, sqlString,params.toArray());
+	return super.findPage(depositPage,  sqlString,  params, pageable);
   }
   
   @Override
   public Page<Deposit> findPage(Pageable pageable){
-	Page<Deposit> adminPage = new Page<Deposit>(pageable.getPageNumber(),pageable.getPageSize());
+	Page<Deposit> depositPage = new Page<Deposit>(pageable.getPageNumber(),pageable.getPageSize());
 		String sqlString = "select deposit from Deposit deposit";
-		return super.find(adminPage, sqlString);
+		List<Object> params = new ArrayList<Object>();
+		return super.findPage(depositPage,  sqlString,  params, pageable);
   }
 }

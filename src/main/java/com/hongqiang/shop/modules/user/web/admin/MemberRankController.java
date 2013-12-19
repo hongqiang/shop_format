@@ -1,4 +1,4 @@
-package com.hongqiang.shop.modules.user.web.member;
+package com.hongqiang.shop.modules.user.web.admin;
 
 import java.math.BigDecimal;
 
@@ -91,7 +91,7 @@ public class MemberRankController extends BaseController
       memberRank.setAmount(null);
     else if ((memberRank.getAmount() == null) || (!this.memberRankService.amountUnique(localMemberRank.getAmount(), memberRank.getAmount())))
       return ERROR_PAGE;
-//    this.memberRankService.update(memberRank, new String[] { "members", "promotions" });
+    this.memberRankService.update(memberRank, new String[] { "members", "promotions" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
@@ -115,9 +115,9 @@ public class MemberRankController extends BaseController
         if ((localMemberRank != null) && (localMemberRank.getMembers() != null) && (!localMemberRank.getMembers().isEmpty()))
           return Message.error("admin.memberRank.deleteExistNotAllowed", new Object[] { localMemberRank.getName() });
       }
-//      long l = this.memberRankService.count();
-//      if (ids.length >= l)
-//        return Message.error("admin.common.deleteAllNotAllowed", new Object[0]);
+      long l = this.memberRankService.count();
+      if (ids.length >= l)
+        return Message.error("admin.common.deleteAllNotAllowed", new Object[0]);
       this.memberRankService.delete(ids);
     }
     return ADMIN_SUCCESS;

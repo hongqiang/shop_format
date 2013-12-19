@@ -11,16 +11,15 @@ import com.hongqiang.shop.common.persistence.BaseDaoImpl;
 import com.hongqiang.shop.modules.entity.Area;
 
 @Repository
-public class AreaDaoImpl extends BaseDaoImpl<Area>
-  implements AreaDaoCustom
-{
- @Override
-  public List<Area> findRoots(Integer count)
-  {
-    String str = "select area from Area area where area.parent is null order by area.order asc";
-    TypedQuery<Area> localTypedQuery = this.getEntityManager().createQuery(str, Area.class).setFlushMode(FlushModeType.COMMIT);
-    if (count != null)
-      localTypedQuery.setMaxResults(count.intValue());
-    return localTypedQuery.getResultList();
-  }
+public class AreaDaoImpl extends BaseDaoImpl<Area> implements AreaDaoCustom {
+	@Override
+	public List<Area> findRoots(Integer count) {
+		String str = "select area from Area area where area.parent is null order by area.order asc";
+		TypedQuery<Area> localTypedQuery = this.getEntityManager()
+				.createQuery(str, Area.class)
+				.setFlushMode(FlushModeType.COMMIT);
+		if (count != null)
+			localTypedQuery.setMaxResults(count.intValue());
+		return localTypedQuery.getResultList();
+	}
 }

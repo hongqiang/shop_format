@@ -6,13 +6,15 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberAttribute;
 
-public  interface MemberAttributeDao extends MemberAttributeDaoCustom, CrudRepository<MemberAttribute, Long>{
+public interface MemberAttributeDao extends MemberAttributeDaoCustom,
+		CrudRepository<MemberAttribute, Long> {
 	public MemberAttribute findById(Long id);
 }
-
 
 /**
  * DAO自定义接口
@@ -21,11 +23,16 @@ public  interface MemberAttributeDao extends MemberAttributeDaoCustom, CrudRepos
  * 
  */
 interface MemberAttributeDaoCustom extends BaseDao<MemberAttribute> {
-  public  Integer findUnusedPropertyIndex();
+	public Integer findUnusedPropertyIndex();
 
-  public Page<MemberAttribute> findPage(Pageable pageable);
-  
-  public  List<MemberAttribute> findList();
-  
-  public void remove(MemberAttribute memberAttribute);
+	public Page<MemberAttribute> findPage(Pageable pageable);
+
+	public List<MemberAttribute> findList();
+	
+	public List<MemberAttribute> findAll();
+	
+	public List<MemberAttribute> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders);
+
+	public void remove(MemberAttribute memberAttribute);
 }

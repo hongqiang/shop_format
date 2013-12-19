@@ -121,6 +121,12 @@ public class MemberRankServiceImpl extends BaseService implements
 		return (MemberRank) this.memberRankDao.merge(memberRank);
 	}
 
+	@Transactional
+	public MemberRank update(MemberRank memberRank, String[] ignoreProperties) {
+		return (MemberRank) this.memberRankDao.update(memberRank,
+				ignoreProperties);
+	}
+
 	@Transactional(readOnly = true)
 	public long count() {
 		return this.memberRankDao.count();

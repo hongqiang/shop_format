@@ -7,7 +7,7 @@ import com.hongqiang.shop.modules.entity.Member;
 
 public abstract interface DepositService {
 
-  public Page<Deposit> findPage(Member paramMember, Pageable paramPageable);
-  
-  public Page<Deposit> findPage(Pageable pageable);
+	public Page<Deposit> findPage(Member paramMember, Pageable paramPageable);
+
+	public Page<Deposit> findPage(Pageable pageable);
 }

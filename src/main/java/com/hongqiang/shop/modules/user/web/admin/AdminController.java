@@ -102,7 +102,7 @@ public class AdminController extends BaseController
       admin.setLoginFailureCount(localAdmin.getLoginFailureCount());
       admin.setLockedDate(localAdmin.getLockedDate());
     }
-//    this.adminService.update(admin, new String[] { "username", "loginDate", "loginIp", "orders" });
+    this.adminService.update(admin, new String[] { "username", "loginDate", "loginIp", "orders" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
@@ -118,8 +118,8 @@ public class AdminController extends BaseController
   @ResponseBody
   public Message delete(Long[] ids)
   {
-//    if (ids.length >= this.adminService.count())
-//      return Message.error("admin.common.deleteAllNotAllowed", new Object[0]);
+    if (ids.length >= this.adminService.count())
+      return Message.error("admin.common.deleteAllNotAllowed", new Object[0]);
     this.adminService.delete(ids);
     return ADMIN_SUCCESS;
   }

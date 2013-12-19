@@ -12,21 +12,18 @@ import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.user.dao.DepositDao;
 
 @Service
-public class DepositServiceImpl extends BaseService
-  implements DepositService
-{
+public class DepositServiceImpl extends BaseService implements DepositService {
 
-  @Autowired
-  private DepositDao depositDao;
+	@Autowired
+	private DepositDao depositDao;
 
-  @Transactional(readOnly=true)
-  public Page<Deposit> findPage(Member member, Pageable pageable)
-  {
-    return this.depositDao.findPage(member, pageable);
-  }
-  
-     @Transactional(readOnly=true)
-  public Page<Deposit> findPage(Pageable pageable){
-	return this.depositDao.findPage(pageable);
-  }
+	@Transactional(readOnly = true)
+	public Page<Deposit> findPage(Member member, Pageable pageable) {
+		return this.depositDao.findPage(member, pageable);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<Deposit> findPage(Pageable pageable) {
+		return this.depositDao.findPage(pageable);
+	}
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
@@ -22,7 +23,7 @@ public class DepositController extends BaseController
   @Autowired
   private MemberService memberService;
 
-  @RequestMapping(value={"/list"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
+  @RequestMapping(value={"/list"}, method=RequestMethod.GET)
   public String list(Long memberId, Pageable pageable, ModelMap model)
   {
     Member localMember = (Member)this.memberService.find(memberId);

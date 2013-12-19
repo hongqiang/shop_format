@@ -2,8 +2,7 @@ package com.hongqiang.shop.modules.user.web.admin;
 
 import java.util.ArrayList;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,7 @@ import com.hongqiang.shop.modules.user.service.AreaService;
 public class AreaController extends BaseController
 {
 
-  @Resource(name="areaServiceImpl")
+  @Autowired
   private AreaService areaService;
 
   @RequestMapping(value={"/add"}, method=RequestMethod.GET)
@@ -61,7 +60,7 @@ public class AreaController extends BaseController
   {
     if (!beanValidator(redirectAttributes,area, new Class[0]))
       return ERROR_PAGE;
-//    this.areaService.update(area, new String[] { "fullName", "treePath", "parent", "children", "members", "receivers", "orders", "deliveryCenters" });
+    this.areaService.update(area, new String[] { "fullName", "treePath", "parent", "children", "members", "receivers", "orders", "deliveryCenters" });
     addMessage(redirectAttributes, ADMIN_SUCCESS);
     return "redirect:list.jhtml";
   }
@@ -73,7 +72,7 @@ public class AreaController extends BaseController
     if (localArea != null)
     {
       model.addAttribute("parent", localArea);
-      model.addAttribute("areas", new ArrayList(localArea.getChildren()));
+      model.addAttribute("areas", new ArrayList<Area>(localArea.getChildren()));
     }
     else
     {

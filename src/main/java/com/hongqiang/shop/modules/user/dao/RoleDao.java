@@ -9,7 +9,8 @@ import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Role;
 
-public abstract interface RoleDao extends RoleDaoCustom, CrudRepository<Role, Long> {
+public abstract interface RoleDao extends RoleDaoCustom,
+		CrudRepository<Role, Long> {
 
 	public Role findById(Long id);
 }
@@ -23,7 +24,7 @@ public abstract interface RoleDao extends RoleDaoCustom, CrudRepository<Role, Lo
 interface RoleDaoCustom extends BaseDao<Role> {
 
 	public Page<Role> findPage(Pageable pageable);
-	
+
 	public List<Role> findList();
 
 }

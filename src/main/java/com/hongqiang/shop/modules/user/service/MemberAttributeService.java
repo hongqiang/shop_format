@@ -5,33 +5,35 @@ import java.util.List;
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberAttribute;
+import com.hongqiang.shop.modules.entity.MemberRank;
 
-public  interface MemberAttributeService{
+public interface MemberAttributeService {
 
-  public  Integer findUnusedPropertyIndex();
+	public Integer findUnusedPropertyIndex();
 
-  public  List<MemberAttribute> findList();
+	public List<MemberAttribute> findList();
 
-  public  List<MemberAttribute> findList(String paramString);
-  
-  public MemberAttribute find(Long id); 
+	public List<MemberAttribute> findList(String paramString);
+	
+	public List<MemberAttribute> findAll();
+
+	public MemberAttribute find(Long id);
 
 	public Page<MemberAttribute> findPage(Pageable pageable);
-	
-//	public long count();
-	
+
+	public long count();
+
 	public void save(MemberAttribute memberAttribute);
 
 	public MemberAttribute update(MemberAttribute memberAttribute);
 
-	// //忽视
-	// public MemberAttribute update(MemberAttribute brand, String[] ignoreProperties);
+	 public MemberAttribute update(MemberAttribute brand, String[]
+	 ignoreProperties);
 
 	public void delete(Long id);
 
 	public void delete(Long[] ids);
 
 	public void delete(MemberAttribute memberAttribute);
-	
-	
+
 }

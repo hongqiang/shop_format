@@ -9,37 +9,45 @@ import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Admin;
 import com.hongqiang.shop.modules.entity.Member;
 
-public abstract interface MemberService{
+public abstract interface MemberService {
 
-  public  boolean usernameExists(String paramString);
+	public boolean usernameExists(String paramString);
 
-  public  boolean usernameDisabled(String paramString);
+	public boolean usernameDisabled(String paramString);
 
-  public  boolean emailExists(String paramString);
+	public boolean emailExists(String paramString);
 
-  public  boolean emailUnique(String paramString1, String paramString2);
+	public boolean emailUnique(String paramString1, String paramString2);
 
-  public  void save(Member paramMember, Admin paramAdmin);
+	public void save(Member paramMember, Admin paramAdmin);
 
-  public  void update(Member paramMember, Integer paramInteger, BigDecimal paramBigDecimal, String paramString, Admin paramAdmin);
-  
-  public Member find(Long id); 
+	public void update(Member paramMember, Integer paramInteger,
+			BigDecimal paramBigDecimal, String paramString, Admin paramAdmin);
 
-  public Page<Member> findPage(Pageable pageable);
+	public Member find(Long id);
 
-  public  Member findByUsername(String paramString);
+	public Page<Member> findPage(Pageable pageable);
 
-  public  List<Member> findListByEmail(String paramString);
+	public Member findByUsername(String paramString);
 
-  public  Page<Member> findPurchasePage(Date paramDate1, Date paramDate2, Pageable paramPageable);
+	public List<Member> findListByEmail(String paramString);
 
-  public  boolean isAuthenticated();
+	public Page<Member> findPurchasePage(Date paramDate1, Date paramDate2,
+			Pageable paramPageable);
 
-  public  Member getCurrent();
+	public boolean isAuthenticated();
 
-  public  String getCurrentUsername();
-  
-  public void delete(Long id);
+	public Member getCurrent();
+
+	public String getCurrentUsername();
+
+	public void save(Member member);
+
+	public Member update(Member member);
+
+	public Member update(Member member, String[] ignoreProperties);
+
+	public void delete(Long id);
 
 	public void delete(Long[] ids);
 
