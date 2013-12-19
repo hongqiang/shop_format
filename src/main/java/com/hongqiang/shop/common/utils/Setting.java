@@ -141,7 +141,7 @@ public class Setting
   public void setHotSearch(String hotSearch)
   {
     if (hotSearch != null) {
-      hotSearch = hotSearch.replaceAll("[,\\s]*,[,\\s]*", ",").replaceAll("^,|,$", "");
+      hotSearch = hotSearch.replaceAll("[,\\s]*,[,\\s]*", SEPARATOR).replaceAll("^,|,$", "");
     }
     this.hotSearch = hotSearch;
   }
@@ -445,7 +445,7 @@ public class Setting
   public void setDisabledUsername(String disabledUsername)
   {
     if (disabledUsername != null) {
-      disabledUsername = disabledUsername.replaceAll("[,\\s]*,[,\\s]*", ",").replaceAll("^,|,$", "");
+      disabledUsername = disabledUsername.replaceAll("[,\\s]*,[,\\s]*", SEPARATOR).replaceAll("^,|,$", "");
     }
     this.disabledUsername = disabledUsername;
   }
@@ -613,7 +613,7 @@ public class Setting
   public void setUploadImageExtension(String uploadImageExtension)
   {
     if (uploadImageExtension != null) {
-      uploadImageExtension = uploadImageExtension.replaceAll("[,\\s]*,[,\\s]*", ",").replaceAll("^,|,$", "").toLowerCase();
+      uploadImageExtension = uploadImageExtension.replaceAll("[,\\s]*,[,\\s]*", SEPARATOR).replaceAll("^,|,$", "").toLowerCase();
     }
     this.uploadImageExtension = uploadImageExtension;
   }
@@ -627,7 +627,7 @@ public class Setting
   public void setUploadFlashExtension(String uploadFlashExtension)
   {
     if (uploadFlashExtension != null) {
-      uploadFlashExtension = uploadFlashExtension.replaceAll("[,\\s]*,[,\\s]*", ",").replaceAll("^,|,$", "").toLowerCase();
+      uploadFlashExtension = uploadFlashExtension.replaceAll("[,\\s]*,[,\\s]*", SEPARATOR).replaceAll("^,|,$", "").toLowerCase();
     }
     this.uploadFlashExtension = uploadFlashExtension;
   }
@@ -641,7 +641,7 @@ public class Setting
   public void setUploadMediaExtension(String uploadMediaExtension)
   {
     if (uploadMediaExtension != null) {
-      uploadMediaExtension = uploadMediaExtension.replaceAll("[,\\s]*,[,\\s]*", ",").replaceAll("^,|,$", "").toLowerCase();
+      uploadMediaExtension = uploadMediaExtension.replaceAll("[,\\s]*,[,\\s]*", SEPARATOR).replaceAll("^,|,$", "").toLowerCase();
     }
     this.uploadMediaExtension = uploadMediaExtension;
   }
@@ -655,7 +655,7 @@ public class Setting
   public void setUploadFileExtension(String uploadFileExtension)
   {
     if (uploadFileExtension != null) {
-      uploadFileExtension = uploadFileExtension.replaceAll("[,\\s]*,[,\\s]*", ",").replaceAll("^,|,$", "").toLowerCase();
+      uploadFileExtension = uploadFileExtension.replaceAll("[,\\s]*,[,\\s]*", SEPARATOR).replaceAll("^,|,$", "").toLowerCase();
     }
     this.uploadFileExtension = uploadFileExtension;
   }
@@ -1041,32 +1041,32 @@ public class Setting
 
   public String[] getHotSearches()
   {
-    return StringUtils.split(this.hotSearch, ",");
+    return StringUtils.split(this.hotSearch, SEPARATOR);
   }
 
   public String[] getDisabledUsernames()
   {
-    return StringUtils.split(this.disabledUsername, ",");
+    return StringUtils.split(this.disabledUsername, SEPARATOR);
   }
 
   public String[] getUploadImageExtensions()
   {
-    return StringUtils.split(this.uploadImageExtension, ",");
+    return StringUtils.split(this.uploadImageExtension, SEPARATOR);
   }
 
   public String[] getUploadFlashExtensions()
   {
-    return StringUtils.split(this.uploadFlashExtension, ",");
+    return StringUtils.split(this.uploadFlashExtension, SEPARATOR);
   }
 
   public String[] getUploadMediaExtensions()
   {
-    return StringUtils.split(this.uploadMediaExtension, ",");
+    return StringUtils.split(this.uploadMediaExtension, SEPARATOR);
   }
 
   public String[] getUploadFileExtensions()
   {
-    return StringUtils.split(this.uploadFileExtension, ",");
+    return StringUtils.split(this.uploadFileExtension, SEPARATOR);
   }
 
   public BigDecimal setScale(BigDecimal amount)

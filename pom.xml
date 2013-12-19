@@ -450,7 +450,12 @@
 			<artifactId>freemarker</artifactId>
 			<version>${freemarker.version}</version>
 		</dependency>
-
+		<!-- CaptchaService -->
+		<dependency>
+			<groupId>com.octo.captcha</groupId>
+			<artifactId>jcaptcha</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<!-- email -->
 		<dependency>
 			<groupId>javax.mail</groupId>
