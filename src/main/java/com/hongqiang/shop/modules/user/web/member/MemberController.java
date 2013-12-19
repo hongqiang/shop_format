@@ -15,7 +15,7 @@ import com.hongqiang.shop.modules.product.service.ProductService;
 import com.hongqiang.shop.modules.user.service.MemberService;
 
 @Controller("shopMemberController")
-@RequestMapping({"/member"})
+@RequestMapping({"${memberPath}"})
 public class MemberController extends BaseController
 {
   private static final int ORDER_INDEX = 6;
