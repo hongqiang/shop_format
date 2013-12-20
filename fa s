@@ -1,0 +1,26 @@
+[1mdiff --git a/src/main/java/com/hongqiang/shop/modules/user/service/MemberService.java b/src/main/java/com/hongqiang/shop/modules/user/service/MemberService.java[m
+[1mindex 7272e88..fce484b 100644[m
+[1m--- a/src/main/java/com/hongqiang/shop/modules/user/service/MemberService.java[m
+[1m+++ b/src/main/java/com/hongqiang/shop/modules/user/service/MemberService.java[m
+[36m@@ -32,7 +32,7 @@[m [mpublic abstract interface MemberService {[m
+ [m
+ 	public List<Member> findListByEmail(String paramString);[m
+ [m
+[31m-	public Page<Object> findPurchasePage(Date paramDate1, Date paramDate2,[m
+[32m+[m	[32mpublic Page<Member> findPurchasePage(Date paramDate1, Date paramDate2,[m
+ 			Pageable paramPageable);[m
+ [m
+ 	public boolean isAuthenticated();[m
+[1mdiff --git a/src/main/java/com/hongqiang/shop/modules/user/service/MemberServiceImpl.java b/src/main/java/com/hongqiang/shop/modules/user/service/MemberServiceImpl.java[m
+[1mindex 4a22e7d..a01aaad 100644[m
+[1m--- a/src/main/java/com/hongqiang/shop/modules/user/service/MemberServiceImpl.java[m
+[1m+++ b/src/main/java/com/hongqiang/shop/modules/user/service/MemberServiceImpl.java[m
+[36m@@ -141,7 +141,7 @@[m [mpublic class MemberServiceImpl extends BaseService implements MemberService {[m
+ 	}[m
+ [m
+ 	@Transactional(readOnly = true)[m
+[31m-	public Page<Object> findPurchasePage(Date beginDate, Date endDate,[m
+[32m+[m	[32mpublic Page<Member> findPurchasePage(Date beginDate, Date endDate,[m
+ 			Pageable pageable) {[m
+ 		return this.memberDao.findPurchasePage(beginDate, endDate, pageable);[m
+ 	}[m
