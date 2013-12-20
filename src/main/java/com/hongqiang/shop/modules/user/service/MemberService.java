@@ -32,7 +32,7 @@ public abstract interface MemberService {
 
 	public List<Member> findListByEmail(String paramString);
 
-	public Page<Member> findPurchasePage(Date paramDate1, Date paramDate2,
+	public Page<Object> findPurchasePage(Date paramDate1, Date paramDate2,
 			Pageable paramPageable);
 
 	public boolean isAuthenticated();

@@ -141,7 +141,7 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Member> findPurchasePage(Date beginDate, Date endDate,
+	public Page<Object> findPurchasePage(Date beginDate, Date endDate,
 			Pageable pageable) {
 		return this.memberDao.findPurchasePage(beginDate, endDate, pageable);
 	}
