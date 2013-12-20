@@ -9,6 +9,7 @@ import java.beans.PropertyEditorSupport;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -26,7 +27,6 @@ import com.hongqiang.shop.common.beanvalidator.BeanValidators;
 import com.hongqiang.shop.common.template.FlashMessageDirective;
 import com.hongqiang.shop.common.utils.DateUtils;
 import com.hongqiang.shop.common.utils.Message;
-
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 
@@ -84,16 +84,32 @@ public abstract class BaseController {
 	 * @return 验证成功：返回true；严重失败：将错误信息添加到 flash message 中
 	 */
 	protected boolean beanValidator(RedirectAttributes redirectAttributes, Object object, Class<?>... groups) {
-		try{
-			BeanValidators.validateWithException(validator, object, groups);
-		}catch(ConstraintViolationException ex){
-			List<String> list = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
-			list.add(0, "数据验证失败：");
-			addMessage(redirectAttributes, list.toArray(new String[]{}));
-			return false;
-		}
-		return true;
+//		try{
+//			BeanValidators.validateWithException(validator, object, groups);
+//		}catch(ConstraintViolationException ex){
+//			List<String> list = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
+//			list.add(0, "数据验证失败：");
+//			addMessage(redirectAttributes, list.toArray(new String[]{}));
+//			return false;
+//		}
+//		return true;
+		Set<?> localSet = this.validator.validate(object, groups);
+	    if (localSet.isEmpty())
+	      return true;
+	    RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
+	    localRequestAttributes.setAttribute(CONSTRAINT_VIOLATIONS, localSet, 0);
+	    return false;
 	}
+	
+	  protected boolean beanValidator(Class<?> paramClass, String paramString, Object paramObject, Class<?>[] paramArrayOfClass)
+	  {
+	    Set<?> localSet = this.validator.validateValue(paramClass, paramString, paramObject, paramArrayOfClass);
+	    if (localSet.isEmpty())
+	      return true;
+	    RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
+	    localRequestAttributes.setAttribute(CONSTRAINT_VIOLATIONS, localSet, 0);
+	    return false;
+	  }
 	
 	/**
 	 * 添加Model消息

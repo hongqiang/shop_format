@@ -61,7 +61,8 @@ public class ProfileController extends BaseController
     return "shop/member/profile/edit";
   }
 
-  @RequestMapping(value={"/update"}, method=RequestMethod.POST)
+  @SuppressWarnings("unchecked")
+@RequestMapping(value={"/update"}, method=RequestMethod.POST)
   public String update(String email, HttpServletRequest request, RedirectAttributes redirectAttributes)
   {
     if (!beanValidator(Member.class, "email", email, new Class[0]))
@@ -123,7 +124,7 @@ public class ProfileController extends BaseController
               continue;
             Object attributeValue = request.getParameterValues("memberAttribute_" + localMemberAttribute.getId());
             Object localAttributeValue = attributeValue != null ? Arrays.asList(attributeValue) : null;
-            if ((localMemberAttribute.getIsRequired().booleanValue()) && ((localAttributeValue == null) || (localAttributeValue.isEmpty())))
+            if ((localMemberAttribute.getIsRequired().booleanValue()) && ((localAttributeValue == null) || (((List<MemberAttribute>) localAttributeValue).isEmpty())))
               return SHOP_ERROR_PAGE;
             localMember.setAttributeValue(localMemberAttribute, localAttributeValue);
           }
