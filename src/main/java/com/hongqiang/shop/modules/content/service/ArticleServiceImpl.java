@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
@@ -34,8 +32,8 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		DisposableBean {
 	private long systemTime = System.currentTimeMillis();
 
-	@Autowired
-	private CacheManager cacheManager;
+//	@Autowired
+//	private CacheManager cacheManager2;
 
 	@Autowired
 	private ArticleDao articleDao;
@@ -84,27 +82,27 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 	}
 
 	public long viewHits(Long id) {
-		Ehcache localEhcache = this.cacheManager.getEhcache("articleHits");
-		Element localElement = localEhcache.get(id);
+//		Ehcache localEhcache = this.cacheManager2.getEhcache("articleHits");
+//		Element localElement = localEhcache.get(id);
 		Long tempLong = 0L;
-		if (localElement != null) {
-			tempLong = (Long) localElement.getObjectValue();
-		} else {
-			Article localArticle = (Article) this.articleDao.find(id);
-			if (localArticle == null)
-				return 0L;
-			tempLong = localArticle.getHits();
-		}
-		Long localLong = Long.valueOf(tempLong.longValue() + 1L);
-		localEhcache.put(new Element(id, localLong));
-		long l = System.currentTimeMillis();
-		if (l > this.systemTime + 600000L) {
-			this.systemTime = l;
-			destroyCache();
-			localEhcache.removeAll();
-		}
-		return localLong.longValue();
-		// return tempLong;
+//		if (localElement != null) {
+//			tempLong = (Long) localElement.getObjectValue();
+//		} else {
+//			Article localArticle = (Article) this.articleDao.find(id);
+//			if (localArticle == null)
+//				return 0L;
+//			tempLong = localArticle.getHits();
+//		}
+//		Long localLong = Long.valueOf(tempLong.longValue() + 1L);
+//		localEhcache.put(new Element(id, localLong));
+//		long l = System.currentTimeMillis();
+//		if (l > this.systemTime + 600000L) {
+//			this.systemTime = l;
+//			destroyCache();
+//			localEhcache.removeAll();
+//		}
+//		return localLong.longValue();
+		 return tempLong;
 	}
 
 	public void destroy() {
@@ -112,20 +110,20 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 	}
 
 	private void destroyCache() {
-		Ehcache localEhcache = this.cacheManager.getEhcache("articleHits");
-		@SuppressWarnings("unchecked")
-		List<Long> localList = localEhcache.getKeys();
-		Iterator<Long> localIterator = localList.iterator();
-		while (localIterator.hasNext()) {
-			Long localLong = (Long) localIterator.next();
-			Article localArticle = (Article) this.articleDao.find(localLong);
-			if (localArticle == null)
-				continue;
-			Element localElement = localEhcache.get(localLong);
-			long l = ((Long) localElement.getObjectValue()).longValue();
-			localArticle.setHits(Long.valueOf(l));
-			this.articleDao.merge(localArticle);
-		}
+//		Ehcache localEhcache = this.cacheManager2.getEhcache("articleHits");
+//		@SuppressWarnings("unchecked")
+//		List<Long> localList = localEhcache.getKeys();
+//		Iterator<Long> localIterator = localList.iterator();
+//		while (localIterator.hasNext()) {
+//			Long localLong = (Long) localIterator.next();
+//			Article localArticle = (Article) this.articleDao.find(localLong);
+//			if (localArticle == null)
+//				continue;
+//			Element localElement = localEhcache.get(localLong);
+//			long l = ((Long) localElement.getObjectValue()).longValue();
+//			localArticle.setHits(Long.valueOf(l));
+//			this.articleDao.merge(localArticle);
+//		}
 	}
 
 	@Transactional
