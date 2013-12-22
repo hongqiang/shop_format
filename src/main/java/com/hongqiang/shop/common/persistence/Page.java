@@ -53,6 +53,8 @@ public class Page<T> {
 	
 	private String message = ""; // 设置提示消息，显示在“共n条”之后
 
+	private Pageable pageable;
+	
 	/**
 	 * 构造方法
 	 * @param request 传递 repage 参数，来记住页码
@@ -133,7 +135,14 @@ public class Page<T> {
 		this.pageSize = pageSize;
 		this.setList(list);
 	}
-	
+
+	public Page(List<T> resultList, int resultSize,
+			com.hongqiang.shop.common.utils.Pageable pageable2) {
+		this.setList(resultList);
+		this.setPageSize(resultSize);
+		this.setPageable(pageable);
+	}
+
 	/**
 	 * 初始化参数
 	 */
@@ -515,6 +524,14 @@ public class Page<T> {
 		this.pageSize = page.getSize();
 		this.count = page.getTotalElements();
 		this.list = page.getContent();
+	}
+
+	public Pageable getPageable() {
+		return pageable;
+	}
+
+	public void setPageable(Pageable pageable) {
+		this.pageable = pageable;
 	}
 	
 }

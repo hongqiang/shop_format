@@ -2,6 +2,7 @@ package com.hongqiang.shop.modules.product.dao;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 //import net.shopxx.Setting;
@@ -351,6 +352,23 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 		return this.find(brandPage, sqlString, params.toArray());// 测试这样是否可行，如果不行，需要重写该函数
 	}
 
+	  @Override
+	  public long count(){
+		  Filter [] filters = null;
+		  return count(filters);
+	  }
+	  
+	  @Override
+	  public long count(Filter[] filters){
+		  String qlString = "select  product from Product product where 1=1 ";
+		  StringBuilder stringBuilder = new StringBuilder(qlString);
+		  List<Object> params = new ArrayList<Object>();
+		  if (filters == null) {
+			  return super.count(stringBuilder,null, params);
+		}
+		  return super.count(stringBuilder,Arrays.asList(filters), params);
+	  }
+	
 	// public Page<Product> findPage(Member member, Pageable pageable) {
 	// if (member == null)
 	// return new Page(Collections.emptyList(), 0L, pageable);

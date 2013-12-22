@@ -16,6 +16,8 @@ public abstract interface TagService {
 
 	public  List<Tag> findList(Tag.Type paramType);
 
+	public  List<Tag> findList(Long[] ids);
+	
 	 public  List<Tag> findList(Integer paramInteger, List<Filter>
 	 paramList, List<Order> paramList1, String paramString);
 

@@ -85,6 +85,7 @@
   </servlet-mapping>
   
   <!-- DruidStatView -->
+<!--   配置数据库 -->
   <servlet>
     <servlet-name>DruidStatView</servlet-name>
     <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>

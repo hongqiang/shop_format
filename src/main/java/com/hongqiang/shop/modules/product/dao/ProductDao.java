@@ -64,6 +64,10 @@ interface ProductDaoCustom extends BaseDao<Product> {
 			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
 			Boolean isStockAlert, Product.OrderType orderType, Pageable pageable);
 
+	public long count();
+	  
+	  public long count(Filter[] filters);
+	  
 	// public Page<Product> findPage(Member paramMember,
 	// Pageable paramPageable);
 	//
