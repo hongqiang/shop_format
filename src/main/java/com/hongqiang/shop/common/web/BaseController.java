@@ -101,6 +101,16 @@ public abstract class BaseController {
 	    return false;
 	}
 	
+	  protected boolean beanValidator(Object paramObject, Class<?>[] paramArrayOfClass)
+	  {
+	    Set<?> localSet = this.validator.validate(paramObject, paramArrayOfClass);
+	    if (localSet.isEmpty())
+	      return true;
+	    RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
+	    localRequestAttributes.setAttribute(CONSTRAINT_VIOLATIONS, localSet, 0);
+	    return false;
+	  }
+	
 	  protected boolean beanValidator(Class<?> paramClass, String paramString, Object paramObject, Class<?>[] paramArrayOfClass)
 	  {
 	    Set<?> localSet = this.validator.validateValue(paramClass, paramString, paramObject, paramArrayOfClass);

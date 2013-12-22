@@ -1,5 +1,7 @@
 package com.hongqiang.shop.modules.account.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,11 @@ public class PaymentMethodServiceImpl extends BaseService implements
 		return this.paymentMethodDao.findPage(pageable);
 	}
 
+	@Transactional
+	public List<PaymentMethod> findAll(){
+		return this.paymentMethodDao.findAll();
+	}
+	
 	@Transactional
 	public long count() {
 		return this.paymentMethodDao.count();

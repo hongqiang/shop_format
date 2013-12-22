@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 //import java.util.Iterator;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,14 +14,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 //import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 //import net.shophq.Setting;
 //import net.shophq.util.SettingUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.utils.Setting;
+import com.hongqiang.shop.common.utils.SettingUtils;
 
 @Entity
 @Table(name="hq_shipping_method")
@@ -160,23 +166,23 @@ public class ShippingMethod extends OrderEntity
     this.orders = orders;
   }
 
-//  @Transient
-//  public BigDecimal calculateFreight(Integer weight)
-//  {
-//    Setting localSetting = SettingUtils.get();
-//    BigDecimal localBigDecimal = new BigDecimal(0);
-//    if (weight != null)
-//      if ((weight.intValue() <= getFirstWeight().intValue()) || (getContinuePrice().compareTo(new BigDecimal(0)) == 0))
-//      {
-//        localBigDecimal = getFirstPrice();
-//      }
-//      else
-//      {
-//        double d = Math.ceil((weight.intValue() - getFirstWeight().intValue()) / getContinueWeight().intValue());
-//        localBigDecimal = getFirstPrice().add(getContinuePrice().multiply(new BigDecimal(d)));
-//      }
-//    return localSetting.setScale(localBigDecimal);
-//  }
+  @Transient
+  public BigDecimal calculateFreight(Integer weight)
+  {
+    Setting localSetting = SettingUtils.get();
+    BigDecimal localBigDecimal = new BigDecimal(0);
+    if (weight != null)
+      if ((weight.intValue() <= getFirstWeight().intValue()) || (getContinuePrice().compareTo(new BigDecimal(0)) == 0))
+      {
+        localBigDecimal = getFirstPrice();
+      }
+      else
+      {
+        double d = Math.ceil((weight.intValue() - getFirstWeight().intValue()) / getContinueWeight().intValue());
+        localBigDecimal = getFirstPrice().add(getContinuePrice().multiply(new BigDecimal(d)));
+      }
+    return localSetting.setScale(localBigDecimal);
+  }
 
   @PreRemove
   public void preRemove()

@@ -1,5 +1,7 @@
 package com.hongqiang.shop.modules.account.service;
 
+import java.util.List;
+
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.PaymentMethod;
@@ -8,6 +10,8 @@ public interface PaymentMethodService {
 	public PaymentMethod find(Long id);
 
 	public Page<PaymentMethod> findPage(Pageable pageable);
+	
+	public List<PaymentMethod> findAll();
 
 	public long count();
 
