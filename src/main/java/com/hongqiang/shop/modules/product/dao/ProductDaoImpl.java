@@ -369,175 +369,175 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 		  return super.count(stringBuilder,Arrays.asList(filters), params);
 	  }
 	
-	// public Page<Product> findPage(Member member, Pageable pageable) {
-	// if (member == null)
-	// return new Page(Collections.emptyList(), 0L, pageable);
-	// CriteriaBuilder localCriteriaBuilder = this.entityManager
-	// .getCriteriaBuilder();
-	// CriteriaQuery localCriteriaQuery = localCriteriaBuilder
-	// .createQuery(Product.class);
-	// Root localRoot = localCriteriaQuery.from(Product.class);
-	// localCriteriaQuery.select(localRoot);
-	// localCriteriaQuery.where(localCriteriaBuilder.equal(
-	// localRoot.join("favoriteMembers"), member));
-	// return super.entityManager(localCriteriaQuery, pageable);
-	// }
-	//
-	// public Page<Object> findSalesPage(Date beginDate, Date endDate,
-	// Pageable pageable) {
-	// CriteriaBuilder localCriteriaBuilder = this.entityManager
-	// .getCriteriaBuilder();
-	// CriteriaQuery localCriteriaQuery1 = localCriteriaBuilder
-	// .createQuery(Object.class);
-	// Root localRoot1 = localCriteriaQuery1.from(Product.class);
-	// Join localJoin1 = localRoot1.join("orderItems");
-	// Join localJoin2 = localJoin1.join("order");
-	// localCriteriaQuery1
-	// .multiselect(new Selection[] {
-	// localRoot1,
-	// localCriteriaBuilder.sum(localJoin1.get("quantity")),
-	// localCriteriaBuilder.sum(localCriteriaBuilder.prod(
-	// localJoin1.get("quantity"),
-	// localJoin1.get("price"))) });
-	// Predicate localPredicate1 = localCriteriaBuilder.conjunction();
-	// if (beginDate != null)
-	// localPredicate1 = localCriteriaBuilder.and(
-	// localPredicate1,
-	// localCriteriaBuilder.greaterThanOrEqualTo(
-	// localJoin1.get("createDate"), beginDate));
-	// if (endDate != null)
-	// localPredicate1 = localCriteriaBuilder.and(
-	// localPredicate1,
-	// localCriteriaBuilder.lessThanOrEqualTo(
-	// localJoin1.get("createDate"), endDate));
-	// localPredicate1 = localCriteriaBuilder.and(localPredicate1,
-	// localCriteriaBuilder.equal(localJoin2.get("orderStatus"),
-	// Order.OrderStatus.completed));
-	// localPredicate1 = localCriteriaBuilder.and(localPredicate1,
-	// localCriteriaBuilder.equal(localJoin2.get("paymentStatus"),
-	// Order.PaymentStatus.paid));
-	// localCriteriaQuery1.where(localPredicate1);
-	// localCriteriaQuery1.groupBy(new Expression[] { localRoot1.get("id") });
-	// CriteriaQuery localCriteriaQuery2 = localCriteriaBuilder
-	// .createQuery(Long.class);
-	// Root localRoot2 = localCriteriaQuery2.from(Product.class);
-	// Join localJoin3 = localRoot2.join("orderItems");
-	// Join localJoin4 = localJoin3.join("order");
-	// Predicate localPredicate2 = localCriteriaBuilder.conjunction();
-	// if (beginDate != null)
-	// localPredicate2 = localCriteriaBuilder.and(
-	// localPredicate2,
-	// localCriteriaBuilder.greaterThanOrEqualTo(
-	// localJoin3.get("createDate"), beginDate));
-	// if (endDate != null)
-	// localPredicate2 = localCriteriaBuilder.and(
-	// localPredicate2,
-	// localCriteriaBuilder.lessThanOrEqualTo(
-	// localJoin3.get("createDate"), endDate));
-	// localPredicate2 = localCriteriaBuilder.and(localPredicate2,
-	// localCriteriaBuilder.equal(localJoin4.get("orderStatus"),
-	// Order.OrderStatus.completed));
-	// localCriteriaQuery2.select(localCriteriaBuilder
-	// .countDistinct(localRoot2));
-	// localCriteriaQuery2.where(localPredicate2);
-	// Long localLong = (Long) this.entityManager
-	// .createQuery(localCriteriaQuery2)
-	// .setFlushMode(FlushModeType.COMMIT).getSingleResult();
-	// int i = (int) Math.ceil(localLong.longValue() / pageable.getPageSize());
-	// if (i < pageable.getPageNumber())
-	// pageable.setPageNumber(i);
-	// localCriteriaQuery1
-	// .orderBy(new javax.persistence.criteria.Order[] { localCriteriaBuilder
-	// .desc(localCriteriaBuilder.sum(localCriteriaBuilder
-	// .prod(localJoin1.get("quantity"),
-	// localJoin1.get("price")))) });
-	// TypedQuery localTypedQuery = this.entityManager.createQuery(
-	// localCriteriaQuery1).setFlushMode(FlushModeType.COMMIT);
-	// localTypedQuery.setFirstResult((pageable.getPageNumber() - 1)
-	// * pageable.getPageSize());
-	// localTypedQuery.setMaxResults(pageable.getPageSize());
-	// return new Page(localTypedQuery.getResultList(), localLong.longValue(),
-	// pageable);
-	// }
-	//
-	// public Long count(Member favoriteMember, Boolean isMarketable,
-	// Boolean isList, Boolean isTop, Boolean isGift,
-	// Boolean isOutOfStock, Boolean isStockAlert) {
-	// CriteriaBuilder localCriteriaBuilder = this.entityManager
-	// .getCriteriaBuilder();
-	// CriteriaQuery localCriteriaQuery = localCriteriaBuilder
-	// .createQuery(Product.class);
-	// Root localRoot = localCriteriaQuery.from(Product.class);
-	// localCriteriaQuery.select(localRoot);
-	// Predicate localPredicate = localCriteriaBuilder.conjunction();
-	// if (favoriteMember != null)
-	// localPredicate = localCriteriaBuilder.and(
-	// localPredicate,
-	// localCriteriaBuilder.equal(
-	// localRoot.join("favoriteMembers"), favoriteMember));
-	// if (isMarketable != null)
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(localRoot.get("isMarketable"),
-	// isMarketable));
-	// if (isList != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.equal(
-	// localRoot.get("isList"), isList));
-	// if (isTop != null)
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.equal(localRoot.get("isTop"), isTop));
-	// if (isGift != null)
-	// localPredicate = localCriteriaBuilder
-	// .and(localPredicate, localCriteriaBuilder.equal(
-	// localRoot.get("isGift"), isGift));
-	// Path localPath1 = localRoot.get("stock");
-	// Path localPath2 = localRoot.get("allocatedStock");
-	// if (isOutOfStock != null)
-	// if (isOutOfStock.booleanValue())
-	// localPredicate = localCriteriaBuilder.and(new Predicate[] {
-	// localPredicate,
-	// localCriteriaBuilder.isNotNull(localPath1),
-	// localCriteriaBuilder.lessThanOrEqualTo(localPath1,
-	// localPath2) });
-	// else
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.or(localCriteriaBuilder
-	// .isNull(localPath1), localCriteriaBuilder
-	// .greaterThan(localPath1, localPath2)));
-	// if (isStockAlert != null) {
-	// Setting localSetting = SettingUtils.get();
-	// if (isStockAlert.booleanValue())
-	// localPredicate = localCriteriaBuilder.and(new Predicate[] {
-	// localPredicate,
-	// localCriteriaBuilder.isNotNull(localPath1),
-	// localCriteriaBuilder.lessThanOrEqualTo(localPath1,
-	// localCriteriaBuilder.sum(localPath2,
-	// localSetting.getStockAlertCount())) });
-	// else
-	// localPredicate = localCriteriaBuilder.and(localPredicate,
-	// localCriteriaBuilder.or(localCriteriaBuilder
-	// .isNull(localPath1), localCriteriaBuilder
-	// .greaterThan(localPath1, localCriteriaBuilder
-	// .sum(localPath2, localSetting
-	// .getStockAlertCount()))));
-	// }
-	// localCriteriaQuery.where(localPredicate);
-	// return super.entityManager(localCriteriaQuery, null);
-	// }
-	//
-	// public boolean isPurchased(Member member, Product product) {
-	// if ((member == null) || (product == null))
-	// return false;
-	// String str =
-	// "select count(*) from OrderItem orderItem where orderItem.product = :product and orderItem.order.member = :member and orderItem.order.orderStatus = :orderStatus";
-	// Long localLong = (Long) this.entityManager.createQuery(str, Long.class)
-	// .setFlushMode(FlushModeType.COMMIT)
-	// .setParameter("product", product)
-	// .setParameter("member", member)
-	// .setParameter("orderStatus", Order.OrderStatus.completed)
-	// .getSingleResult();
-	// return localLong.longValue() > 0L;
-	// }
+//	 public Page<Product> findPage(Member member, Pageable pageable) {
+//	 if (member == null)
+//	 return new Page(Collections.emptyList(), 0L, pageable);
+//	 CriteriaBuilder localCriteriaBuilder = this.entityManager
+//	 .getCriteriaBuilder();
+//	 CriteriaQuery localCriteriaQuery = localCriteriaBuilder
+//	 .createQuery(Product.class);
+//	 Root localRoot = localCriteriaQuery.from(Product.class);
+//	 localCriteriaQuery.select(localRoot);
+//	 localCriteriaQuery.where(localCriteriaBuilder.equal(
+//	 localRoot.join("favoriteMembers"), member));
+//	 return super.entityManager(localCriteriaQuery, pageable);
+//	 }
+//	
+//	 public Page<Object> findSalesPage(Date beginDate, Date endDate,
+//	 Pageable pageable) {
+//	 CriteriaBuilder localCriteriaBuilder = this.entityManager
+//	 .getCriteriaBuilder();
+//	 CriteriaQuery localCriteriaQuery1 = localCriteriaBuilder
+//	 .createQuery(Object.class);
+//	 Root localRoot1 = localCriteriaQuery1.from(Product.class);
+//	 Join localJoin1 = localRoot1.join("orderItems");
+//	 Join localJoin2 = localJoin1.join("order");
+//	 localCriteriaQuery1
+//	 .multiselect(new Selection[] {
+//	 localRoot1,
+//	 localCriteriaBuilder.sum(localJoin1.get("quantity")),
+//	 localCriteriaBuilder.sum(localCriteriaBuilder.prod(
+//	 localJoin1.get("quantity"),
+//	 localJoin1.get("price"))) });
+//	 Predicate localPredicate1 = localCriteriaBuilder.conjunction();
+//	 if (beginDate != null)
+//	 localPredicate1 = localCriteriaBuilder.and(
+//	 localPredicate1,
+//	 localCriteriaBuilder.greaterThanOrEqualTo(
+//	 localJoin1.get("createDate"), beginDate));
+//	 if (endDate != null)
+//	 localPredicate1 = localCriteriaBuilder.and(
+//	 localPredicate1,
+//	 localCriteriaBuilder.lessThanOrEqualTo(
+//	 localJoin1.get("createDate"), endDate));
+//	 localPredicate1 = localCriteriaBuilder.and(localPredicate1,
+//	 localCriteriaBuilder.equal(localJoin2.get("orderStatus"),
+//	 Order.OrderStatus.completed));
+//	 localPredicate1 = localCriteriaBuilder.and(localPredicate1,
+//	 localCriteriaBuilder.equal(localJoin2.get("paymentStatus"),
+//	 Order.PaymentStatus.paid));
+//	 localCriteriaQuery1.where(localPredicate1);
+//	 localCriteriaQuery1.groupBy(new Expression[] { localRoot1.get("id") });
+//	 CriteriaQuery localCriteriaQuery2 = localCriteriaBuilder
+//	 .createQuery(Long.class);
+//	 Root localRoot2 = localCriteriaQuery2.from(Product.class);
+//	 Join localJoin3 = localRoot2.join("orderItems");
+//	 Join localJoin4 = localJoin3.join("order");
+//	 Predicate localPredicate2 = localCriteriaBuilder.conjunction();
+//	 if (beginDate != null)
+//	 localPredicate2 = localCriteriaBuilder.and(
+//	 localPredicate2,
+//	 localCriteriaBuilder.greaterThanOrEqualTo(
+//	 localJoin3.get("createDate"), beginDate));
+//	 if (endDate != null)
+//	 localPredicate2 = localCriteriaBuilder.and(
+//	 localPredicate2,
+//	 localCriteriaBuilder.lessThanOrEqualTo(
+//	 localJoin3.get("createDate"), endDate));
+//	 localPredicate2 = localCriteriaBuilder.and(localPredicate2,
+//	 localCriteriaBuilder.equal(localJoin4.get("orderStatus"),
+//	 Order.OrderStatus.completed));
+//	 localCriteriaQuery2.select(localCriteriaBuilder
+//	 .countDistinct(localRoot2));
+//	 localCriteriaQuery2.where(localPredicate2);
+//	 Long localLong = (Long) this.entityManager
+//	 .createQuery(localCriteriaQuery2)
+//	 .setFlushMode(FlushModeType.COMMIT).getSingleResult();
+//	 int i = (int) Math.ceil(localLong.longValue() / pageable.getPageSize());
+//	 if (i < pageable.getPageNumber())
+//	 pageable.setPageNumber(i);
+//	 localCriteriaQuery1
+//	 .orderBy(new javax.persistence.criteria.Order[] { localCriteriaBuilder
+//	 .desc(localCriteriaBuilder.sum(localCriteriaBuilder
+//	 .prod(localJoin1.get("quantity"),
+//	 localJoin1.get("price")))) });
+//	 TypedQuery localTypedQuery = this.entityManager.createQuery(
+//	 localCriteriaQuery1).setFlushMode(FlushModeType.COMMIT);
+//	 localTypedQuery.setFirstResult((pageable.getPageNumber() - 1)
+//	 * pageable.getPageSize());
+//	 localTypedQuery.setMaxResults(pageable.getPageSize());
+//	 return new Page(localTypedQuery.getResultList(), localLong.longValue(),
+//	 pageable);
+//	 }
+//	
+//	 public Long count(Member favoriteMember, Boolean isMarketable,
+//	 Boolean isList, Boolean isTop, Boolean isGift,
+//	 Boolean isOutOfStock, Boolean isStockAlert) {
+//	 CriteriaBuilder localCriteriaBuilder = this.entityManager
+//	 .getCriteriaBuilder();
+//	 CriteriaQuery localCriteriaQuery = localCriteriaBuilder
+//	 .createQuery(Product.class);
+//	 Root localRoot = localCriteriaQuery.from(Product.class);
+//	 localCriteriaQuery.select(localRoot);
+//	 Predicate localPredicate = localCriteriaBuilder.conjunction();
+//	 if (favoriteMember != null)
+//	 localPredicate = localCriteriaBuilder.and(
+//	 localPredicate,
+//	 localCriteriaBuilder.equal(
+//	 localRoot.join("favoriteMembers"), favoriteMember));
+//	 if (isMarketable != null)
+//	 localPredicate = localCriteriaBuilder.and(localPredicate,
+//	 localCriteriaBuilder.equal(localRoot.get("isMarketable"),
+//	 isMarketable));
+//	 if (isList != null)
+//	 localPredicate = localCriteriaBuilder
+//	 .and(localPredicate, localCriteriaBuilder.equal(
+//	 localRoot.get("isList"), isList));
+//	 if (isTop != null)
+//	 localPredicate = localCriteriaBuilder.and(localPredicate,
+//	 localCriteriaBuilder.equal(localRoot.get("isTop"), isTop));
+//	 if (isGift != null)
+//	 localPredicate = localCriteriaBuilder
+//	 .and(localPredicate, localCriteriaBuilder.equal(
+//	 localRoot.get("isGift"), isGift));
+//	 Path localPath1 = localRoot.get("stock");
+//	 Path localPath2 = localRoot.get("allocatedStock");
+//	 if (isOutOfStock != null)
+//	 if (isOutOfStock.booleanValue())
+//	 localPredicate = localCriteriaBuilder.and(new Predicate[] {
+//	 localPredicate,
+//	 localCriteriaBuilder.isNotNull(localPath1),
+//	 localCriteriaBuilder.lessThanOrEqualTo(localPath1,
+//	 localPath2) });
+//	 else
+//	 localPredicate = localCriteriaBuilder.and(localPredicate,
+//	 localCriteriaBuilder.or(localCriteriaBuilder
+//	 .isNull(localPath1), localCriteriaBuilder
+//	 .greaterThan(localPath1, localPath2)));
+//	 if (isStockAlert != null) {
+//	 Setting localSetting = SettingUtils.get();
+//	 if (isStockAlert.booleanValue())
+//	 localPredicate = localCriteriaBuilder.and(new Predicate[] {
+//	 localPredicate,
+//	 localCriteriaBuilder.isNotNull(localPath1),
+//	 localCriteriaBuilder.lessThanOrEqualTo(localPath1,
+//	 localCriteriaBuilder.sum(localPath2,
+//	 localSetting.getStockAlertCount())) });
+//	 else
+//	 localPredicate = localCriteriaBuilder.and(localPredicate,
+//	 localCriteriaBuilder.or(localCriteriaBuilder
+//	 .isNull(localPath1), localCriteriaBuilder
+//	 .greaterThan(localPath1, localCriteriaBuilder
+//	 .sum(localPath2, localSetting
+//	 .getStockAlertCount()))));
+//	 }
+//	 localCriteriaQuery.where(localPredicate);
+//	 return super.entityManager(localCriteriaQuery, null);
+//	 }
+//	
+//	 public boolean isPurchased(Member member, Product product) {
+//	 if ((member == null) || (product == null))
+//	 return false;
+//	 String str =
+//	 "select count(*) from OrderItem orderItem where orderItem.product = :product and orderItem.order.member = :member and orderItem.order.orderStatus = :orderStatus";
+//	 Long localLong = (Long) this.entityManager.createQuery(str, Long.class)
+//	 .setFlushMode(FlushModeType.COMMIT)
+//	 .setParameter("product", product)
+//	 .setParameter("member", member)
+//	 .setParameter("orderStatus", Order.OrderStatus.completed)
+//	 .getSingleResult();
+//	 return localLong.longValue() > 0L;
+//	 }
 
 	@Override
 	public void persist(Product product) {

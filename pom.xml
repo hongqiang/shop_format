@@ -63,11 +63,11 @@
 			Nexus Repository</name> <url>http://localhost:8081/nexus/content/groups/public</url> 
 			</repository> -->
 
-<!-- 		<repository> -->
-<!-- 			<id>atlassian</id> -->
-<!-- 			<name>atlassian</name> -->
-<!-- 			<url>https://maven-us.nuxeo.org/nexus</url> -->
-<!-- 		</repository> -->
+		<!-- <repository> -->
+		<!-- <id>atlassian</id> -->
+		<!-- <name>atlassian</name> -->
+		<!-- <url>https://maven-us.nuxeo.org/nexus</url> -->
+		<!-- </repository> -->
 
 		<repository>
 			<id>central-repos</id>
@@ -469,11 +469,17 @@
 			<version>${freemarker.version}</version>
 		</dependency>
 		<!-- CaptchaService -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.octo.captcha</groupId> -->
+<!-- 			<artifactId>jcaptcha-api</artifactId> -->
+<!-- 			<version>1.0</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>com.octo.captcha</groupId>
 			<artifactId>jcaptcha</artifactId>
 			<version>1.0</version>
 		</dependency>
+
 		<!-- CaptchaService 依赖包 -->
 		<dependency>
 			<groupId>com.jhlabs</groupId>
