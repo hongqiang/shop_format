@@ -23,7 +23,7 @@ public abstract interface ProductService {
 
 	// 通过sn找到商品
 	public Product findBySn(String paramString);
-	
+
 	public Product find(Long id);
 
 	// 判断两个sn是否一样
@@ -34,7 +34,7 @@ public abstract interface ProductService {
 			Integer paramInteger);
 
 	public List<Product> findList(Long[] ids);
-	
+
 	// 找到商品列表
 	public List<Product> findList(ProductCategory paramProductCategory,
 			Brand paramBrand, Promotion paramPromotion, List<Tag> paramList,
@@ -69,29 +69,28 @@ public abstract interface ProductService {
 			Boolean paramBoolean6, Product.OrderType paramOrderType,
 			Pageable paramPageable);
 
-//	public Page<Product> findPage(Member paramMember, Pageable paramPageable);
-//
-//	public Page<Object> findSalesPage(Date paramDate1, Date paramDate2,
-//			Pageable paramPageable);
-//
-//	public Long count(Member paramMember, Boolean paramBoolean1,
-//			Boolean paramBoolean2, Boolean paramBoolean3,
-//			Boolean paramBoolean4, Boolean paramBoolean5, Boolean paramBoolean6);
-//
-//	public boolean isPurchased(Member paramMember, Product paramProduct);
-//
-//	public long viewHits(Long paramLong);
-	
-	  public void save(Product brand);
+	public Page<Product> findPage(Member paramMember, Pageable paramPageable);
 
-	  public Product update(Product product);
+	public Page<Object> findSalesPage(Date paramDate1, Date paramDate2,
+			Pageable paramPageable);
 
-	//  //忽视
-	//  public Brand update(Brand brand, String[] ignoreProperties);
+	public Long count(Member paramMember, Boolean paramBoolean1,
+			Boolean paramBoolean2, Boolean paramBoolean3,
+			Boolean paramBoolean4, Boolean paramBoolean5, Boolean paramBoolean6);
 
-	  public void delete(Long id);
+	public boolean isPurchased(Member paramMember, Product paramProduct);
 
-	  public void delete(Long[] ids);
+	public long viewHits(Long paramLong);
 
-	  public void delete(Product product);
+	public void save(Product brand);
+
+	public Product update(Product product);
+
+	public Product update(Product brand, String[] ignoreProperties);
+
+	public void delete(Long id);
+
+	public void delete(Long[] ids);
+
+	public void delete(Product product);
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -15,10 +14,10 @@ import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
-import com.hongqiang.shop.modules.cms.entity.Category;
 import com.hongqiang.shop.modules.entity.Attribute;
 import com.hongqiang.shop.modules.entity.Brand;
 import com.hongqiang.shop.modules.entity.Goods;
+import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.entity.Promotion;
@@ -63,22 +62,20 @@ interface ProductDaoCustom extends BaseDao<Product> {
 			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
 			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
 			Boolean isStockAlert, Product.OrderType orderType, Pageable pageable);
-
-	public long count();
 	  
-	  public long count(Filter[] filters);
-	  
-	// public Page<Product> findPage(Member paramMember,
-	// Pageable paramPageable);
-	//
-	// public Page<Object> findSalesPage(Date paramDate1,
-	// Date paramDate2, Pageable paramPageable);
-	//
-	// public Long count(Member paramMember, Boolean paramBoolean1,
-	// Boolean paramBoolean2, Boolean paramBoolean3,
-	// Boolean paramBoolean4, Boolean paramBoolean5, Boolean paramBoolean6);
-	//
-	// public boolean isPurchased(Member paramMember, Product paramProduct);
+	public long count(Filter[] filters);
+	
+	 public Page<Product> findPage(Member paramMember,
+	 Pageable paramPageable);
+	
+	 public Page<Object> findSalesPage(Date paramDate1,
+	 Date paramDate2, Pageable paramPageable);
+	
+	 public Long count(Member paramMember, Boolean paramBoolean1,
+	 Boolean paramBoolean2, Boolean paramBoolean3,
+	 Boolean paramBoolean4, Boolean paramBoolean5, Boolean paramBoolean6);
+	
+	 public boolean isPurchased(Member paramMember, Product paramProduct);
 
 	public void persist(Product product);
 
@@ -89,4 +86,8 @@ interface ProductDaoCustom extends BaseDao<Product> {
 	public void  deleteAttributeOfProduct(Attribute attribute);
 	
 	public void  updateAttributeOfProduct(Attribute attribute);
+	
+	public void persist(Goods goods);
+	
+	public void mergeForDelete(Goods goods);
 }

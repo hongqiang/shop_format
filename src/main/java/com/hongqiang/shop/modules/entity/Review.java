@@ -15,96 +15,87 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 //评论
 @Entity
-@Table(name="hq_review")
-public class Review extends BaseEntity
-{
-  private static final long serialVersionUID = 8795901519290584100L;
-  private static final String filePath = "/review/content";
-  private Integer score;//评论分数
-  private String content;//评论内容
-  private Boolean isShow;//是否显示
-  private String ip;//ip地址
-  private Member member;//会员
-  private Product product;//商品
+@Table(name = "hq_review")
+public class Review extends BaseEntity {
 
-  @NotNull
-  @Min(1L)
-  @Max(5L)
-  @Column(nullable=false, updatable=false)
-  public Integer getScore()
-  {
-    return this.score;
-  }
+	public enum Type {
+		positive, moderate, negative;
+	}
 
-  public void setScore(Integer score)
-  {
-    this.score = score;
-  }
+	private static final long serialVersionUID = 8795901519290584100L;
+	private static final String filePath = "/review/content";
+	private Integer score;// 评论分数
+	private String content;// 评论内容
+	private Boolean isShow;// 是否显示
+	private String ip;// ip地址
+	private Member member;// 会员
+	private Product product;// 商品
 
-  @NotEmpty
-  @Length(max=200)
-  @Column(nullable=false, updatable=false)
-  public String getContent()
-  {
-    return this.content;
-  }
+	@NotNull
+	@Min(1L)
+	@Max(5L)
+	@Column(nullable = false, updatable = false)
+	public Integer getScore() {
+		return this.score;
+	}
 
-  public void setContent(String content)
-  {
-    this.content = content;
-  }
+	public void setScore(Integer score) {
+		this.score = score;
+	}
 
-  @Column(nullable=false)
-  public Boolean getIsShow()
-  {
-    return this.isShow;
-  }
+	@NotEmpty
+	@Length(max = 200)
+	@Column(nullable = false, updatable = false)
+	public String getContent() {
+		return this.content;
+	}
 
-  public void setIsShow(Boolean isShow)
-  {
-    this.isShow = isShow;
-  }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-  @Column(nullable=false, updatable=false)
-  public String getIp()
-  {
-    return this.ip;
-  }
+	@Column(nullable = false)
+	public Boolean getIsShow() {
+		return this.isShow;
+	}
 
-  public void setIp(String ip)
-  {
-    this.ip = ip;
-  }
+	public void setIsShow(Boolean isShow) {
+		this.isShow = isShow;
+	}
 
-  @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(updatable=false)
-  public Member getMember()
-  {
-    return this.member;
-  }
+	@Column(nullable = false, updatable = false)
+	public String getIp() {
+		return this.ip;
+	}
 
-  public void setMember(Member member)
-  {
-    this.member = member;
-  }
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
 
-  @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(nullable=false, updatable=false)
-  public Product getProduct()
-  {
-    return this.product;
-  }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	public Member getMember() {
+		return this.member;
+	}
 
-  public void setProduct(Product product)
-  {
-    this.product = product;
-  }
+	public void setMember(Member member) {
+		this.member = member;
+	}
 
-  @Transient
-  public String getPath()
-  {
-    if ((getProduct() != null) && (getProduct().getId() != null))
-      return filePath + getProduct().getId() + fileSuffix;
-    return null;
-  }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, updatable = false)
+	public Product getProduct() {
+		return this.product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	@Transient
+	public String getPath() {
+		if ((getProduct() != null) && (getProduct().getId() != null))
+			return filePath + getProduct().getId() + fileSuffix;
+		return null;
+	}
 }

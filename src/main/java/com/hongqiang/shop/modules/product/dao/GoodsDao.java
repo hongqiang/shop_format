@@ -16,7 +16,4 @@ public abstract interface GoodsDao extends GoodsDaoCustom, CrudRepository<Goods,
  */
 interface GoodsDaoCustom extends BaseDao<Goods> {
 
-	public void persist(Goods goods);
-	
-	public Goods merge(Goods goods);
 }

@@ -2,21 +2,14 @@ package com.hongqiang.shop.modules.product.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.persistence.LockModeType;
-
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,6 +31,7 @@ import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.entity.Promotion;
 import com.hongqiang.shop.modules.entity.Tag;
 import com.hongqiang.shop.modules.product.dao.ProductDao;
+import com.hongqiang.shop.modules.util.service.StaticService;
 
 @Service
 public class ProductServiceImpl extends BaseService implements ProductService,
@@ -50,8 +44,8 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 	@Autowired
 	private ProductDao productDao;
 
-	// @Autowired
-	// private StaticService staticService;
+	 @Autowired
+	 private StaticService staticService;
 
 	@Transactional(readOnly = true)
 	public boolean snExists(String sn) {
@@ -81,7 +75,6 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 	
 	public List<Product> findList(Long[] ids) {
 		List<Product> localArrayList = new ArrayList<Product>();
-		int i=0;
 		if (ids != null)
 			for (Long id : ids) {
 				Product localObject = this.productDao.findById(id);
@@ -107,7 +100,7 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 	}
 
 	@Transactional(readOnly = true)
-//	@Cacheable({ "product" })
+	@Cacheable({ "product" })
 	public List<Product> findList(ProductCategory productCategory, Brand brand,
 			Promotion promotion, List<Tag> tags,
 			Map<Attribute, String> attributeValue, BigDecimal startPrice,
@@ -141,31 +134,31 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 				pageable);
 	}
 
-//	@Transactional(readOnly = true)
-//	public Page<Product> findPage(Member member, Pageable pageable) {
-//		return this.productDao.findPage(member, pageable);
-//	}
-//
-//	@Transactional(readOnly = true)
-//	public Page<Object> findSalesPage(Date beginDate, Date endDate,
-//			Pageable pageable) {
-//		return this.productDao.findSalesPage(beginDate, endDate, pageable);
-//	}
-//
-//	@Transactional(readOnly = true)
-//	public Long count(Member favoriteMember, Boolean isMarketable,
-//			Boolean isList, Boolean isTop, Boolean isGift,
-//			Boolean isOutOfStock, Boolean isStockAlert) {
-//		return this.productDao.count(favoriteMember, isMarketable, isList,
-//				isTop, isGift, isOutOfStock, isStockAlert);
-//	}
-//
-//	@Transactional(readOnly = true)
-//	public boolean isPurchased(Member member, Product product) {
-//		return this.productDao.isPurchased(member, product);
-//	}
+	@Transactional(readOnly = true)
+	public Page<Product> findPage(Member member, Pageable pageable) {
+		return this.productDao.findPage(member, pageable);
+	}
 
-//	public long viewHits(Long id) {
+	@Transactional(readOnly = true)
+	public Page<Object> findSalesPage(Date beginDate, Date endDate,
+			Pageable pageable) {
+		return this.productDao.findSalesPage(beginDate, endDate, pageable);
+	}
+
+	@Transactional(readOnly = true)
+	public Long count(Member favoriteMember, Boolean isMarketable,
+			Boolean isList, Boolean isTop, Boolean isGift,
+			Boolean isOutOfStock, Boolean isStockAlert) {
+		return this.productDao.count(favoriteMember, isMarketable, isList,
+				isTop, isGift, isOutOfStock, isStockAlert);
+	}
+
+	@Transactional(readOnly = true)
+	public boolean isPurchased(Member member, Product product) {
+		return this.productDao.isPurchased(member, product);
+	}
+
+	public long viewHits(Long id) {
 //		Ehcache localEhcache = this.cacheManager.getEhcache("productHits");
 //		Element localElement = localEhcache.get(id);
 //		if (localElement != null) {
@@ -185,13 +178,14 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 //			localEhcache.removeAll();
 //		}
 //		return localLong.longValue();
-//	}
-//
-	public void destroy() {
-//		currentTimeMillis();
+		return 1L;
 	}
-//
-//	private void currentTimeMillis() {
+
+	public void destroy() {
+		currentTimeMillis();
+	}
+
+	private void currentTimeMillis() {
 //		Ehcache localEhcache = this.cacheManager.getEhcache("productHits");
 //		List localList = localEhcache.getKeys();
 //		Iterator localIterator = localList.iterator();
@@ -226,49 +220,48 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 //			localProduct.setMonthHitsDate(new Date());
 //			this.productDao.merge(localProduct);
 //		}
-//	}
+	}
 
 
 	
 	@Transactional
-//	@CacheEvict(value = { "product", "productCategory", "review",
-//			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void save(Product product) {
 		Assert.notNull(product);
 		this.productDao.persist(product);
 		this.productDao.flush();
-//		this.staticService.build(product);
+		this.staticService.build(product);
 	}
 
 	@Transactional
-//	@CacheEvict(value = { "product", "productCategory", "review",
-//			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public Product update(Product product) {
 		Assert.notNull(product);
 		Product localProduct = (Product)  this.productDao.merge(product);
 		this.productDao.flush();
-//		this.staticService.build(localProduct);
+		this.staticService.build(localProduct);
 		return localProduct;
 	}
 
 	@Transactional
-//	@CacheEvict(value = { "product", "productCategory", "review",
-//			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public Product update(Product product, String[] ignoreProperties) {
-//		return (Product) super.update(product, ignoreProperties);
-		return (Product) this.productDao.merge(product);
+		return (Product) this.productDao.update(product, ignoreProperties);
 	}
 
 	@Transactional
-//	@CacheEvict(value = { "product", "productCategory", "review",
-//			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void delete(Long id) {
 		this.productDao.delete(id);
 	}
 
 	@Transactional
-//	@CacheEvict(value = { "product", "productCategory", "review",
-//			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void delete(Long[] ids) {
 		  if (ids != null)
 				for (Long localSerializable : ids)
@@ -276,11 +269,11 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 	}
 
 	@Transactional
-//	@CacheEvict(value = { "product", "productCategory", "review",
-//			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void delete(Product product) {
-//		if (product != null)
-//			this.staticService.delete(product);
+		if (product != null)
+			this.staticService.delete(product);
 		this.productDao.delete(product);
 	}
 }
