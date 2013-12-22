@@ -54,7 +54,8 @@ public final class SettingUtils
       {
         File localFile = new ClassPathResource("/shophq.xml").getFile();
         Document localDocument = new SAXReader().read(localFile);
-        List<org.dom4j.Element> localList = localDocument.selectNodes("/shophq/setting");
+        @SuppressWarnings("unchecked")
+		List<org.dom4j.Element> localList = localDocument.selectNodes("/shophq/setting");
         Iterator<org.dom4j.Element> localIterator = localList.iterator();
         while (localIterator.hasNext())
         {
@@ -63,6 +64,7 @@ public final class SettingUtils
           String str2 = localElement1.attributeValue("value");
           try
           {
+        	  System.out.println("key= "+str1+" , value= "+str2);
             beanUtilsBean.setProperty(localSetting, str1, str2);
           }
           catch (IllegalAccessException localIllegalAccessException)
