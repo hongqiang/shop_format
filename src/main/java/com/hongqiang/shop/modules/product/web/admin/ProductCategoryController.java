@@ -1,15 +1,20 @@
 package com.hongqiang.shop.modules.product.web.admin;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hongqiang.shop.common.utils.Message;
@@ -17,14 +22,21 @@ import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.entity.Brand;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductCategory;
+import com.hongqiang.shop.modules.entity.ProductImage;
 import com.hongqiang.shop.modules.product.service.BrandService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
+import com.hongqiang.shop.modules.product.service.ProductImageService;
+import com.hongqiang.shop.modules.sys.entity.JArea;
+import com.hongqiang.shop.modules.sys.utils.UserUtils;
 
 @Controller("adminProductCategoryController")
 @RequestMapping({"${adminPath}/product_category"})
 public class ProductCategoryController extends BaseController
 {
 
+	@Autowired
+	private ProductImageService productImageService;
+	
 	@Autowired
   private ProductCategoryService productCategoryService;
 
@@ -119,4 +131,44 @@ public class ProductCategoryController extends BaseController
     this.productCategoryService.delete(id);
     return ADMIN_SUCCESS;
   }
+  
+//  @RequiresPermissions("sys:area:edit")
+  @RequestMapping(value = "/form",method = RequestMethod.POST)
+	public String handleFormUpload(@RequestParam("name") String name,
+			@RequestParam("file") MultipartFile file) {
+	    System.out.println("name="+name);
+		System.out.println("get here.");
+		try {
+			if (!file.isEmpty()) {
+				System.out.println("and get here");
+				byte[] bytes = file.getBytes();
+				System.out.println("len= " + bytes.length);
+				ProductImage productImage = new ProductImage();
+				productImage.setFile(file);
+				productImage.setTitle("hehe");
+				productImage.setOrder(1);
+				System.out.println("productImage.Title"+productImage.getTitle());
+				System.out.println("productImage.Order"+productImage.getOrder());
+				this.productImageService.build(productImage);
+				System.out.println("productImage.Large"+productImage.getLarge());
+				System.out.println("productImage.Source"+productImage.getSource());
+				System.out.println("productImage.Title"+productImage.getTitle());
+				System.out.println("build success");
+			} else {
+				System.out.println("no file upload");
+				return "redirect:uploadFailure";
+			}
+		} catch (IOException e) {
+			System.out.println("nothing");
+		}
+		System.out.println("over\n");
+		return "redirect:list";
+	}
+	
+	@RequestMapping(value = "/form", method = RequestMethod.GET)
+	public String handleFormUpload() {
+		System.out.println("we get here.");
+		return "modules/upload/upload";
+	}
+
 }

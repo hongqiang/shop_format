@@ -469,11 +469,11 @@
 			<version>${freemarker.version}</version>
 		</dependency>
 		<!-- CaptchaService -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.octo.captcha</groupId> -->
-<!-- 			<artifactId>jcaptcha-api</artifactId> -->
-<!-- 			<version>1.0</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.octo.captcha</groupId> -->
+		<!-- <artifactId>jcaptcha-api</artifactId> -->
+		<!-- <version>1.0</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>com.octo.captcha</groupId>
 			<artifactId>jcaptcha</artifactId>
@@ -485,6 +485,12 @@
 			<groupId>com.jhlabs</groupId>
 			<artifactId>imaging</artifactId>
 			<version>01012005</version>
+		</dependency>
+		<!-- 生成图片的颜色依赖库 -->
+		<dependency>
+			<groupId>org.im4java</groupId>
+			<artifactId>im4java</artifactId>
+			<version>1.4.0</version>
 		</dependency>
 		<!-- email -->
 		<dependency>
