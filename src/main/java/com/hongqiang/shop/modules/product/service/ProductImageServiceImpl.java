@@ -43,6 +43,7 @@ public class ProductImageServiceImpl implements ProductImageService,
 				String smallFilePath) {
 			this.productImageService = productImageService;
 			this.largeFilePath = largeFilePath;
+			this.sourceFilePath = sourceFilePath;
 			this.mediumFilePath = mediumFilePath;
 			this.smallFilePath = smallFilePath;
 			this.contentType = contentType;
@@ -175,11 +176,8 @@ public class ProductImageServiceImpl implements ProductImageService,
 									+ UUID.randomUUID() + ".tmp");
 					if (!localFile.getParentFile().exists())
 						localFile.getParentFile().mkdirs();
-					localMultipartFile.transferTo(localFile);// Transfer the
-																// received file
-																// to the given
-																// destination
-																// file.
+					// Transfer the received file to the given destination file.
+					localMultipartFile.transferTo(localFile);
 					storeImages(str3, str4, str5, str6, localFile,
 							localMultipartFile.getContentType());
 					productImage.setSource(localStoragePlugin.getUrl(str3));
