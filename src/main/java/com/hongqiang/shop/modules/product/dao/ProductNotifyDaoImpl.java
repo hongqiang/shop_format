@@ -18,7 +18,9 @@ import com.hongqiang.shop.modules.entity.ProductNotify;
 public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
 		ProductNotifyDaoCustom {
 	public boolean exists(Product product, String email) {
-		String str = "select count(*) from ProductNotify productNotify where productNotify.product = :product and lower(productNotify.email) = lower(:email) and productNotify.hasSent = false";
+		String str = "select count(*) from ProductNotify productNotify "+
+					"where productNotify.product = :product and"+
+				"lower(productNotify.email) = lower(:email) and productNotify.hasSent = false";
 		Long localLong = (Long) this.getEntityManager()
 				.createQuery(str, Long.class)
 				.setFlushMode(FlushModeType.COMMIT)
@@ -29,7 +31,8 @@ public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
 
 	public Page<ProductNotify> findPage(Member member, Boolean isMarketable,
 			Boolean isOutOfStock, Boolean hasSent, Pageable pageable) {
-		String sqlString = "select DISTINCT productNotify from ProductNotify productNotify where 1=1 ";
+		String sqlString = "select DISTINCT productNotify from ProductNotify productNotify "
+							+ "where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 
 		sqlString=inquerySql(sqlString, params, member, isMarketable, isOutOfStock,
@@ -41,7 +44,8 @@ public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
 
 	public Long count(Member member, Boolean isMarketable,
 			Boolean isOutOfStock, Boolean hasSent) {
-		String sqlString = "select DISTINCT productNotify from ProductNotify productNotify where 1=1 ";
+		String sqlString = "select DISTINCT productNotify from ProductNotify productNotify "+
+			"where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 
 		sqlString=inquerySql(sqlString, params, member, isMarketable, isOutOfStock,
@@ -66,9 +70,11 @@ public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
 		}
 		if (isOutOfStock != null) {
 			if (isOutOfStock.booleanValue()) {
-				sqlString += " and (productNotify.product.stock !=null and productNotify.product.stock<= productNotify.product.allocatedStock) ";
+				sqlString += " and (productNotify.product.stock is not null "+
+						"and productNotify.product.stock<= productNotify.product.allocatedStock) ";
 			} else {
-				sqlString += " and (productNotify.product.stock !=null or productNotify.product.stock> productNotify.product.allocatedStock)";
+				sqlString += " and (productNotify.product.stock is null or "+
+			"productNotify.product.stock> productNotify.product.allocatedStock)";
 			}
 		}
 		if (hasSent != null) {

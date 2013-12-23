@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.content.service.ArticleCategoryService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 import com.hongqiang.shop.website.entity.Navigation;
 import com.hongqiang.shop.website.service.NavigationService;
@@ -23,8 +24,8 @@ public class NavigationController extends BaseController
  @Autowired
   private NavigationService navigationService;
 
-//  @Autowired
-//  private ArticleCategoryService articleCategoryService;
+  @Autowired
+  private ArticleCategoryService articleCategoryService;
 
   @Autowired
   private ProductCategoryService productCategoryService;
@@ -33,7 +34,7 @@ public class NavigationController extends BaseController
   public String add(ModelMap model)
   {
     model.addAttribute("positions", Navigation.Position.values());
-//    model.addAttribute("articleCategoryTree", this.articleCategoryService.findTree());
+    model.addAttribute("articleCategoryTree", this.articleCategoryService.findTree());
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
     return "/admin/navigation/add";
   }
@@ -52,7 +53,7 @@ public class NavigationController extends BaseController
   public String edit(Long id, ModelMap model)
   {
     model.addAttribute("positions", Navigation.Position.values());
-//    model.addAttribute("articleCategoryTree", this.articleCategoryService.findTree());
+    model.addAttribute("articleCategoryTree", this.articleCategoryService.findTree());
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
     model.addAttribute("navigation", this.navigationService.find(id));
     return "/admin/navigation/edit";

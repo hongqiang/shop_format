@@ -1,17 +1,9 @@
 package com.hongqiang.shop.modules.product.web.admin;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+
 
 //import net.shopxx.FileInfo.FileType;
 //import net.shopxx.Message;
@@ -44,72 +36,59 @@ import javax.servlet.http.HttpServletRequest;
 //import net.shopxx.service.TagService;
 //import net.shopxx.util.SettingUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hongqiang.shop.common.utils.Message;
-import com.hongqiang.shop.common.utils.Pageable;
-import com.hongqiang.shop.common.utils.Setting;
-import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.account.service.PromotionService;
 import com.hongqiang.shop.modules.entity.Attribute;
-import com.hongqiang.shop.modules.entity.Brand;
-import com.hongqiang.shop.modules.entity.Goods;
-import com.hongqiang.shop.modules.entity.MemberRank;
-import com.hongqiang.shop.modules.entity.Parameter;
 import com.hongqiang.shop.modules.entity.ParameterGroup;
-import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductCategory;
-import com.hongqiang.shop.modules.entity.ProductImage;
-import com.hongqiang.shop.modules.entity.Promotion;
-import com.hongqiang.shop.modules.entity.Specification;
-import com.hongqiang.shop.modules.entity.SpecificationValue;
-import com.hongqiang.shop.modules.entity.Tag;
 import com.hongqiang.shop.modules.product.service.BrandService;
 import com.hongqiang.shop.modules.product.service.GoodsService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
+import com.hongqiang.shop.modules.product.service.ProductImageService;
 import com.hongqiang.shop.modules.product.service.ProductService;
 import com.hongqiang.shop.modules.product.service.SpecificationService;
 import com.hongqiang.shop.modules.product.service.SpecificationValueService;
 import com.hongqiang.shop.modules.product.service.TagService;
+import com.hongqiang.shop.modules.user.service.MemberRankService;
 
 @Controller("adminProductController")
 @RequestMapping({"/admin/product"})
 public class ProductController extends BaseController
 {
 
-  @Resource(name="productServiceImpl")
+  @Autowired
   private ProductService productService;
 
-  @Resource(name="productCategoryServiceImpl")
+  @Autowired
   private ProductCategoryService productCategoryService;
 
-  @Resource(name="goodsServiceImpl")
+  @Autowired
   private GoodsService goodsService;
 
-  @Resource(name="brandServiceImpl")
+  @Autowired
   private BrandService brandService;
 
-//  @Resource(name="promotionServiceImpl")
-//  private PromotionService promotionService;
+  @Autowired
+  private PromotionService promotionService;
 
-  @Resource(name="tagServiceImpl")
+  @Autowired
   private TagService tagService;
-//
-//  @Resource(name="memberRankServiceImpl")
-//  private MemberRankService memberRankService;
-//
-//  @Resource(name="productImageServiceImpl")
-//  private ProductImageService productImageService;
 
-  @Resource(name="specificationServiceImpl")
+  @Autowired
+  private MemberRankService memberRankService;
+
+  @Autowired
+  private ProductImageService productImageService;
+
+  @Autowired
   private SpecificationService specificationService;
 
-  @Resource(name="specificationValueServiceImpl")
+  @Autowired
   private SpecificationValueService specificationValueService;
 
 //  @Resource(name="fileServiceImpl")

@@ -107,15 +107,13 @@ public class GoodsServiceImpl extends BaseService implements GoodsService {
 	@CacheEvict(value = { "product", "productCategory", "review",
 			"consultation" }, allEntries = true)
 	public void delete(Goods goods) {
-		// if ((goods != null) && (goods.getProducts() != null))
-		// {
-		// Iterator localIterator = goods.getProducts().iterator();
-		// while (localIterator.hasNext())
-		// {
-		// Product localProduct = (Product)localIterator.next();
-		// this.staticService.delete(localProduct);
-		// }
-		// }
+		if ((goods != null) && (goods.getProducts() != null)) {
+			Iterator<Product> localIterator = goods.getProducts().iterator();
+			while (localIterator.hasNext()) {
+				Product localProduct = (Product) localIterator.next();
+				this.staticService.delete(localProduct);
+			}
+		}
 		this.goodsDao.delete(goods);
 	}
 }

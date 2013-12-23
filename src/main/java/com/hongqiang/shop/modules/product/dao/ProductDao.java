@@ -30,7 +30,6 @@ public interface ProductDao extends ProductDaoCustom,
 
 	public Product findById(Long id);
 
-	
 }
 
 interface ProductDaoCustom extends BaseDao<Product> {
@@ -39,6 +38,9 @@ interface ProductDaoCustom extends BaseDao<Product> {
 
 	public List<Product> search(String paramString, Boolean paramBoolean,
 			Integer paramInteger);
+
+	public List<Product> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders);
 
 	public List<Product> findList(ProductCategory paramProductCategory,
 			Brand paramBrand, Promotion paramPromotion, List<Tag> paramList,
@@ -62,32 +64,31 @@ interface ProductDaoCustom extends BaseDao<Product> {
 			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
 			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
 			Boolean isStockAlert, Product.OrderType orderType, Pageable pageable);
-	  
+
 	public long count(Filter[] filters);
-	
-	 public Page<Product> findPage(Member paramMember,
-	 Pageable paramPageable);
-	
-	 public Page<Object> findSalesPage(Date paramDate1,
-	 Date paramDate2, Pageable paramPageable);
-	
-	 public Long count(Member paramMember, Boolean paramBoolean1,
-	 Boolean paramBoolean2, Boolean paramBoolean3,
-	 Boolean paramBoolean4, Boolean paramBoolean5, Boolean paramBoolean6);
-	
-	 public boolean isPurchased(Member paramMember, Product paramProduct);
+
+	public Page<Product> findPage(Member paramMember, Pageable paramPageable);
+
+	public Page<Object> findSalesPage(Date paramDate1, Date paramDate2,
+			Pageable paramPageable);
+
+	public Long count(Member paramMember, Boolean paramBoolean1,
+			Boolean paramBoolean2, Boolean paramBoolean3,
+			Boolean paramBoolean4, Boolean paramBoolean5, Boolean paramBoolean6);
+
+	public boolean isPurchased(Member paramMember, Product paramProduct);
 
 	public void persist(Product product);
 
 	public Product merge(Product product);
 
 	public void remove(Product product);
-	
-	public void  deleteAttributeOfProduct(Attribute attribute);
-	
-	public void  updateAttributeOfProduct(Attribute attribute);
-	
+
+	public void deleteAttributeOfProduct(Attribute attribute);
+
+	public void updateAttributeOfProduct(Attribute attribute);
+
 	public void persist(Goods goods);
-	
+
 	public void mergeForDelete(Goods goods);
 }

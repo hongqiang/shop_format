@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.account.service.PromotionService;
 import com.hongqiang.shop.modules.entity.Brand;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductCategory;
@@ -41,6 +42,7 @@ import com.hongqiang.shop.modules.product.service.BrandService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 import com.hongqiang.shop.modules.product.service.ProductService;
 import com.hongqiang.shop.modules.product.service.TagService;
+import com.hongqiang.shop.modules.util.service.SearchService;
 
 @Controller("shopProductController")
  @RequestMapping(value = "${frontPath}/product")
@@ -63,14 +65,14 @@ public class ProductController extends BaseController {
 	@Autowired
 	private BrandService brandService;
 
-//	@Autowired
-//	private PromotionService promotionService;
-//
+	@Autowired
+	private PromotionService promotionService;
+
 	@Autowired
 	private TagService tagService;
-//
-//	@Autowired
-//	private SearchService searchService;
+
+	@Autowired
+	private SearchService searchService;
 
 	@RequestMapping(value = { "/history" }, method =RequestMethod.GET )
 	@ResponseBody

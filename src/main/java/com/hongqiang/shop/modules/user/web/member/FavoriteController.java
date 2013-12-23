@@ -49,7 +49,7 @@ public class FavoriteController extends BaseController
   {
     Member localMember = this.memberService.getCurrent();
     Pageable localPageable = new Pageable(pageNumber, Integer.valueOf(PAGE_SIZE));
-//    model.addAttribute("page", this.productService.findPage(localMember, localPageable));
+    model.addAttribute("page", this.productService.findPage(localMember, localPageable));
     return "shop/member/favorite/list";
   }
 

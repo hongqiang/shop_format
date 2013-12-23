@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -48,11 +49,11 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 
 	private static final Pattern pattern = Pattern.compile("\\d*");
 
-	 @Autowired
-	 private GoodsDao goodsDao;
-	
-	 @Autowired
-	 private SnDao snDao;
+	@Autowired
+	private GoodsDao goodsDao;
+
+	@Autowired
+	private SnDao snDao;
 
 	public boolean snExists(String sn) {
 		if (sn == null)
@@ -86,7 +87,16 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			params.add(isGift);
 		}
 		sqlString += " order by product.isTop DESC, product.updateDate DESC ";
-		return super.findList(sqlString, params, null, count,null,null);
+		return super.findList(sqlString, params, null, count, null, null);
+	}
+
+	@Override
+	public List<Product> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders) {
+		String qlString = "select product from Product product where 1=1 ";
+		List<Object> parameter = new ArrayList<Object>();
+		return super.findList(qlString, parameter, first, count, filters,
+				orders);
 	}
 
 	@Override
@@ -115,15 +125,15 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 
 		}
 		if (attributeValue != null) {
-			Iterator localObject2 = attributeValue.entrySet().iterator();
-			while (localObject2.hasNext()) {
-				Map.Entry localObject1 = (Map.Entry) ((Iterator) localObject2)
+			Iterator<Entry<Attribute, String>> localIterator = attributeValue
+					.entrySet().iterator();
+			while (localIterator.hasNext()) {
+				Entry<Attribute, String> pairs = (Entry<Attribute, String>) localIterator
 						.next();
-				Object localObject3 = "attributeValue"
-						+ ((Attribute) ((Map.Entry) localObject1).getKey())
-								.getPropertyIndex();
-				sqlString += " and product." + (String) localObject3 + " = ? ";
-				params.add(((Map.Entry) localObject1).getValue());
+				String localString = "attributeValue"
+						+ ((Attribute) pairs.getKey()).getPropertyIndex();
+				sqlString += " and product." + localString + " = ? ";
+				params.add(pairs.getValue());
 			}
 		}
 		if ((startPrice != null) && (endPrice != null)
@@ -170,8 +180,8 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			}
 		}
 		if (isStockAlert != null) {
-			Integer stockAlertCount= SettingUtils.get().getStockAlertCount();
-			//Long stockAlertCount = 1L;
+			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
+			// Long stockAlertCount = 1L;
 			if (isStockAlert.booleanValue()) {
 				sqlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
 				params.add(stockAlertCount);
@@ -219,7 +229,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			params.add(endDate);
 		}
 		sqlString += " order by product.isTop DESC, product.updateDate DESC ";
-		return super.findList(sqlString, params, first, count,null,null);
+		return super.findList(sqlString, params, first, count, null, null);
 	}
 
 	@Override
@@ -234,10 +244,9 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			sqlString += " and product not in (?) ";
 			params.add(excludes);
 		}
-		return super.findList(sqlString, params, null, null,null,null);
+		return super.findList(sqlString, params, null, null, null, null);
 	}
 
-	
 	public Page<Product> findPage(ProductCategory productCategory, Brand brand,
 			Promotion promotion, List<Tag> tags,
 			Map<Attribute, String> attributeValue, BigDecimal startPrice,
@@ -262,15 +271,15 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 
 		}
 		if (attributeValue != null) {
-			Iterator localObject2 = attributeValue.entrySet().iterator();
-			while (localObject2.hasNext()) {
-				Map.Entry localObject1 = (Map.Entry) ((Iterator) localObject2)
+			Iterator<Entry<Attribute, String>> localIterator = attributeValue
+					.entrySet().iterator();
+			while (localIterator.hasNext()) {
+				Entry<Attribute, String> pairs = (Entry<Attribute, String>) localIterator
 						.next();
-				Object localObject3 = "attributeValue"
-						+ ((Attribute) ((Map.Entry) localObject1).getKey())
-								.getPropertyIndex();
-				sqlString += " and product." + (String) localObject3 + " = ? ";
-				params.add(((Map.Entry) localObject1).getValue());
+				String localString = "attributeValue"
+						+ ((Attribute) pairs.getKey()).getPropertyIndex();
+				sqlString += " and product." + localString + " = ? ";
+				params.add(pairs.getValue());
 			}
 		}
 		if ((startPrice != null) && (endPrice != null)
@@ -317,8 +326,8 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			}
 		}
 		if (isStockAlert != null) {
-			Integer stockAlertCount= SettingUtils.get().getStockAlertCount();
-			//int stockAlertCount = 1;
+			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
+			// int stockAlertCount = 1;
 			if (isStockAlert.booleanValue()) {
 				sqlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
 				params.add(stockAlertCount);
@@ -345,92 +354,92 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 				pageable.getPageSize());
 		return super.findPage(productPage, sqlString, params, pageable);
 	}
-	  
-	  @Override
-	  public long count(Filter[] filters){
-		  String qlString = "select  product from Product product where 1=1 ";
-		  StringBuilder stringBuilder = new StringBuilder(qlString);
-		  List<Object> params = new ArrayList<Object>();
-		  if (filters == null) {
-			  return super.count(stringBuilder,null, params);
-		}
-		  return super.count(stringBuilder,Arrays.asList(filters), params);
-	  }
-	
-	public Page<Product> findPage(Member member, Pageable pageable) {
-	 if (member == null)
-	 return new Page(Collections.emptyList(), 0, pageable);
-	 String qlString = "select product from Product product where 1=1 and product.favoriteMembers= ?";
-	 List<Object> params = new ArrayList<Object>();
-	 params.add(member);
-	 Page<Product> productPage = new Page<Product>(pageable.getPageNumber(),
-				pageable.getPageSize());
-	 return super.findPage(productPage,  qlString,  params, pageable);
-	 }
-	
-	 public Page<Object> findSalesPage(Date beginDate, Date endDate,
-	 Pageable pageable) {
-	 String qlString = "select product, sum(orderItems.quantity), sum(orderItems.quantity * orderItems.price) from Product product, OrderItem orderItems, Order order where 1=1 ";
-	 List<Object> params = new ArrayList<Object>();
-	 if (beginDate != null){
-		qlString += " and orderItems.createDate >= ? ";
-		params.add(beginDate);
-	 }
 
-	 if (endDate != null){
-		qlString += " and orderItems.createDate <= ? ";
-		params.add(endDate);
-	 }
-	 qlString += " and order.orderStatus = ? ";
-	 params.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.completed);
-	 qlString += " and order.paymentStatus = ? ";
-	 params.add(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
-	 
-	 qlString += " group by product.id ";
-	 
-	 StringBuilder stringBuilder = new StringBuilder(qlString);
-	 Long localLong = super.count(stringBuilder,null, params);
-	 int i = (int) Math.ceil(localLong.longValue() / pageable.getPageSize());
-	 if (i < pageable.getPageNumber())
-		pageable.setPageNumber(i);
-	
-	 qlString += " order by sum(orderItems.quantity * orderItems.price) DESC ";
-	//和shopxx不同
-//	 int first = (pageable.getPageNumber() - 1)* pageable.getPageSize();
-//	 int count = pageable.getPageSize();
-	 Page<Object> productPage = new Page<Object>(pageable.getPageNumber(),
+	@Override
+	public long count(Filter[] filters) {
+		String qlString = "select  product from Product product where 1=1 ";
+		StringBuilder stringBuilder = new StringBuilder(qlString);
+		List<Object> params = new ArrayList<Object>();
+		if (filters == null) {
+			return super.count(stringBuilder, null, params);
+		}
+		return super.count(stringBuilder, Arrays.asList(filters), params);
+	}
+
+	public Page<Product> findPage(Member member, Pageable pageable) {
+		if (member == null)
+			return new Page<Product>(0, 0);
+		String qlString = "select product from Product product where 1=1 and product.favoriteMembers= ?";
+		List<Object> params = new ArrayList<Object>();
+		params.add(member);
+		Page<Product> productPage = new Page<Product>(pageable.getPageNumber(),
 				pageable.getPageSize());
-	 return super.findPage(productPage,  qlString,  params, pageable);
-	 
-	 }
-	
-	 public Long count(Member favoriteMember, Boolean isMarketable,
-	 Boolean isList, Boolean isTop, Boolean isGift,
-	 Boolean isOutOfStock, Boolean isStockAlert) {
-	 
-	 String qlString = "select product from Product product where 1=1 ";
-	 List<Object> params = new ArrayList<Object>();
-	 if (favoriteMember != null){
-		qlString += " and product.favoriteMembers= ?";
-		params.add(favoriteMember);
-	 }
-	 if (isMarketable != null){
-		qlString += " and product.isMarketable= ?";
-		params.add(isMarketable);
-	 }
-	 if (isList != null){
-		qlString += " and product.isList= ?";
-		params.add(isList);
-	 }
-	 if (isTop != null){
-		qlString += " and product.isTop= ?";
-		params.add(isTop);
-	 }
-	 if (isGift != null){
-		qlString += " and product.isGift= ?";
-		params.add(isGift);
-	 }
-	if (isOutOfStock != null) {
+		return super.findPage(productPage, qlString, params, pageable);
+	}
+
+	public Page<Object> findSalesPage(Date beginDate, Date endDate,
+			Pageable pageable) {
+		String qlString = "select product, sum(orderItems.quantity), sum(orderItems.quantity * orderItems.price) from Product product, OrderItem orderItems, Order order where 1=1 ";
+		List<Object> params = new ArrayList<Object>();
+		if (beginDate != null) {
+			qlString += " and orderItems.createDate >= ? ";
+			params.add(beginDate);
+		}
+
+		if (endDate != null) {
+			qlString += " and orderItems.createDate <= ? ";
+			params.add(endDate);
+		}
+		qlString += " and order.orderStatus = ? ";
+		params.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.completed);
+		qlString += " and order.paymentStatus = ? ";
+		params.add(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
+
+		qlString += " group by product.id ";
+
+		StringBuilder stringBuilder = new StringBuilder(qlString);
+		Long localLong = super.count(stringBuilder, null, params);
+		int i = (int) Math.ceil(localLong.longValue() / pageable.getPageSize());
+		if (i < pageable.getPageNumber())
+			pageable.setPageNumber(i);
+
+		qlString += " order by sum(orderItems.quantity * orderItems.price) DESC ";
+		// 和shopxx不同
+		// int first = (pageable.getPageNumber() - 1)* pageable.getPageSize();
+		// int count = pageable.getPageSize();
+		Page<Object> productPage = new Page<Object>(pageable.getPageNumber(),
+				pageable.getPageSize());
+		return super.findPage(productPage, qlString, params, pageable);
+
+	}
+
+	public Long count(Member favoriteMember, Boolean isMarketable,
+			Boolean isList, Boolean isTop, Boolean isGift,
+			Boolean isOutOfStock, Boolean isStockAlert) {
+
+		String qlString = "select product from Product product where 1=1 ";
+		List<Object> params = new ArrayList<Object>();
+		if (favoriteMember != null) {
+			qlString += " and product.favoriteMembers= ?";
+			params.add(favoriteMember);
+		}
+		if (isMarketable != null) {
+			qlString += " and product.isMarketable= ?";
+			params.add(isMarketable);
+		}
+		if (isList != null) {
+			qlString += " and product.isList= ?";
+			params.add(isList);
+		}
+		if (isTop != null) {
+			qlString += " and product.isTop= ?";
+			params.add(isTop);
+		}
+		if (isGift != null) {
+			qlString += " and product.isGift= ?";
+			params.add(isGift);
+		}
+		if (isOutOfStock != null) {
 			if (isOutOfStock.booleanValue()) {
 				qlString += " and (product.stock is not null and product.stock <= product.allocatedStock) ";
 			} else {
@@ -438,8 +447,8 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			}
 		}
 		if (isStockAlert != null) {
-			Integer stockAlertCount= SettingUtils.get().getStockAlertCount();
-			//int stockAlertCount = 1;
+			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
+			// int stockAlertCount = 1;
 			if (isStockAlert.booleanValue()) {
 				qlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
 				params.add(stockAlertCount);
@@ -448,23 +457,26 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 				params.add(stockAlertCount);
 			}
 		}
-	 StringBuilder stringBuilder = new StringBuilder(qlString);
-	 return super.count(stringBuilder,null, params);
-	 }
-	
-	 public boolean isPurchased(Member member, Product product) {
-	 if ((member == null) || (product == null))
-	 return false;
-	 String str =
-	 "select count(*) from OrderItem orderItem where orderItem.product = :product and orderItem.order.member = :member and orderItem.order.orderStatus = :orderStatus";
-	 Long localLong = (Long) this.getEntityManager().createQuery(str, Long.class)
-	 .setFlushMode(FlushModeType.COMMIT)
-	 .setParameter("product", product)
-	 .setParameter("member", member)
-	 .setParameter("orderStatus", com.hongqiang.shop.modules.entity.Order.OrderStatus.completed)
-	 .getSingleResult();
-	 return localLong.longValue() > 0L;
-	 }
+		StringBuilder stringBuilder = new StringBuilder(qlString);
+		return super.count(stringBuilder, null, params);
+	}
+
+	public boolean isPurchased(Member member, Product product) {
+		if ((member == null) || (product == null))
+			return false;
+		String str = "select count(*) from OrderItem orderItem where orderItem.product = :product and orderItem.order.member = :member and orderItem.order.orderStatus = :orderStatus";
+		Long localLong = (Long) this
+				.getEntityManager()
+				.createQuery(str, Long.class)
+				.setFlushMode(FlushModeType.COMMIT)
+				.setParameter("product", product)
+				.setParameter("member", member)
+				.setParameter(
+						"orderStatus",
+						com.hongqiang.shop.modules.entity.Order.OrderStatus.completed)
+				.getSingleResult();
+		return localLong.longValue() > 0L;
+	}
 
 	@Override
 	public void persist(Product product) {
@@ -505,34 +517,32 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 		}
 		super.remove(product);
 	}
-	
+
 	@Override
-	public void  deleteAttributeOfProduct(Attribute attribute){
+	public void deleteAttributeOfProduct(Attribute attribute) {
 		String str1 = "attributeValue" + attribute.getPropertyIndex();
-		String str2 = "update Product product set product."
-				+ str1
+		String str2 = "update Product product set product." + str1
 				+ " = null where product.productCategory = :productCategory";
 		this.getEntityManager()
-		.createQuery(str2)
-		.setFlushMode(FlushModeType.COMMIT)
-		.setParameter("productCategory",
-				attribute.getProductCategory()).executeUpdate();
+				.createQuery(str2)
+				.setFlushMode(FlushModeType.COMMIT)
+				.setParameter("productCategory", attribute.getProductCategory())
+				.executeUpdate();
 	}
-	
+
 	@Override
-	public void  updateAttributeOfProduct(Attribute attribute){
+	public void updateAttributeOfProduct(Attribute attribute) {
 		String str1 = "attributeValue" + attribute.getPropertyIndex();
-		String str2 = "update Product product set product."
-				+ str1
-				+ " = '"+attribute.getName()
-				+"' where product.productCategory = :productCategory";
+		String str2 = "update Product product set product." + str1 + " = '"
+				+ attribute.getName()
+				+ "' where product.productCategory = :productCategory";
 		this.getEntityManager()
-		.createQuery(str2)
-		.setFlushMode(FlushModeType.COMMIT)
-		.setParameter("productCategory",
-				attribute.getProductCategory()).executeUpdate();
+				.createQuery(str2)
+				.setFlushMode(FlushModeType.COMMIT)
+				.setParameter("productCategory", attribute.getProductCategory())
+				.executeUpdate();
 	}
-	
+
 	@Override
 	public void persist(Goods goods) {
 		if (goods.getProducts() != null) {
@@ -543,7 +553,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			}
 		}
 	}
-	
+
 	@Override
 	public void mergeForDelete(Goods goods) {
 		if (goods.getProducts() != null) {
@@ -572,16 +582,16 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			}
 		}
 	}
-	
+
 	private void setProductFullName(Product paramProduct) {
 		if (paramProduct == null)
 			return;
 		if (StringUtils.isEmpty(paramProduct.getSn())) {
 			String snString;
-			 do{
-				 snString = this.snDao.generate(Sn.Type.product);
-			 }while (snExists(snString));
-			 paramProduct.setSn(snString);
+			do {
+				snString = this.snDao.generate(Sn.Type.product);
+			} while (snExists(snString));
+			paramProduct.setSn(snString);
 		}
 		StringBuffer stringBuffer = new StringBuffer(paramProduct.getName());
 		if ((paramProduct.getSpecificationValues() != null)
@@ -596,9 +606,8 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			while (localIterator.hasNext()) {
 				if (i != 0)
 					stringBuffer.append(" ");
-				stringBuffer
-						.append(((SpecificationValue) localIterator.next())
-								.getName());
+				stringBuffer.append(((SpecificationValue) localIterator.next())
+						.getName());
 				i++;
 			}
 			stringBuffer.append("]");

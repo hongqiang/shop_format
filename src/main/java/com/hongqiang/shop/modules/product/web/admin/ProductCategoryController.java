@@ -5,10 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,8 +24,6 @@ import com.hongqiang.shop.modules.entity.ProductImage;
 import com.hongqiang.shop.modules.product.service.BrandService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 import com.hongqiang.shop.modules.product.service.ProductImageService;
-import com.hongqiang.shop.modules.sys.entity.JArea;
-import com.hongqiang.shop.modules.sys.utils.UserUtils;
 
 @Controller("adminProductCategoryController")
 @RequestMapping({"${adminPath}/product_category"})

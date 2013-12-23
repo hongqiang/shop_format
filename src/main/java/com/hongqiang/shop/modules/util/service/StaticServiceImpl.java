@@ -22,6 +22,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.FreeMarkers;
+import com.hongqiang.shop.modules.account.dao.PromotionDao;
 import com.hongqiang.shop.modules.content.dao.ArticleDao;
 import com.hongqiang.shop.modules.entity.Article;
 import com.hongqiang.shop.modules.entity.Product;
@@ -48,8 +49,8 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	@Autowired
 	private BrandDao brandDao;
 
-	// @Autowired
-	// private PromotionDao promotionDao;
+	 @Autowired
+	 private PromotionDao promotionDao;
 
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
@@ -140,105 +141,113 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	@Transactional(readOnly = true)
 	public int buildSitemap() {
 		int i = 0;
-//		com.hongqiang.shop.modules.utils.Template localTemplate1 = this.templateService
-//				.get("sitemapIndex");
-//		com.hongqiang.shop.modules.utils.Template localTemplate2 = this.templateService
-//				.get("sitemap");
-//		HashMap<String, Object> localHashMap = new HashMap<String, Object>();
-//		ArrayList<String> localArrayList = new ArrayList<String>();
-//		int j = 0;
-//		int k = 0;
-//		int m = 0;
-//		int n = STATIC_SIZE.intValue();
-//		while (true)
-//			try {
-//				localHashMap.put("index", Integer.valueOf(k));
-//				String str1 = localTemplate2.getTemplatePath();
-//				String str2 = FreeMarkers.renderString(
-//						localTemplate2.getStaticPath(), localHashMap);
-//				if (j != 0)
-//					continue;
-//				List<Article> localList = this.articleDao.findList(Integer.valueOf(m),
-//						Integer.valueOf(n), null, null);
-//				localHashMap.put("articles", localList);
-//				if (localList.size() >= n)
-//					continue;
-//				j++;
-//				m = 0;
-//				n -= localList.size();
-//				continue;
-//				i += build(str1, str2, localHashMap);
-//				this.articleDao.clear();
-//				this.articleDao.flush();
-//				localArrayList.add(str2);
-//				localHashMap.clear();
-//				k++;
-//				m += localList.size();
-//				n = STATIC_SIZE.intValue();
-//				continue;
-//				if (j != 1)
-//					continue;
-//				localList = this.productDao.findList(Integer.valueOf(m),
-//						Integer.valueOf(n), null, null);
-//				localHashMap.put("products", localList);
-//				if (localList.size() >= n)
-//					continue;
-//				j++;
-//				m = 0;
-//				n -= localList.size();
-//				continue;
-//				i += build(str1, str2, localHashMap);
-//				this.productDao.clear();
-//				this.productDao.flush();
-//				localArrayList.add(str2);
-//				localHashMap.clear();
-//				k++;
-//				m += localList.size();
-//				n = STATIC_SIZE.intValue();
-//				continue;
-//				if (j != 2)
-//					continue;
-//				localList = this.brandDao.findList(Integer.valueOf(m),
-//						Integer.valueOf(n), null, null);
-//				localHashMap.put("brands", localList);
-//				if (localList.size() >= n)
-//					continue;
-//				j++;
-//				m = 0;
-//				n -= localList.size();
-//				continue;
-//				i += build(str1, str2, localHashMap);
-//				this.brandDao.clear();
-//				this.brandDao.flush();
-//				localArrayList.add(str2);
-//				localHashMap.clear();
-//				k++;
-//				m += localList.size();
-//				n = STATIC_SIZE.intValue();
-//				continue;
-//				if (j != 3)
-//					continue;
-//				localList = this.promotionDao.findList(Integer.valueOf(m),
-//						Integer.valueOf(n), null, null);
-//				localHashMap.put("promotions", localList);
-//				i += build(str1, str2, localHashMap);
-//				this.promotionDao.clear();
-//				this.promotionDao.flush();
-//				localArrayList.add(str2);
-//				if (localList.size() >= n)
-//					continue;
-//				localHashMap.put("staticPaths", localArrayList);
-//				i += build(localTemplate1.getTemplatePath(),
-//						localTemplate1.getStaticPath(), localHashMap);
-//				break;
-//				localHashMap.clear();
-//				k++;
-//				m += localList.size();
-//				n = STATIC_SIZE.intValue();
-//				continue;
-//			} catch (Exception localException) {
-//				localException.printStackTrace();
-//			}
+		com.hongqiang.shop.modules.utils.Template localTemplate1 = this.templateService
+				.get("sitemapIndex");
+		com.hongqiang.shop.modules.utils.Template localTemplate2 = this.templateService
+				.get("sitemap");
+		HashMap<String, Object> localHashMap = new HashMap<String, Object>();
+		ArrayList<String> localArrayList = new ArrayList<String>();
+		int j = 0;
+		int k = 0;
+		int m = 0;
+		int n = STATIC_SIZE.intValue();
+		while (true)
+			try {
+				localHashMap.put("index", Integer.valueOf(k));
+				String str1 = localTemplate2.getTemplatePath();
+				String str2 = FreeMarkers.renderString(
+						localTemplate2.getStaticPath(), localHashMap);
+				if (j != 0)
+					continue;
+				List localList = this.articleDao.findList(Integer.valueOf(m),
+						Integer.valueOf(n), null, null);
+				localHashMap.put("articles", localList);
+				if (localList.size() >= n)
+					continue;
+				j++;
+				m = 0;
+				n -= localList.size();
+				if (m >= n)//
+					continue;
+				i += build(str1, str2, localHashMap);
+				this.articleDao.clear();
+				this.articleDao.flush();
+				localArrayList.add(str2);
+				localHashMap.clear();
+				k++;
+				m += localList.size();
+				n = STATIC_SIZE.intValue();
+				if (m>=n)//
+					continue;
+				if (j != 1)
+					continue;
+				localList = this.productDao.findList(Integer.valueOf(m),
+						Integer.valueOf(n), null, null);
+				localHashMap.put("products", localList);
+				if (localList.size() >= n)
+					continue;
+				j++;
+				m = 0;
+				n -= localList.size();
+				if (m >= n)//
+					continue;
+				i += build(str1, str2, localHashMap);
+				this.productDao.clear();
+				this.productDao.flush();
+				localArrayList.add(str2);
+				localHashMap.clear();
+				k++;
+				m += localList.size();
+				n = STATIC_SIZE.intValue();
+				if (m>=n)//
+				continue;
+				if (j != 2)
+					continue;
+				localList = this.brandDao.findList(Integer.valueOf(m),
+						Integer.valueOf(n), null, null);
+				localHashMap.put("brands", localList);
+				if (localList.size() >= n)
+					continue;
+				j++;
+				m = 0;
+				n -= localList.size();
+				if (m>=n)//
+				continue;
+				i += build(str1, str2, localHashMap);
+				this.brandDao.clear();
+				this.brandDao.flush();
+				localArrayList.add(str2);
+				localHashMap.clear();
+				k++;
+				m += localList.size();
+				n = STATIC_SIZE.intValue();
+				if (m>=n)//
+				continue;
+				if (j != 3)
+					continue;
+				localList = this.promotionDao.findList(Integer.valueOf(m),
+						Integer.valueOf(n), null, null);
+				localHashMap.put("promotions", localList);
+				i += build(str1, str2, localHashMap);
+				this.promotionDao.clear();
+				this.promotionDao.flush();
+				localArrayList.add(str2);
+				if (localList.size() >= n)
+					continue;
+				localHashMap.put("staticPaths", localArrayList);
+				i += build(localTemplate1.getTemplatePath(),
+						localTemplate1.getStaticPath(), localHashMap);
+				if (m>=n)//
+				break;
+				localHashMap.clear();
+				k++;
+				m += localList.size();
+				n = STATIC_SIZE.intValue();
+				if (m>=n)//
+				continue;
+			} catch (Exception localException) {
+				localException.printStackTrace();
+			}
 		return i;
 	}
 
@@ -259,32 +268,32 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	@Transactional(readOnly = true)
 	public int buildAll() {
 		int i = 0;
-//		List localList;
-//		Iterator localIterator;
-//		Object localObject;
-//		for (int j = 0; j < this.articleDao.count(new Filter[0]); j += 20) {
-//			localList = this.articleDao.findList(Integer.valueOf(j),
-//					Integer.valueOf(20), null, null);
-//			localIterator = localList.iterator();
-//			while (localIterator.hasNext()) {
-//				localObject = (Article) localIterator.next();
-//				i += build((Article) localObject);
-//			}
-//			this.articleDao.clear();
-//		}
-//		for (j = 0; j < this.productDao.count(new Filter[0]); j += 20) {
-//			localList = this.productDao.findList(Integer.valueOf(j),
-//					Integer.valueOf(20), null, null);
-//			localIterator = localList.iterator();
-//			while (localIterator.hasNext()) {
-//				localObject = (Product) localIterator.next();
-//				i += build((Product) localObject);
-//			}
-//			this.productDao.clear();
-//		}
-//		buildIndex();
-//		buildSitemap();
-//		buildOther();
+		List localList;
+		Iterator localIterator;
+		Object localObject;
+		for (int j = 0; j < this.articleDao.count(new Filter[0]); j += 20) {
+			localList = this.articleDao.findList(Integer.valueOf(j),
+					Integer.valueOf(20), null, null);
+			localIterator = localList.iterator();
+			while (localIterator.hasNext()) {
+				localObject = (Article) localIterator.next();
+				i += build((Article) localObject);
+			}
+			this.articleDao.clear();
+		}
+		for (int j = 0; j < this.productDao.count(new Filter[0]); j += 20) {
+			localList = this.productDao.findList(Integer.valueOf(j),
+					Integer.valueOf(20), null, null);
+			localIterator = localList.iterator();
+			while (localIterator.hasNext()) {
+				localObject = (Product) localIterator.next();
+				i += build((Product) localObject);
+			}
+			this.productDao.clear();
+		}
+		buildIndex();
+		buildSitemap();
+		buildOther();
 		return i;
 	}
 

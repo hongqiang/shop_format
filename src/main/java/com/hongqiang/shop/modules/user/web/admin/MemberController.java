@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -174,7 +173,7 @@ public class MemberController extends BaseController {
 						localObject1 = request
 								.getParameterValues("memberAttribute_"
 										+ localMemberAttribute.getId());
-						List localObject2 = localObject1 != null ? Arrays
+						List<Object> localObject2 = localObject1 != null ? Arrays
 								.asList(localObject1) : null;
 						if ((localMemberAttribute.getIsRequired()
 								.booleanValue())
@@ -302,7 +301,7 @@ public class MemberController extends BaseController {
 						localObject1 = request
 								.getParameterValues("memberAttribute_"
 										+ localMemberAttribute.getId());
-						List localObject2 = localObject1 != null ? Arrays
+						List<Object> localObject2 = localObject1 != null ? Arrays
 								.asList(localObject1) : null;
 						if ((localMemberAttribute.getIsRequired()
 								.booleanValue())

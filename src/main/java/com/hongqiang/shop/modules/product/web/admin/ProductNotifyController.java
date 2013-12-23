@@ -1,8 +1,5 @@
 package com.hongqiang.shop.modules.product.web.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,7 +16,7 @@ import com.hongqiang.shop.modules.entity.ProductNotify;
 import com.hongqiang.shop.modules.product.service.ProductNotifyService;
 import com.hongqiang.shop.modules.product.service.ProductService;
 
-@Controller("ProductNotifyntroller")
+@Controller("adminProductNotifyntroller")
 @RequestMapping({"${adminPath}/product_notify"})
 public class ProductNotifyController extends BaseController
 {
@@ -51,7 +48,6 @@ public class ProductNotifyController extends BaseController
   {
     this.productNotifyService.delete(ids);
     return ADMIN_SUCCESS;
-//    return Message.success("admin.message.success",null);
   }
   
  @Autowired

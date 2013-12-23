@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.FlushModeType;
 
@@ -24,13 +23,15 @@ public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup>
 	@Autowired
 	private ParameterDao parameterDao;
 
-	public Page<ParameterGroup> findPage(Pageable pageable){
-		Page<ParameterGroup> parameterGroupPage = new Page<ParameterGroup>(pageable.getPageNumber(),pageable.getPageSize());
+	public Page<ParameterGroup> findPage(Pageable pageable) {
+		Page<ParameterGroup> parameterGroupPage = new Page<ParameterGroup>(
+				pageable.getPageNumber(), pageable.getPageSize());
 		String qlString = "select parameterGroup from ParameterGroup parameterGroup";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(parameterGroupPage,  qlString,  parameter, pageable) ;
+		return super
+				.findPage(parameterGroupPage, qlString, parameter, pageable);
 	}
-	
+
 	public ParameterGroup merge(ParameterGroup parameterGroup) {
 
 		HashSet<Parameter> localHashSet = new HashSet<Parameter>();
@@ -40,10 +41,13 @@ public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup>
 				localHashSet.add(tempParameter);
 			}
 		}
-		List<Parameter> localList1 = this.parameterDao.findList(parameterGroup,localHashSet);
+		List<Parameter> localList1 = this.parameterDao.findList(parameterGroup,
+				localHashSet);
 		for (int i = 0; i < localList1.size(); i++) {
 			Parameter localParameter = (Parameter) localList1.get(i);
-			String str = "select product from Product product join product.parameterValue parameterValue where index(parameterValue) = :parameter";
+			String str = "select product from Product product join "
+					+ "product.parameterValue parameterValue"
+					+ "where index(parameterValue) = :parameter";
 			List<Product> localList2 = this.getEntityManager()
 					.createQuery(str, Product.class)
 					.setFlushMode(FlushModeType.COMMIT)
@@ -66,7 +70,9 @@ public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup>
 			for (int i = 0; i < parameterGroup.getParameters().size(); i++) {
 				Parameter localParameter = (Parameter) parameterGroup
 						.getParameters().get(i);
-				String str = "select product from Product product join product.parameterValue parameterValue where index(parameterValue) = :parameter";
+				String str = "select product from Product product join "
+						+ "product.parameterValue parameterValue "
+						+ "where index(parameterValue) = :parameter";
 				List<Product> localList = this.getEntityManager()
 						.createQuery(str, Product.class)
 						.setFlushMode(FlushModeType.COMMIT)

@@ -20,12 +20,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-
-import net.sf.ehcache.search.expression.Or;
-
-//import net.shophq.Setting;
-//import net.shophq.util.SettingUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
