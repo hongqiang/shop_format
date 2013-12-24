@@ -8,27 +8,33 @@ import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Promotion;
 
-public interface PromotionService{
+public interface PromotionService {
 
-  public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded, Integer count, List<Filter> filters, List<Order> orders);
+	public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded,
+			Integer count, List<Filter> filters, List<Order> orders);
 
-  public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded, Integer count, List<Filter> filters, List<Order> orders, String cacheRegion);
-  
-  public Promotion find(Long id);
-	
+	public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded,
+			Integer count, List<Filter> filters, List<Order> orders,
+			String cacheRegion);
+
+	public List<Promotion> findAll();
+
+	public Promotion find(Long id);
+
 	public Page<Promotion> findPage(Pageable pageable);
 
-  public List<Promotion> findList(Integer count, List<Filter> filters, List<Order> orders);
-  
-  public void save(Promotion promotion);
+	public List<Promotion> findList(Integer count, List<Filter> filters,
+			List<Order> orders);
 
-  public Promotion update(Promotion promotion);
+	public void save(Promotion promotion);
 
-  public Promotion update(Promotion promotion, String[] ignoreProperties);
+	public Promotion update(Promotion promotion);
 
-  public void delete(Long id);
+	public Promotion update(Promotion promotion, String[] ignoreProperties);
 
-  public void delete(Long[] ids);
+	public void delete(Long id);
 
-  public void delete(Promotion promotion);
+	public void delete(Long[] ids);
+
+	public void delete(Promotion promotion);
 }

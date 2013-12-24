@@ -60,4 +60,9 @@ public class PromotionDaoImpl extends BaseDaoImpl<Promotion> implements
 		return super.findList(qlString, parameter, first, count, filters,
 				orders);
 	}
+	
+	@Override
+	public List<Promotion> findAll(){
+		return findList(null, null, null, null);
+	}
 }

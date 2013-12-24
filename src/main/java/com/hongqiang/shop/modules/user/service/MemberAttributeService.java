@@ -5,7 +5,6 @@ import java.util.List;
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberAttribute;
-import com.hongqiang.shop.modules.entity.MemberRank;
 
 public interface MemberAttributeService {
 
@@ -14,7 +13,7 @@ public interface MemberAttributeService {
 	public List<MemberAttribute> findList();
 
 	public List<MemberAttribute> findList(String paramString);
-	
+
 	public List<MemberAttribute> findAll();
 
 	public MemberAttribute find(Long id);
@@ -27,8 +26,8 @@ public interface MemberAttributeService {
 
 	public MemberAttribute update(MemberAttribute memberAttribute);
 
-	 public MemberAttribute update(MemberAttribute brand, String[]
-	 ignoreProperties);
+	public MemberAttribute update(MemberAttribute brand,
+			String[] ignoreProperties);
 
 	public void delete(Long id);
 

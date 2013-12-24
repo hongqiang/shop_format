@@ -49,8 +49,8 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	@Autowired
 	private BrandDao brandDao;
 
-	 @Autowired
-	 private PromotionDao promotionDao;
+	@Autowired
+	private PromotionDao promotionDao;
 
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
@@ -177,7 +177,7 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				k++;
 				m += localList.size();
 				n = STATIC_SIZE.intValue();
-				if (m>=n)//
+				if (m >= n)//
 					continue;
 				if (j != 1)
 					continue;
@@ -199,8 +199,8 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				k++;
 				m += localList.size();
 				n = STATIC_SIZE.intValue();
-				if (m>=n)//
-				continue;
+				if (m >= n)//
+					continue;
 				if (j != 2)
 					continue;
 				localList = this.brandDao.findList(Integer.valueOf(m),
@@ -211,8 +211,8 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				j++;
 				m = 0;
 				n -= localList.size();
-				if (m>=n)//
-				continue;
+				if (m >= n)//
+					continue;
 				i += build(str1, str2, localHashMap);
 				this.brandDao.clear();
 				this.brandDao.flush();
@@ -221,8 +221,8 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				k++;
 				m += localList.size();
 				n = STATIC_SIZE.intValue();
-				if (m>=n)//
-				continue;
+				if (m >= n)//
+					continue;
 				if (j != 3)
 					continue;
 				localList = this.promotionDao.findList(Integer.valueOf(m),
@@ -237,14 +237,14 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				localHashMap.put("staticPaths", localArrayList);
 				i += build(localTemplate1.getTemplatePath(),
 						localTemplate1.getStaticPath(), localHashMap);
-				if (m>=n)//
-				break;
+				if (m >= n)//
+					break;
 				localHashMap.clear();
 				k++;
 				m += localList.size();
 				n = STATIC_SIZE.intValue();
-				if (m>=n)//
-				continue;
+				if (m >= n)//
+					continue;
 			} catch (Exception localException) {
 				localException.printStackTrace();
 			}

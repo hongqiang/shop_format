@@ -12,7 +12,6 @@ import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberAttribute;
-import com.hongqiang.shop.modules.entity.MemberRank;
 import com.hongqiang.shop.modules.user.dao.MemberAttributeDao;
 
 @Service

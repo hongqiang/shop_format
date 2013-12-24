@@ -12,7 +12,7 @@ class ShopConvertUtils extends ConvertUtilsBean
   {
     if (value != null)
     {
-      Class localClass = value.getClass();
+      Class<?> localClass = value.getClass();
       if ((localClass.isEnum()) && (super.lookup(localClass) == null))
       {
         super.register(new EnumConverter(localClass), localClass);
@@ -32,21 +32,21 @@ class ShopConvertUtils extends ConvertUtilsBean
     return (String)super.convert(value);
   }
 
-  public Object convert(String value, Class clazz)
+  public Object convert(String value, @SuppressWarnings("rawtypes") Class clazz)
   {
     if ((clazz.isEnum()) && (super.lookup(clazz) == null))
       super.register(new EnumConverter(clazz), clazz);
     return super.convert(value, clazz);
   }
 
-  public Object convert(String[] values, Class clazz)
+  public Object convert(String[] values, @SuppressWarnings("rawtypes") Class clazz)
   {
     if ((clazz.isArray()) && (clazz.getComponentType().isEnum()) && (super.lookup(clazz.getComponentType()) == null))
       super.register(new EnumConverter(clazz.getComponentType()), clazz.getComponentType());
     return super.convert(values, clazz);
   }
 
-  public Object convert(Object value, Class targetType)
+  public Object convert(Object value, @SuppressWarnings("rawtypes") Class targetType)
   {
     if (super.lookup(targetType) == null)
       if (targetType.isEnum())

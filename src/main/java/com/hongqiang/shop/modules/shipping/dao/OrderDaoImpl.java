@@ -47,7 +47,7 @@ public class OrderDaoImpl extends
 	public Page<com.hongqiang.shop.modules.entity.Order> findPage(
 			Member member, Pageable pageable) {
 		if (member == null)
-			return new Page(Collections.emptyList(), 0, pageable);
+			return new Page<com.hongqiang.shop.modules.entity.Order>(0,0);
 		String qlString = "select order from Order order where 1=1 and order.member = ? ";
 		List<Object> parameter = new ArrayList<Object>();
 		parameter.add(parameter);
@@ -179,12 +179,14 @@ public class OrderDaoImpl extends
 		return super.count(stringBuilder, null, parameter);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public BigDecimal getSalesAmount(Date beginDate, Date endDate) {
 		CriteriaBuilder localCriteriaBuilder = this.getEntityManager()
 				.getCriteriaBuilder();
 		CriteriaQuery<BigDecimal> localCriteriaQuery = localCriteriaBuilder
 				.createQuery(BigDecimal.class);
+		@SuppressWarnings("rawtypes")
 		Root localRoot = localCriteriaQuery.from(com.hongqiang.shop.modules.entity.Order.class);
 		localCriteriaQuery.select(localCriteriaBuilder.sum(localRoot
 				.get("amountPaid")));
@@ -207,12 +209,14 @@ public class OrderDaoImpl extends
 				.setFlushMode(FlushModeType.COMMIT).getSingleResult();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Integer getSalesVolume(Date beginDate, Date endDate) {
 		CriteriaBuilder localCriteriaBuilder = this.getEntityManager()
 				.getCriteriaBuilder();
 		CriteriaQuery<Integer> localCriteriaQuery = localCriteriaBuilder
 				.createQuery(Integer.class);
+		@SuppressWarnings("rawtypes")
 		Root localRoot = localCriteriaQuery.from(com.hongqiang.shop.modules.entity.Order.class);
 		localCriteriaQuery.select(localCriteriaBuilder.sum(localRoot.join(
 				"orderItems").get("shippedQuantity")));

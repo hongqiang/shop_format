@@ -3,6 +3,15 @@ package com.hongqiang.shop.website.entity;
 import java.util.Date;
 
 public class FileInfo {
+
+	public enum OrderType {
+		name, size, type;
+	}
+
+	public enum FileType {
+		image, flash, media, file;
+	}
+
 	private String name;
 	private String url;
 	private Boolean isDirectory;

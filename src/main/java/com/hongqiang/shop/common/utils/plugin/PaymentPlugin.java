@@ -126,13 +126,13 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	public abstract String getNotifyContext(String paramString,
 			HttpServletRequest paramHttpServletRequest);
 
-	protected String aaaaaaaa(String paramString) {
+	protected String getReturnUrl(String paramString) {
 		Setting localSetting = SettingUtils.get();
 		return localSetting.getSiteUrl() + "/payment/return/" + paramString
 				+ ".jhtml";
 	}
 
-	protected String IIIllIll(String paramString) {
+	protected String getNotifyUrl(String paramString) {
 		Setting localSetting = SettingUtils.get();
 		return localSetting.getSiteUrl() + "/payment/notify/" + paramString
 				+ ".jhtml";

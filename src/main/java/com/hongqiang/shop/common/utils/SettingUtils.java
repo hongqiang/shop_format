@@ -90,18 +90,19 @@ public final class SettingUtils
   {
     try
     {
-      File localFile = new ClassPathResource("/shopxx.xml").getFile();
+      File localFile = new ClassPathResource("/shophq.xml").getFile();
       Document localDocument = new SAXReader().read(localFile);
-      List<org.dom4j.Element> localList = localDocument.selectNodes("/shopxx/setting");
-      Object localObject2 = localList.iterator();
-      while (((Iterator<org.dom4j.Element>)localObject2).hasNext())
+      @SuppressWarnings("unchecked")
+	List<org.dom4j.Element> localList = localDocument.selectNodes("/shophq/setting");
+      Iterator<org.dom4j.Element> elementIterator = localList.iterator();
+      while (elementIterator.hasNext())
       {
-    	org.dom4j.Element localObject1 = (org.dom4j.Element)((Iterator)localObject2).next();
+    	org.dom4j.Element element = (org.dom4j.Element)elementIterator.next();
         try
         {
-          String str1 = ((org.dom4j.Element)localObject1).attributeValue("name");
+          String str1 = element.attributeValue("name");
           String str2 = beanUtilsBean.getProperty(setting, str1);
-          Attribute localAttribute = ((org.dom4j.Element)localObject1).attribute("value");
+          Attribute localAttribute = element.attribute("value");
           localAttribute.setValue(str2);
         }
         catch (IllegalAccessException localIllegalAccessException1)
@@ -117,8 +118,8 @@ public final class SettingUtils
           localNoSuchMethodException1.printStackTrace();
         }
       }
-      Object localObject1 = null;
-      localObject2 = null;
+      OutputStream outputStream = null;
+      XMLWriter xmlWriter = null;
       try
       {
         OutputFormat localOutputFormat = OutputFormat.createPrettyPrint();
@@ -126,9 +127,9 @@ public final class SettingUtils
         localOutputFormat.setIndent(true);
         localOutputFormat.setIndent("\t");
         localOutputFormat.setNewlines(true);
-        localObject1 = new FileOutputStream(localFile);
-        localObject2 = new XMLWriter((OutputStream)localObject1, localOutputFormat);
-        ((XMLWriter)localObject2).write(localDocument);
+        outputStream = new FileOutputStream(localFile);
+        xmlWriter = new XMLWriter(outputStream, localOutputFormat);
+        xmlWriter.write(localDocument);
       }
       catch (Exception localException3)
       {
@@ -136,15 +137,15 @@ public final class SettingUtils
       }
       finally
       {
-        if (localObject2 != null)
+        if (xmlWriter != null)
           try
           {
-            ((XMLWriter)localObject2).close();
+        	  xmlWriter.close();
           }
           catch (IOException localIOException4)
           {
           }
-        IOUtils.closeQuietly((OutputStream)localObject1);
+        IOUtils.closeQuietly(outputStream);
       }
       Ehcache localEhcache = cacheManager.getEhcache("setting");
       localEhcache.put(new net.sf.ehcache.Element(Setting.CACHE_KEY, setting));

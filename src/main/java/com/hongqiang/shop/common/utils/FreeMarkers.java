@@ -11,17 +11,15 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.beanutils.ConvertUtilsBean;
-import org.apache.commons.beanutils.Converter;
-import org.apache.commons.beanutils.converters.ArrayConverter;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 import com.hongqiang.shop.common.utils.model.CommonAttributes;
-import com.hongqiang.shop.common.utils.model.EnumConverter;
 
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
@@ -75,6 +73,7 @@ public class FreeMarkers {
 		return cfg;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T> T getParameter(String name, Class<T> type, Map<String, TemplateModel> params) throws TemplateModelException
 	  {
 	    Assert.hasText(name);
@@ -108,10 +107,10 @@ public class FreeMarkers {
 	  {
 	    Assert.notNull(variables);
 	    Assert.notNull(env);
-	    Iterator localIterator = variables.entrySet().iterator();
+	    Iterator<Entry<String, Object>> localIterator = variables.entrySet().iterator();
 	    while (localIterator.hasNext())
 	    {
-	      Map.Entry localEntry = (Map.Entry)localIterator.next();
+	    	Entry<String, Object>localEntry = (Entry<String, Object>)localIterator.next();
 	      String str = (String)localEntry.getKey();
 	      Object localObject = localEntry.getValue();
 	      if ((localObject instanceof TemplateModel))
@@ -140,61 +139,3 @@ public class FreeMarkers {
 	}
 	
 }
-
-//class ShopConvertUtils extends ConvertUtilsBean
-//{
-//  public   String convert(Object value)
-//  {
-//    if (value != null)
-//    {
-//      Class localClass = value.getClass();
-//      if ((localClass.isEnum()) && (super.lookup(localClass) == null))
-//      {
-//        super.register(new EnumConverter(localClass), localClass);
-//      }
-//      else if ((localClass.isArray()) && (localClass.getComponentType().isEnum()))
-//      {
-//        if (super.lookup(localClass) == null)
-//        {
-//          Object localObject = new ArrayConverter(localClass, new EnumConverter(localClass.getComponentType()), 0);
-//          ((ArrayConverter)localObject).setOnlyFirstToString(false);
-//          super.register((Converter)localObject, localClass);
-//        }
-//        Object localObject = super.lookup(localClass);
-//        return (String)((Converter)localObject).convert(String.class, value);
-//      }
-//    }
-//    return (String)super.convert(value);
-//  }
-//
-//  public Object convert(String value, Class clazz)
-//  {
-//    if ((clazz.isEnum()) && (super.lookup(clazz) == null))
-//      super.register(new EnumConverter(clazz), clazz);
-//    return super.convert(value, clazz);
-//  }
-//
-//  public Object convert(String[] values, Class clazz)
-//  {
-//    if ((clazz.isArray()) && (clazz.getComponentType().isEnum()) && (super.lookup(clazz.getComponentType()) == null))
-//      super.register(new EnumConverter(clazz.getComponentType()), clazz.getComponentType());
-//    return super.convert(values, clazz);
-//  }
-//
-//  public Object convert(Object value, Class targetType)
-//  {
-//    if (super.lookup(targetType) == null)
-//      if (targetType.isEnum())
-//      {
-//        super.register(new EnumConverter(targetType), targetType);
-//      }
-//      else if ((targetType.isArray()) && (targetType.getComponentType().isEnum()))
-//      {
-//        ArrayConverter localArrayConverter = new ArrayConverter(targetType, new EnumConverter(targetType.getComponentType()), 0);
-//        localArrayConverter.setOnlyFirstToString(false);
-//        super.register(localArrayConverter, targetType);
-//      }
-//    return super.convert(value, targetType);
-//  }
-//}
-

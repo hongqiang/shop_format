@@ -37,9 +37,9 @@ public class ProductNotifyController extends BaseController
   public Map<String, String> email()
   {
     Member localMember = this.memberService.getCurrent();
-    Object localObject = localMember != null ? localMember.getEmail() : null;
-    HashMap localHashMap = new HashMap();
-    localHashMap.put("email", localObject);
+    String tempEmail = localMember != null ? localMember.getEmail() : null;
+    HashMap<String, String> localHashMap = new HashMap<String, String>();
+    localHashMap.put("email", tempEmail);
     return localHashMap;
   }
 
@@ -47,12 +47,12 @@ public class ProductNotifyController extends BaseController
   @ResponseBody
   public Map<String, Object> save(String email, Long productId)
   {
-    HashMap localHashMap = new HashMap();
-//    if (!IIIllIlI(ProductNotify.class, "email", email, new Class[0]))
-//    {
-//      localHashMap.put("message", IIIllIll);
-//      return localHashMap;
-//    }
+    HashMap<String, Object> localHashMap = new HashMap<String, Object>();
+    if (!beanValidator(ProductNotify.class, "email", email, new Class[0]))
+    {
+      localHashMap.put("message", SHOP_ERROR);
+      return localHashMap;
+    }
     Product localProduct = (Product)this.productService.find(productId);
     if (localProduct == null)
     {
@@ -78,7 +78,7 @@ public class ProductNotifyController extends BaseController
       localProductNotify.setMember(this.memberService.getCurrent());
       localProductNotify.setProduct(localProduct);
       this.productNotifyService.save(localProductNotify);
-//      localHashMap.put("message", IIIlllII);
+      localHashMap.put("message", SHOP_SUCCESS);
     }
     return localHashMap;
   }

@@ -13,7 +13,6 @@ import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberAttribute;
-import com.hongqiang.shop.modules.entity.MemberRank;
 
 @Repository
 public class MemberAttributeDaoImpl extends BaseDaoImpl<MemberAttribute>

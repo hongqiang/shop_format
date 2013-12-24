@@ -1,5 +1,7 @@
 package com.hongqiang.shop.modules.product.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,11 @@ public class SpecificationValueServiceImpl extends BaseService implements
 		return this.specificationValueDao.findById(id);
 	}
 
+	@Transactional
+	public List<SpecificationValue> findAll(){
+		return this.specificationValueDao.findAll();
+	}
+	
 	@Transactional
 	@CacheEvict(value={"specificationValue"}, allEntries=true)
 	public void save(SpecificationValue specificationValue) {

@@ -8,7 +8,6 @@ package com.hongqiang.shop.common.utils;
 import java.util.Locale;
 
 import org.apache.commons.lang3.Validate;
-import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -22,12 +21,14 @@ import org.springframework.web.servlet.LocaleResolver;
  * @author Zaric
  * @date 2013-5-29 下午1:25:40
  */
-//@Service
-public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
+// @Service
+public class SpringContextHolder implements ApplicationContextAware,
+		DisposableBean {
 
 	private static ApplicationContext applicationContext = null;
 
-	private static Logger logger = LoggerFactory.getLogger(SpringContextHolder.class);
+	private static Logger logger = LoggerFactory
+			.getLogger(SpringContextHolder.class);
 
 	/**
 	 * 取得存储在静态变量中的ApplicationContext.
@@ -54,13 +55,13 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
 		return applicationContext.getBean(requiredType);
 	}
 
-	  public static String getMessage(String code, Object[] args)
-	  {
-	    LocaleResolver localLocaleResolver = (LocaleResolver)applicationContext.getBean("localeResolver", LocaleResolver.class);
-	    Locale localLocale = localLocaleResolver.resolveLocale(null);
-	    return applicationContext.getMessage(code, args, localLocale);
-	  }
-	
+	public static String getMessage(String code, Object[] args) {
+		LocaleResolver localLocaleResolver = (LocaleResolver) applicationContext
+				.getBean("localeResolver", LocaleResolver.class);
+		Locale localLocale = localLocaleResolver.resolveLocale(null);
+		return applicationContext.getMessage(code, args, localLocale);
+	}
+
 	/**
 	 * 清除SpringContextHolder中的ApplicationContext为Null.
 	 */
@@ -75,10 +76,12 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
 	 */
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
-//		logger.debug("注入ApplicationContext到SpringContextHolder:{}", applicationContext);
+		// logger.debug("注入ApplicationContext到SpringContextHolder:{}",
+		// applicationContext);
 
 		if (SpringContextHolder.applicationContext != null) {
-			logger.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringContextHolder.applicationContext);
+			logger.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:"
+					+ SpringContextHolder.applicationContext);
 		}
 
 		SpringContextHolder.applicationContext = applicationContext; // NOSONAR
@@ -96,6 +99,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
 	 * 检查ApplicationContext不为空.
 	 */
 	private static void assertContextInjected() {
-		Validate.validState(applicationContext != null, "applicaitonContext属性未注入, 请在applicationContext.xml中定义SpringContextHolder.");
+		Validate.validState(applicationContext != null,
+				"applicaitonContext属性未注入, 请在applicationContext.xml中定义SpringContextHolder.");
 	}
 }

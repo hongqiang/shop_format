@@ -46,6 +46,11 @@ public class PromotionServiceImpl extends BaseService
 	}
 
 	@Transactional(readOnly = true)
+	public List<Promotion> findAll(){
+		return this.promotionDao.findAll();
+	}
+	
+	@Transactional(readOnly = true)
 	@Cacheable({ "promotion" })
 	public Page<Promotion> findPage(Pageable pageable) {
 		return this.promotionDao.findPage(pageable);

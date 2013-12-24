@@ -22,7 +22,8 @@ public class EnumConverter extends AbstractConverter
     return this.enumClass;
   }
 
-  protected Object convertToType(Class type, Object value)
+  @SuppressWarnings("unchecked")
+protected Object convertToType(@SuppressWarnings("rawtypes") Class type, Object value)
   {
     String str = value.toString().trim();
     return Enum.valueOf(type, str);

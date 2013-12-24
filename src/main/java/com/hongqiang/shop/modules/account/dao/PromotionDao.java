@@ -11,8 +11,9 @@ import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Promotion;
 
-public interface PromotionDao extends PromotionDaoCustom, CrudRepository<Promotion, Long> {
-	
+public interface PromotionDao extends PromotionDaoCustom,
+		CrudRepository<Promotion, Long> {
+
 }
 
 /**
@@ -22,9 +23,13 @@ public interface PromotionDao extends PromotionDaoCustom, CrudRepository<Promoti
  * 
  */
 interface PromotionDaoCustom extends BaseDao<Promotion> {
-  public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded, Integer count, List<Filter> filters, List<Order> orders);
-  
-  public Page<Promotion>  findPage(Pageable pageable);
-  
-  public  List<Promotion> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders);
+	public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded,
+			Integer count, List<Filter> filters, List<Order> orders);
+
+	public Page<Promotion> findPage(Pageable pageable);
+
+	public List<Promotion> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders);
+
+	public List<Promotion> findAll();
 }

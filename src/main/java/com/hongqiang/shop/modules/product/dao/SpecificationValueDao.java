@@ -1,11 +1,16 @@
 package com.hongqiang.shop.modules.product.dao;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.modules.entity.SpecificationValue;
 
-public interface SpecificationValueDao extends SpecificationValueCustom, CrudRepository<SpecificationValue, Long> {
+public interface SpecificationValueDao extends SpecificationValueCustom,
+		CrudRepository<SpecificationValue, Long> {
 	public SpecificationValue findById(Long id);
 }
 
@@ -16,5 +21,8 @@ public interface SpecificationValueDao extends SpecificationValueCustom, CrudRep
  * 
  */
 interface SpecificationValueCustom extends BaseDao<SpecificationValue> {
+	public List<SpecificationValue> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders);
 
+	public List<SpecificationValue> findAll();
 }
