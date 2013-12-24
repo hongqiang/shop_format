@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -28,7 +29,7 @@ public class MemberInterceptor extends HandlerInterceptorAdapter
   @Value("${url_escaping_charset}")
   private String url_escaping_charset;
 
-  @Resource(name="memberServiceImpl")
+  @Autowired
   private MemberService memberService;
 
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException

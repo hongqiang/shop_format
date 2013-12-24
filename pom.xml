@@ -481,11 +481,11 @@
 		</dependency>
 
 		<!-- CaptchaService 依赖包 -->
-		<dependency>
-			<groupId>com.jhlabs</groupId>
-			<artifactId>imaging</artifactId>
-			<version>01012005</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.jhlabs</groupId> -->
+<!-- 			<artifactId>imaging</artifactId> -->
+<!-- 			<version>01012005</version> -->
+<!-- 		</dependency> -->
 		<!-- 生成图片的颜色依赖库 -->
 		<dependency>
 			<groupId>org.im4java</groupId>
@@ -521,7 +521,11 @@
 			<version>${poi.version}</version>
 		</dependency>
 		<!-- GENERAL UTILS end -->
-
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpg-jdk14</artifactId>
+			<version>1.50</version>
+		</dependency>
 		<!-- CKFinder begin -->
 		<dependency>
 			<groupId>net.coobird</groupId>
