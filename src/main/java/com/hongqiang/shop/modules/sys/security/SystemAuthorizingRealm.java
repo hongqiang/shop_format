@@ -159,6 +159,11 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			this.name = user.getName();
 		}
 
+		public Principal(Long id, String username) {
+			this.id = id;
+			this.username = username;
+		}
+
 		public Long getId() {
 			return id;
 		}
