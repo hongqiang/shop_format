@@ -3,18 +3,19 @@ package com.hongqiang.shop.modules.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.groups.Default;
 
-import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -22,9 +23,10 @@ import org.hibernate.search.annotations.Resolution;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonFormat;
 //import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 数据Entity类
@@ -32,12 +34,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @author Jack
  * 
  */
-// @JsonAutoDetect(fieldVisibility=JsonAutoDetect.Visibility.NONE,
-// getterVisibility=JsonAutoDetect.Visibility.NONE,
-// setterVisibility=JsonAutoDetect.Visibility.NONE,
-// isGetterVisibility=JsonAutoDetect.Visibility.NONE,
-// creatorVisibility=JsonAutoDetect.Visibility.NONE)
+ @JsonAutoDetect(fieldVisibility=JsonAutoDetect.Visibility.NONE,
+ getterVisibility=JsonAutoDetect.Visibility.NONE,
+ setterVisibility=JsonAutoDetect.Visibility.NONE,
+ isGetterVisibility=JsonAutoDetect.Visibility.NONE,
+ creatorVisibility=JsonAutoDetect.Visibility.NONE)
 @MappedSuperclass
+@EntityListeners(EntityListeners.class)
 public abstract class BaseEntity implements Serializable {
 	
 	public abstract interface Save extends Default{

@@ -25,10 +25,6 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-
-//import net.shophq.interceptor.MemberInterceptor;
-//import net.shophq.util.JsonUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
