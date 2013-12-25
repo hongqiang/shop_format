@@ -65,6 +65,7 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 		return !this.memberDao.emailExists(currentEmail);
 	}
 
+	@Transactional(readOnly = true)
 	public void save(Member member, Admin operator) {
 		Assert.notNull(member);
 		this.memberDao.persist(member);
@@ -82,6 +83,7 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public void update(Member member, Integer modifyPoint,
 			BigDecimal modifyBalance, String depositMemo, Admin operator) {
 		Assert.notNull(member);
@@ -120,6 +122,11 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 		this.memberDao.merge(member);
 	}
 
+	@Transactional(readOnly = true)
+	public Long count(){
+		return this.memberDao.count();
+	}
+	
 	@Transactional(readOnly = true)
 	public Member find(Long id) {
 		return this.memberDao.findById(id);

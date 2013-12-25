@@ -24,6 +24,8 @@ public abstract interface MemberService {
 	public void update(Member paramMember, Integer paramInteger,
 			BigDecimal paramBigDecimal, String paramString, Admin paramAdmin);
 
+	public Long count();
+	
 	public Member find(Long id);
 
 	public Page<Member> findPage(Pageable pageable);
