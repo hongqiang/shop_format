@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.DeliveryCenter;
 
@@ -28,6 +30,19 @@ public class DeliveryCenterDaoImpl extends BaseDaoImpl<DeliveryCenter>
 		return null;
 	}
 
+	@Override
+	public List<DeliveryCenter> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders) {
+		String qlString = "select deliveryCenter from DeliveryCenter deliveryCenter where 1=1 ";
+		List<Object> parameter = new ArrayList<Object>();
+		return super.findList(qlString, parameter, first, count, filters, orders);
+	}
+	
+	@Override
+	public List<DeliveryCenter> findAll(){
+		return findList(null, null, null, null);
+	}
+	
 	@Override
 	 public Page<DeliveryCenter> findPage(Pageable pageable){
 	    	Page<DeliveryCenter> deliveryCenterPage = new Page<DeliveryCenter>(pageable.getPageNumber(),pageable.getPageSize());

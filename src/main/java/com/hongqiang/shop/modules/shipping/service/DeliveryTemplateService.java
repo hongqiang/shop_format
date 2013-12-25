@@ -1,26 +1,31 @@
 package com.hongqiang.shop.modules.shipping.service;
 
+import java.util.List;
+
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.website.entity.DeliveryTemplate;
 
-public interface DeliveryTemplateService{
+public interface DeliveryTemplateService {
 
-  public DeliveryTemplate findDefault();
-  
-   public DeliveryTemplate find(Long id);
-  
-  public Page<DeliveryTemplate> findPage(Pageable pageable);
-  
-  public void save(DeliveryTemplate deliveryTemplate);
+	public DeliveryTemplate findDefault();
 
-  public DeliveryTemplate update(DeliveryTemplate deliveryTemplate);
+	public DeliveryTemplate find(Long id);
 
-  public DeliveryTemplate update(DeliveryTemplate deliveryTemplate, String[] ignoreProperties);
+	public List<DeliveryTemplate> findAll();
 
-  public void delete(Long id);
+	public Page<DeliveryTemplate> findPage(Pageable pageable);
 
-  public void delete(Long[] ids);
+	public void save(DeliveryTemplate deliveryTemplate);
 
-  public void delete(DeliveryTemplate deliveryTemplate);
+	public DeliveryTemplate update(DeliveryTemplate deliveryTemplate);
+
+	public DeliveryTemplate update(DeliveryTemplate deliveryTemplate,
+			String[] ignoreProperties);
+
+	public void delete(Long id);
+
+	public void delete(Long[] ids);
+
+	public void delete(DeliveryTemplate deliveryTemplate);
 }

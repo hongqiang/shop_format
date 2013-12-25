@@ -1,5 +1,7 @@
 package com.hongqiang.shop.modules.shipping.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,11 @@ public class DeliveryCenterServiceImpl extends BaseService implements
 		return this.deliveryCenterDao.find(id);
 	}
 
+	@Transactional(readOnly = true)
+	public List<DeliveryCenter> findAll(){
+		return this.deliveryCenterDao.findAll();
+	}
+	
 	@Transactional(readOnly = true)
 	public Page<DeliveryCenter> findPage(Pageable pageable) {
 		return this.deliveryCenterDao.findPage(pageable);

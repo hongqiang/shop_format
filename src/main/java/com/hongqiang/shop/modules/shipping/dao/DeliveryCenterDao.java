@@ -1,14 +1,19 @@
 package com.hongqiang.shop.modules.shipping.dao;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.DeliveryCenter;
 
-public interface DeliveryCenterDao extends DeliveryCenterDaoCustom, CrudRepository<DeliveryCenter, Long> {
-	
+public interface DeliveryCenterDao extends DeliveryCenterDaoCustom,
+		CrudRepository<DeliveryCenter, Long> {
+
 }
 
 /**
@@ -19,13 +24,17 @@ public interface DeliveryCenterDao extends DeliveryCenterDaoCustom, CrudReposito
  */
 interface DeliveryCenterDaoCustom extends BaseDao<DeliveryCenter> {
 
-  public DeliveryCenter findDefault();
-  
-  public Page<DeliveryCenter> findPage(Pageable pageable);
-  
-  public void persist(DeliveryCenter deliveryCenter);
-  
-  public DeliveryCenter merge(DeliveryCenter deliveryCenter);
-  
-  
+	public DeliveryCenter findDefault();
+
+	public List<DeliveryCenter> findAll();
+
+	public List<DeliveryCenter> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders);
+
+	public Page<DeliveryCenter> findPage(Pageable pageable);
+
+	public void persist(DeliveryCenter deliveryCenter);
+
+	public DeliveryCenter merge(DeliveryCenter deliveryCenter);
+
 }
