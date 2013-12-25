@@ -34,6 +34,12 @@ public class NavigationServiceImpl extends BaseService
   {
     return this.navigationDao.findList(null, count, filters, orders);
   }
+  
+  @Transactional(readOnly=true)
+  public List<Navigation> findList(Integer count, List<Filter> filters, List<Order> orders)
+  {
+    return this.navigationDao.findList(null, count, filters, orders);
+  }
 
     @Transactional
   @CacheEvict(value={"navigation"})

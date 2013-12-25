@@ -14,6 +14,9 @@ public interface FriendLinkService {
 	public List<FriendLink> findList(Integer paramInteger,
 			List<Filter> paramList, List<Order> paramList1, String paramString);
 
+	public List<FriendLink> findList(Integer paramInteger,
+			List<Filter> paramList, List<Order> paramList1);
+	
 	public FriendLink find(Long id);
 
 	public Page<FriendLink> findPage(Pageable pageable);

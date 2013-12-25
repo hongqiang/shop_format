@@ -21,7 +21,7 @@ public class FlashMessageDirective extends BaseDirective
   public static final String FLASH_MESSAGE_ATTRIBUTE_NAME = FlashMessageDirective.class.getName() + ".FLASH_MESSAGE";
   private static final String FLASH_MESSAGE = "flashMessage";
 
-  public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException
+  public void execute(Environment env, @SuppressWarnings("rawtypes") Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException
   {
     RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
     if (localRequestAttributes != null)

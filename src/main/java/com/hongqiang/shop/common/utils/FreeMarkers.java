@@ -85,6 +85,19 @@ public class FreeMarkers {
 	    Object localObject = DeepUnwrap.unwrap(localTemplateModel);
 	    return (T) convertUtilsBean.convert(localObject, type);
 	  }
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T[] getParameters(String name, Class<T> type, Map<String, TemplateModel> params) throws TemplateModelException
+	  {
+	    Assert.hasText(name);
+	    Assert.notNull(type);
+	    Assert.notNull(params);
+	    TemplateModel localTemplateModel = (TemplateModel)params.get(name);
+	    if (localTemplateModel == null)
+	      return null;
+	    Object localObject = DeepUnwrap.unwrap(localTemplateModel);
+	    return (T[]) convertUtilsBean.convert(localObject, type);
+	  }
 
 	  public static TemplateModel getVariable(String name, Environment env) throws TemplateModelException
 	  {

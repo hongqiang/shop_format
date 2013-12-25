@@ -11,6 +11,9 @@ public interface NavigationService {
 
 	public List<Navigation> findList(Integer paramInteger,
 			List<Filter> paramList, List<Order> paramList1, String paramString);
+	
+	public List<Navigation> findList(Integer paramInteger,
+			List<Filter> paramList, List<Order> paramList1);
 
 	public Navigation find(Long id);
 

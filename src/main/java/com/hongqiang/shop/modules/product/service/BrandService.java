@@ -17,6 +17,9 @@ public abstract interface BrandService
   public List<Brand> findList(Integer count, List<Filter> filters, 
 						List<Order> orders, String cacheRegion);
   
+  public List<Brand> findList(Integer count, List<Filter> filters, 
+			List<Order> orders);
+  
   public List<Brand> findList(Long[] ids);
   
   public List<Brand> findAll();

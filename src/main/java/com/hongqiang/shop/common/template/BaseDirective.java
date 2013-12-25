@@ -27,45 +27,45 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 	private static final String USE_CACHE = "useCache";
 	private static final String CACHE_REGION = "cacheRegion";
 	private static final String ID = "id";
-	private static final String COUNT = "count";
-	private static final String ORDER_BY = "orderBy";
+//	private static final String COUNT = "count";
+//	private static final String ORDER_BY = "orderBy";
 	private static final String ASTERISK = "\\s*,\\s*";
 	private static final String ADDITION = "\\s+";
 
 	protected boolean setFreemarker(Environment paramEnvironment,
 			Map<String, TemplateModel> paramMap) throws TemplateModelException {
-		Boolean localBoolean = (Boolean) FreeMarkers.getParameter(USE_CACHE,
+		Boolean localBoolean = FreeMarkers.getParameter(USE_CACHE,
 				Boolean.class, paramMap);
 		return localBoolean != null ? localBoolean.booleanValue() : true;
 	}
 
 	protected String getFreemarkerCacheRegion(Environment paramEnvironment,
 			Map<String, TemplateModel> paramMap) throws TemplateModelException {
-		String str = (String) FreeMarkers.getParameter(CACHE_REGION,
+		String str = FreeMarkers.getParameter(CACHE_REGION,
 				String.class, paramMap);
 		return str != null ? str : paramEnvironment.getTemplate().getName();
 	}
 
 	protected Long getFreemarkerLong(Map<String, TemplateModel> paramMap)
 			throws TemplateModelException {
-		return (Long) FreeMarkers.getParameter(ID, Long.class, paramMap);
+		return FreeMarkers.getParameter(ID, Long.class, paramMap);
 	}
 
 	protected Integer getFreemarkerCount(Map<String, TemplateModel> paramMap)
 			throws TemplateModelException {
-		return (Integer) FreeMarkers.getParameter("count", Integer.class,
+		return FreeMarkers.getParameter("count", Integer.class,
 				paramMap);
 	}
 
 	protected List<Filter> getFreemarkerFilter(
 			Map<String, TemplateModel> paramMap, Class<?> paramClass,
 			String[] paramArrayOfString) throws TemplateModelException {
-		ArrayList localArrayList = new ArrayList();
+		ArrayList<Filter> localArrayList = new ArrayList<Filter>();
 		PropertyDescriptor[] arrayOfPropertyDescriptor1 = PropertyUtils
 				.getPropertyDescriptors(paramClass);
 		for (PropertyDescriptor localPropertyDescriptor : arrayOfPropertyDescriptor1) {
 			String str = localPropertyDescriptor.getName();
-			Class localClass = localPropertyDescriptor.getPropertyType();
+			Class<?> localClass = localPropertyDescriptor.getPropertyType();
 			if ((ArrayUtils.contains(paramArrayOfString, str))
 					|| (!paramMap.containsKey(str)))
 				continue;
@@ -78,9 +78,9 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 
 	protected List<Order> getFreemarkerOrder(
 			Map<String, TemplateModel> paramMap, String[] paramArrayOfString) throws TemplateModelException {
-		String str1 = StringUtils.trim((String) FreeMarkers.getParameter(
+		String str1 = StringUtils.trim(FreeMarkers.getParameter(
 				"orderBy", String.class, paramMap));
-		ArrayList localArrayList = new ArrayList();
+		ArrayList<Order> localArrayList = new ArrayList<Order>();
 		if (StringUtils.isNotEmpty(str1)) {
 			String[] arrayOfString1 = str1.split(ASTERISK);
 			for (String str2 : arrayOfString1) {
@@ -126,10 +126,10 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 			Environment paramEnvironment,
 			TemplateDirectiveBody paramTemplateDirectiveBody)
 			throws TemplateException, IOException {
-		HashMap localHashMap = new HashMap();
-		Iterator localIterator = paramMap.keySet().iterator();
+		HashMap<String, Object> localHashMap = new HashMap<String, Object>();
+		Iterator<String> localIterator = paramMap.keySet().iterator();
 		while (localIterator.hasNext()) {
-			String str = (String) localIterator.next();
+			String str = localIterator.next();
 			TemplateModel localTemplateModel = FreeMarkers.getVariable(str,
 					paramEnvironment);
 			localHashMap.put(str, localTemplateModel);

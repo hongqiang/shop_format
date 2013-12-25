@@ -40,11 +40,17 @@ public class BrandServiceImpl extends BaseService
 
   @Transactional(readOnly=true)
   @Cacheable({"brand"})
-  public List<Brand> findList(Integer count, List<Filter> filters, List<Order> orders, String cacheRegion)
+	public List<Brand> findList(Integer count, List<Filter> filters, List<Order> orders, String cacheRegion)
   {
     return this.brandDao.findList(null, count, filters, orders);
   }
 
+  @Transactional(readOnly=true)
+  public List<Brand> findList(Integer count, List<Filter> filters, 
+			List<Order> orders){
+	  return this.brandDao.findList(null, count, filters, orders);
+  }
+  
   @Transactional
   @CacheEvict(value={"brand"})
  public List<Brand> findList(Long[] ids){

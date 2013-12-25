@@ -56,6 +56,12 @@ public class TagServiceImpl extends BaseService implements TagService {
 		return this.tagDao.findList(null, count, filters, orders);
 	}
 
+	@Transactional(readOnly = true)
+	public List<Tag> findList(Integer count, List<Filter> filters,
+			List<Order> orders) {
+		return this.tagDao.findList(null, count, filters, orders);
+	}
+	
 	@Transactional
 	@CacheEvict(value = { "tag" }, allEntries = true)
 	public void save(Tag tag) {
