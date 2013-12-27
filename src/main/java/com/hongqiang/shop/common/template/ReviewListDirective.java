@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 import com.hongqiang.shop.common.utils.FreeMarkers;
 import com.hongqiang.shop.modules.content.service.ReviewService;
 import com.hongqiang.shop.modules.entity.Member;
-import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.Review;
-import com.hongqiang.shop.modules.product.service.ProductService;
 import com.hongqiang.shop.modules.user.service.MemberService;
 
 import freemarker.core.Environment;
@@ -35,9 +33,6 @@ public class ReviewListDirective extends BaseDirective
   @Autowired
   private MemberService memberService;
 
-  @Autowired
-  private ProductService productService;
-
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)throws TemplateException, IOException
   {
@@ -45,24 +40,23 @@ public class ReviewListDirective extends BaseDirective
     Long localLong2 = (Long)FreeMarkers.getParameter(PRODUCT_ID, Long.class, params);
     Review.Type localType = (Review.Type)FreeMarkers.getParameter(TYPE, Review.Type.class, params);
     Member localMember = (Member)this.memberService.find(localLong1);
-    Product localProduct = (Product)this.productService.find(localLong2);
     Object localObject;
-    if (((localLong1 != null) && (localMember == null)) || ((localLong2 != null) && (localProduct == null)))
+
+    if (((localLong1 != null) && (localMember == null)) || ((localLong2 != null)))
     {
       localObject = new ArrayList();
     }
     else
     {
-//    	localObject = new ArrayList();
       boolean bool = setFreemarker(env, params);
       String str = getFreemarkerCacheRegion(env, params);
       Integer localInteger = getFreemarkerCount(params);
       List localList1 = getFreemarkerFilter(params, Review.class, new String[0]);
       List localList2 = getFreemarkerOrder(params, new String[0]);
       if (bool)
-        localObject = this.reviewService.findList(localMember, localProduct, localType, Boolean.valueOf(true), localInteger, localList1, localList2, str);
+        localObject = this.reviewService.findList(localMember, localLong2, localType, Boolean.valueOf(true), localInteger, localList1, localList2, str);
       else
-        localObject = this.reviewService.findList(localMember, localProduct, localType, Boolean.valueOf(true), localInteger, localList1, localList2);
+        localObject = this.reviewService.findList(localMember, localLong2, localType, Boolean.valueOf(true), localInteger, localList1, localList2);
     }
     setFreemarker(REVIEWS, localObject, env, body);
   }

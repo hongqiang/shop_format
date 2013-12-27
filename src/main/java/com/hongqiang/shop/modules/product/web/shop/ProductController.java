@@ -178,7 +178,7 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = { "/hits/{id}" }, method = RequestMethod.GET)
 	@ResponseBody
-	public Long hits(@PathVariable Long id) {
+	public Long hits(@PathVariable String id) {
 		return Long.valueOf(this.productService.viewHits(id));
 	}
 

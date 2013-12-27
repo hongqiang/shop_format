@@ -1,14 +1,22 @@
 package com.hongqiang.shop.modules.product.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
+import javax.persistence.LockModeType;
+import javax.servlet.ServletContext;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +25,15 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
+import com.hongqiang.shop.common.utils.CacheUtils;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.modules.entity.Article;
 import com.hongqiang.shop.modules.entity.Attribute;
 import com.hongqiang.shop.modules.entity.Brand;
 import com.hongqiang.shop.modules.entity.Member;
@@ -31,22 +42,25 @@ import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.entity.Promotion;
 import com.hongqiang.shop.modules.entity.Tag;
 import com.hongqiang.shop.modules.product.dao.ProductDao;
-import com.hongqiang.shop.modules.util.service.StaticService;
+import com.hongqiang.shop.modules.util.service.TemplateService;
 
 @Service
 public class ProductServiceImpl extends BaseService implements ProductService,
 		DisposableBean {
-	private long currentTimeMillis = System.currentTimeMillis();
+	private long systemTime = System.currentTimeMillis();
+	public static final String HITS_CACHE_NAME = "productHits";
 
-//	@Autowired
-//	private CacheManager cacheManager;
+	private ServletContext servletContext;
 
 	@Autowired
 	private ProductDao productDao;
 
-	 @Autowired
-	 private StaticService staticService;
+	@Autowired
+	private FreeMarkerConfigurer freeMarkerConfigurer;
 
+	@Autowired
+	private TemplateService templateService;
+	
 	@Transactional(readOnly = true)
 	public boolean snExists(String sn) {
 		return this.productDao.snExists(sn);
@@ -57,10 +71,10 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		return this.productDao.findBySn(sn);
 	}
 
-	public Product find(Long id){
+	public Product find(Long id) {
 		return this.productDao.findById(id);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public boolean snUnique(String previousSn, String currentSn) {
 		if (StringUtils.equalsIgnoreCase(previousSn, currentSn))
@@ -72,7 +86,7 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 	public List<Product> search(String keyword, Boolean isGift, Integer count) {
 		return this.productDao.search(keyword, isGift, count);
 	}
-	
+
 	public List<Product> findList(Long[] ids) {
 		List<Product> localArrayList = new ArrayList<Product>();
 		if (ids != null)
@@ -84,7 +98,7 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 			}
 		return localArrayList;
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<Product> findList(ProductCategory productCategory, Brand brand,
 			Promotion promotion, List<Tag> tags,
@@ -158,72 +172,66 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		return this.productDao.isPurchased(member, product);
 	}
 
-	public long viewHits(Long id) {
-//		Ehcache localEhcache = this.cacheManager.getEhcache("productHits");
-//		Element localElement = localEhcache.get(id);
-//		if (localElement != null) {
-//			localLong = (Long) localElement.getObjectValue();
-//		} else {
-//			Product localProduct = (Product) this.productDao.find(id);
-//			if (localProduct == null)
-//				return 0L;
-//			localLong = localProduct.getHits();
-//		}
-//		Long localLong = Long.valueOf(localLong.longValue() + 1L);
-//		localEhcache.put(new Element(id, localLong));
-//		long l = System.currentTimeMillis();
-//		if (l > this.currentTimeMillis + 600000L) {
-//			this.currentTimeMillis = l;
-//			currentTimeMillis();
-//			localEhcache.removeAll();
-//		}
-//		return localLong.longValue();
-		return 1L;
+	public long viewHits(String id) {
+		Long hits = (Long) CacheUtils.get(HITS_CACHE_NAME, id);
+		if (hits == null) {
+			Article localArticle = (Article) this.productDao.find(id);
+			if (localArticle == null)
+				return 0L;
+			hits = localArticle.getHits();
+		}
+		Long returnHits = Long.valueOf(hits.longValue() + 1L);
+		CacheUtils.put(HITS_CACHE_NAME, id, returnHits);
+		long l = System.currentTimeMillis();
+		if (l > this.systemTime + 600000L) {
+			this.systemTime = l;
+			destroyCache();
+			CacheUtils.removeAll(HITS_CACHE_NAME);
+		}
+		return returnHits.longValue();
 	}
 
 	public void destroy() {
-		currentTimeMillis();
+		destroyCache();
 	}
 
-	private void currentTimeMillis() {
-//		Ehcache localEhcache = this.cacheManager.getEhcache("productHits");
-//		List localList = localEhcache.getKeys();
-//		Iterator localIterator = localList.iterator();
-//		while (localIterator.hasNext()) {
-//			Long localLong = (Long) localIterator.next();
-//			Product localProduct = (Product) this.productDao.find(localLong);
-//			if (localProduct == null)
-//				continue;
-//			this.productDao.lock(localProduct, LockModeType.PESSIMISTIC_WRITE);
-//			Element localElement = localEhcache.get(localLong);
-//			long l1 = ((Long) localElement.getObjectValue()).longValue();
-//			long l2 = l1 - localProduct.getHits().longValue();
-//			Calendar localCalendar1 = Calendar.getInstance();
-//			Calendar localCalendar2 = DateUtils.toCalendar(localProduct
-//					.getWeekHitsDate());
-//			Calendar localCalendar3 = DateUtils.toCalendar(localProduct
-//					.getMonthHitsDate());
-//			if ((localCalendar1.get(1) != localCalendar2.get(1))
-//					|| (localCalendar1.get(3) > localCalendar2.get(3)))
-//				localProduct.setWeekHits(Long.valueOf(l2));
-//			else
-//				localProduct.setWeekHits(Long.valueOf(localProduct
-//						.getWeekHits().longValue() + l2));
-//			if ((localCalendar1.get(1) != localCalendar3.get(1))
-//					|| (localCalendar1.get(2) > localCalendar3.get(2)))
-//				localProduct.setMonthHits(Long.valueOf(l2));
-//			else
-//				localProduct.setMonthHits(Long.valueOf(localProduct
-//						.getMonthHits().longValue() + l2));
-//			localProduct.setHits(Long.valueOf(l1));
-//			localProduct.setWeekHitsDate(new Date());
-//			localProduct.setMonthHitsDate(new Date());
-//			this.productDao.merge(localProduct);
-//		}
+	private void destroyCache() {
+		@SuppressWarnings("unchecked")
+		List<Long> localList = (List<Long>) CacheUtils.getKeys(HITS_CACHE_NAME);
+		Iterator<Long> localIterator = localList.iterator();
+		while (localIterator.hasNext()) {
+			Long id = (Long) localIterator.next();
+			Product localProduct = (Product) this.productDao.find(id);
+			if (localProduct == null)
+				continue;
+			this.productDao.lock(localProduct, LockModeType.PESSIMISTIC_WRITE);
+			Long l1 = (Long) CacheUtils.get(HITS_CACHE_NAME, id.toString());
+			long l2 = l1 - localProduct.getHits().longValue();
+			Calendar localCalendar1 = Calendar.getInstance();
+			Calendar localCalendar2 = Calendar.getInstance();
+			localCalendar2.setTime(localProduct.getWeekHitsDate());
+			Calendar localCalendar3 = Calendar.getInstance();
+			localCalendar3.setTime(localProduct.getMonthHitsDate());
+
+			if ((localCalendar1.get(1) != localCalendar2.get(1))
+					|| (localCalendar1.get(3) > localCalendar2.get(3)))
+				localProduct.setWeekHits(Long.valueOf(l2));
+			else
+				localProduct.setWeekHits(Long.valueOf(localProduct
+						.getWeekHits().longValue() + l2));
+			if ((localCalendar1.get(1) != localCalendar3.get(1))
+					|| (localCalendar1.get(2) > localCalendar3.get(2)))
+				localProduct.setMonthHits(Long.valueOf(l2));
+			else
+				localProduct.setMonthHits(Long.valueOf(localProduct
+						.getMonthHits().longValue() + l2));
+			localProduct.setHits(Long.valueOf(l1));
+			localProduct.setWeekHitsDate(new Date());
+			localProduct.setMonthHitsDate(new Date());
+			this.productDao.merge(localProduct);
+		}
 	}
 
-
-	
 	@Transactional
 	@CacheEvict(value = { "product", "productCategory", "review",
 			"consultation" }, allEntries = true)
@@ -231,7 +239,7 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		Assert.notNull(product);
 		this.productDao.persist(product);
 		this.productDao.flush();
-		this.staticService.build(product);
+		build(product);
 	}
 
 	@Transactional
@@ -239,9 +247,9 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 			"consultation" }, allEntries = true)
 	public Product update(Product product) {
 		Assert.notNull(product);
-		Product localProduct = (Product)  this.productDao.merge(product);
+		Product localProduct = (Product) this.productDao.merge(product);
 		this.productDao.flush();
-		this.staticService.build(localProduct);
+		build(localProduct);
 		return localProduct;
 	}
 
@@ -263,9 +271,9 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 	@CacheEvict(value = { "product", "productCategory", "review",
 			"consultation" }, allEntries = true)
 	public void delete(Long[] ids) {
-		  if (ids != null)
-				for (Long localSerializable : ids)
-					this.productDao.delete(localSerializable);
+		if (ids != null)
+			for (Long localSerializable : ids)
+				this.productDao.delete(localSerializable);
 	}
 
 	@Transactional
@@ -273,7 +281,74 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 			"consultation" }, allEntries = true)
 	public void delete(Product product) {
 		if (product != null)
-			this.staticService.delete(product);
+			deleteStaticProduct(product);
+//			this.staticService.delete(product);
 		this.productDao.delete(product);
+	}
+
+	@Transactional(readOnly = true)
+	public int build(Product product) {
+		Assert.notNull(product);
+		deleteStaticProduct(product);
+		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService
+				.get("productContent");
+		int i = 0;
+		if (product.getIsMarketable().booleanValue()) {
+			HashMap<String, Object> localHashMap = new HashMap<String, Object>();
+			localHashMap.put("product", product);
+			i += build(localTemplate.getTemplatePath(), product.getPath(),
+					localHashMap);
+		}
+		return i;
+	}
+
+	@Transactional(readOnly = true)
+	private int build(String templatePath, String staticPath,
+			Map<String, Object> model) {
+		Assert.hasText(templatePath);
+		Assert.hasText(staticPath);
+		FileOutputStream localFileOutputStream = null;
+		OutputStreamWriter localOutputStreamWriter = null;
+		BufferedWriter localBufferedWriter = null;
+		try {
+			freemarker.template.Template localTemplate = this.freeMarkerConfigurer
+					.getConfiguration().getTemplate(templatePath);
+			File localFile1 = new File(
+					this.servletContext.getRealPath(staticPath));
+			File localFile2 = localFile1.getParentFile();
+			if (!localFile2.exists())
+				localFile2.mkdirs();
+			localFileOutputStream = new FileOutputStream(localFile1);
+			localOutputStreamWriter = new OutputStreamWriter(
+					localFileOutputStream, "UTF-8");
+			localBufferedWriter = new BufferedWriter(localOutputStreamWriter);
+			localTemplate.process(model, localBufferedWriter);
+			localBufferedWriter.flush();
+			return 1;
+		} catch (Exception localException1) {
+			localException1.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(localBufferedWriter);
+			IOUtils.closeQuietly(localOutputStreamWriter);
+			IOUtils.closeQuietly(localFileOutputStream);
+		}
+		return 0;
+	}
+
+	@Transactional(readOnly = true)
+	public int deleteStaticProduct(Product product) {
+		Assert.notNull(product);
+		return delete(product.getPath());
+	}
+
+	@Transactional(readOnly = true)
+	private int delete(String staticPath) {
+		Assert.hasText(staticPath);
+		File localFile = new File(this.servletContext.getRealPath(staticPath));
+		if (localFile.exists()) {
+			localFile.delete();
+			return 1;
+		}
+		return 0;
 	}
 }

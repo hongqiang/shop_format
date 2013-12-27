@@ -80,7 +80,7 @@ public abstract interface ProductService {
 
 	public boolean isPurchased(Member paramMember, Product paramProduct);
 
-	public long viewHits(Long paramLong);
+	public long viewHits(String id);
 
 	public void save(Product brand);
 
@@ -93,4 +93,9 @@ public abstract interface ProductService {
 	public void delete(Long[] ids);
 
 	public void delete(Product product);
+	
+	//删除商品的静态文件
+	public int deleteStaticProduct(Product product);
+	//生成商品的静态文件
+	public int build(Product product);
 }

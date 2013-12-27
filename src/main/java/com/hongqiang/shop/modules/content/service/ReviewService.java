@@ -10,28 +10,42 @@ import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.Review;
 
-public interface ReviewService{
-  public List<Review> findList(Member member, Product product, Review.Type type, Boolean isShow, Integer count, List<Filter> filters, List<Order> orders);
+public interface ReviewService {
+	public List<Review> findList(Member member, Long productId,
+			Review.Type type, Boolean isShow, Integer count,
+			List<Filter> filters, List<Order> orders);
+	
+	public List<Review> findList(Member member, Long productId,
+			Review.Type type, Boolean isShow, Integer count,
+			List<Filter> filters, List<Order> orders, String cacheRegion);
+	
+	public List<Review> findList(Member member, Product product,
+			Review.Type type, Boolean isShow, Integer count,
+			List<Filter> filters, List<Order> orders);
 
-  public List<Review> findList(Member member, Product product, Review.Type type, Boolean isShow, Integer count, List<Filter> filters, List<Order> orders, String cacheRegion);
+	public List<Review> findList(Member member, Product product,
+			Review.Type type, Boolean isShow, Integer count,
+			List<Filter> filters, List<Order> orders, String cacheRegion);
 
-  public Page<Review> findPage(Member member, Product product, Review.Type type, Boolean isShow, Pageable pageable);
+	public Page<Review> findPage(Member member, Product product,
+			Review.Type type, Boolean isShow, Pageable pageable);
 
-  public Long count(Member member, Product product, Review.Type type, Boolean isShow);
+	public Long count(Member member, Product product, Review.Type type,
+			Boolean isShow);
 
-  public boolean isReviewed(Member member, Product product);
-  
-  public Review find(Long id);
-  
-  public void save(Review review);
+	public boolean isReviewed(Member member, Product product);
 
-  public Review update(Review review);
+	public Review find(Long id);
 
-  public Review update(Review review, String[] ignoreProperties);
+	public void save(Review review);
 
-  public void delete(Long id);
+	public Review update(Review review);
 
-  public void delete(Long[] ids);
+	public Review update(Review review, String[] ignoreProperties);
 
-  public void delete(Review review);
+	public void delete(Long id);
+
+	public void delete(Long[] ids);
+
+	public void delete(Review review);
 }

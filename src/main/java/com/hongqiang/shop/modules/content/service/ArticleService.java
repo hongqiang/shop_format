@@ -25,7 +25,7 @@ public interface ArticleService
   
   public Article find(Long id);
   
-  public long viewHits(Long paramLong);
+  public long viewHits(String id);
   
   public void save(Article article);
   
@@ -38,4 +38,8 @@ public interface ArticleService
   public void delete(Long[] ids);
   
   public void delete(Article article);
+  
+  public int build(Article article);
+  
+  public int deleteStaticArticle(Article article);
 }

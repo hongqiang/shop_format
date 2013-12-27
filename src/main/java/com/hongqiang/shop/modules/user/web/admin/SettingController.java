@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.mail.MailAuthenticationException;
@@ -46,7 +47,8 @@ public class SettingController extends BaseController {
 	// @javax.annotation.Resource(name="cacheServiceImpl")
 	// private CacheService cacheService;
 
-	@javax.annotation.Resource(name = "staticServiceImpl")
+//	@javax.annotation.Resource(name = "staticServiceImpl")
+	@Autowired
 	private StaticService staticService;
 
 	@RequestMapping(value = { "/mail_test" }, method = RequestMethod.POST)

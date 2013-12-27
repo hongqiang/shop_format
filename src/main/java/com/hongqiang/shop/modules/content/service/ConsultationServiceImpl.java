@@ -1,12 +1,23 @@
 package com.hongqiang.shop.modules.content.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.ServletContext;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
@@ -17,18 +28,28 @@ import com.hongqiang.shop.modules.content.dao.ConsultationDao;
 import com.hongqiang.shop.modules.entity.Consultation;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Product;
+import com.hongqiang.shop.modules.product.dao.ProductDao;
 import com.hongqiang.shop.modules.util.service.StaticService;
+import com.hongqiang.shop.modules.util.service.TemplateService;
 
 @Service
 public class ConsultationServiceImpl extends BaseService
   implements ConsultationService
 {
 
+	private ServletContext servletContext;
+	
+	@Autowired
+	private FreeMarkerConfigurer freeMarkerConfigurer;
+
+	@Autowired
+	private TemplateService templateService;
+	
   @Autowired
   private ConsultationDao consultationDao;
 
-  @Autowired
-  private StaticService staticService;
+//	 @Autowired
+//	 private StaticService staticService;
 
   @Transactional(readOnly=true)
   public List<Consultation> findList(Member member, Product product, Boolean isShow, Integer count, List<Filter> filters, List<Order> orders)
@@ -89,7 +110,8 @@ public class ConsultationServiceImpl extends BaseService
     if (localProduct != null)
     {
       this.consultationDao.flush();
-      this.staticService.build(localProduct);
+//      this.staticService.build(localProduct);
+      build(localProduct);
     }
   }
 
@@ -102,7 +124,8 @@ public class ConsultationServiceImpl extends BaseService
     if (localProduct != null)
     {
       this.consultationDao.flush();
-      this.staticService.build(localProduct);
+//      this.staticService.build(localProduct);
+      build(localProduct);
     }
   }
 
@@ -115,7 +138,8 @@ public class ConsultationServiceImpl extends BaseService
     if (localProduct != null)
     {
       this.consultationDao.flush();
-      this.staticService.build(localProduct);
+//      this.staticService.build(localProduct);
+      build(localProduct);
     }
     return localConsultation;
   }
@@ -154,8 +178,76 @@ public class ConsultationServiceImpl extends BaseService
       if (localProduct != null)
       {
         this.consultationDao.flush();
-        this.staticService.build(localProduct);
+//        this.staticService.build(localProduct);
+        build(localProduct);
       }
     }
   }
+  
+  
+  @Transactional(readOnly = true)
+	public int build(Product product) {
+		Assert.notNull(product);
+		deleteStaticProduct(product);
+		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService
+				.get("productContent");
+		int i = 0;
+		if (product.getIsMarketable().booleanValue()) {
+			HashMap<String, Object> localHashMap = new HashMap<String, Object>();
+			localHashMap.put("product", product);
+			i += build(localTemplate.getTemplatePath(), product.getPath(),
+					localHashMap);
+		}
+		return i;
+	}
+
+	@Transactional(readOnly = true)
+	private int build(String templatePath, String staticPath,
+			Map<String, Object> model) {
+		Assert.hasText(templatePath);
+		Assert.hasText(staticPath);
+		FileOutputStream localFileOutputStream = null;
+		OutputStreamWriter localOutputStreamWriter = null;
+		BufferedWriter localBufferedWriter = null;
+		try {
+			freemarker.template.Template localTemplate = this.freeMarkerConfigurer
+					.getConfiguration().getTemplate(templatePath);
+			File localFile1 = new File(
+					this.servletContext.getRealPath(staticPath));
+			File localFile2 = localFile1.getParentFile();
+			if (!localFile2.exists())
+				localFile2.mkdirs();
+			localFileOutputStream = new FileOutputStream(localFile1);
+			localOutputStreamWriter = new OutputStreamWriter(
+					localFileOutputStream, "UTF-8");
+			localBufferedWriter = new BufferedWriter(localOutputStreamWriter);
+			localTemplate.process(model, localBufferedWriter);
+			localBufferedWriter.flush();
+			return 1;
+		} catch (Exception localException1) {
+			localException1.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(localBufferedWriter);
+			IOUtils.closeQuietly(localOutputStreamWriter);
+			IOUtils.closeQuietly(localFileOutputStream);
+		}
+		return 0;
+	}
+
+	@Transactional(readOnly = true)
+	public int deleteStaticProduct(Product product) {
+		Assert.notNull(product);
+		return delete(product.getPath());
+	}
+
+	@Transactional(readOnly = true)
+	private int delete(String staticPath) {
+		Assert.hasText(staticPath);
+		File localFile = new File(this.servletContext.getRealPath(staticPath));
+		if (localFile.exists()) {
+			localFile.delete();
+			return 1;
+		}
+		return 0;
+	}
 }

@@ -42,7 +42,6 @@ public class ArticleListDirective extends BaseDirective {
 				Long.class, params);
 		 Long[] arrayOfLong = (Long[])FreeMarkers.getParameters(TAG_IDS,
 		 Long.class, params);
-//		Long[] arrayOfLong = null;
 		ArticleCategory localArticleCategory = (ArticleCategory) this.articleCategoryService
 				.find(localLong);
 		List localList1 = this.tagService.findList(arrayOfLong);

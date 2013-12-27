@@ -1,13 +1,18 @@
 package com.hongqiang.shop.modules.content.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
+import javax.servlet.ServletContext;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -15,9 +20,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
+import com.hongqiang.shop.common.utils.CacheUtils;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -25,21 +32,24 @@ import com.hongqiang.shop.modules.content.dao.ArticleDao;
 import com.hongqiang.shop.modules.entity.Article;
 import com.hongqiang.shop.modules.entity.ArticleCategory;
 import com.hongqiang.shop.modules.entity.Tag;
-import com.hongqiang.shop.modules.util.service.StaticService;
+import com.hongqiang.shop.modules.util.service.TemplateService;
 
 @Service
 public class ArticleServiceImpl extends BaseService implements ArticleService,
 		DisposableBean {
 	private long systemTime = System.currentTimeMillis();
+	public static final String HITS_CACHE_NAME = "articleHits";
+	
+	private ServletContext servletContext;
 
 	@Autowired
-	private CacheManager cacheManager2;
+	private FreeMarkerConfigurer freeMarkerConfigurer;
 
+	@Autowired
+	private TemplateService templateService;
+	
 	@Autowired
 	private ArticleDao articleDao;
-
-	@Autowired
-	private StaticService staticService;
 
 	@Transactional(readOnly = true)
 	public List<Article> findList(ArticleCategory articleCategory,
@@ -81,58 +91,51 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		return this.articleDao.find(id);
 	}
 
-	public long viewHits(Long id) {
-		Ehcache localEhcache = this.cacheManager2.getEhcache("articleHits");
-		Element localElement = localEhcache.get(id);
-		Long tempLong = 0L;
-		if (localElement != null) {
-			tempLong = (Long) localElement.getObjectValue();
-		} else {
+	public long viewHits(String id){
+		Long hits = (Long)CacheUtils.get(HITS_CACHE_NAME, id);
+		if (hits == null) {
 			Article localArticle = (Article) this.articleDao.find(id);
 			if (localArticle == null)
 				return 0L;
-			tempLong = localArticle.getHits();
+			hits = localArticle.getHits();
 		}
-		Long localLong = Long.valueOf(tempLong.longValue() + 1L);
-		localEhcache.put(new Element(id, localLong));
+		Long returnHits = Long.valueOf(hits.longValue() + 1L);
+		CacheUtils.put(HITS_CACHE_NAME, id, returnHits);
 		long l = System.currentTimeMillis();
 		if (l > this.systemTime + 600000L) {
 			this.systemTime = l;
 			destroyCache();
-			localEhcache.removeAll();
+			CacheUtils.removeAll(HITS_CACHE_NAME);
 		}
-		return localLong.longValue();
-//		 return tempLong;
+		return returnHits.longValue();
 	}
 
 	public void destroy() {
 		destroyCache();
 	}
 
-	private void destroyCache() {
-		Ehcache localEhcache = this.cacheManager2.getEhcache("articleHits");
+	private void destroyCache(){
 		@SuppressWarnings("unchecked")
-		List<Long> localList = localEhcache.getKeys();
+		List<Long> localList = (List<Long>) CacheUtils.getKeys(HITS_CACHE_NAME);
 		Iterator<Long> localIterator = localList.iterator();
 		while (localIterator.hasNext()) {
-			Long localLong = (Long) localIterator.next();
-			Article localArticle = (Article) this.articleDao.find(localLong);
+			Long id = (Long) localIterator.next();
+			Article localArticle = (Article) this.articleDao.find(id);
 			if (localArticle == null)
 				continue;
-			Element localElement = localEhcache.get(localLong);
-			long l = ((Long) localElement.getObjectValue()).longValue();
-			localArticle.setHits(Long.valueOf(l));
+			Long hits = (Long)CacheUtils.get(HITS_CACHE_NAME, id.toString());
+			localArticle.setHits(hits);
 			this.articleDao.merge(localArticle);
 		}
 	}
-
+	
 	@Transactional
 	@CacheEvict(value = { "article", "articleCategory" }, allEntries = true)
 	public void save(Article article) {
 		Assert.notNull(article);
 		this.articleDao.persist(article);
 		this.articleDao.flush();
-		this.staticService.build(article);
+		build(article);
 	}
 
 	@Transactional
@@ -141,7 +144,7 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		Assert.notNull(article);
 		Article localArticle = (Article) this.articleDao.merge(article);
 		this.articleDao.flush();
-		this.staticService.build(localArticle);
+		build(localArticle);
 		return localArticle;
 	}
 
@@ -169,7 +172,86 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 	@CacheEvict(value = { "article", "articleCategory" }, allEntries = true)
 	public void delete(Article article) {
 		if (article != null)
-			this.staticService.delete(article);
+			deleteStaticArticle(article);
 		this.articleDao.delete(article);
+	}
+	
+	@Transactional(readOnly = true)
+	public int build(Article article) {
+		Assert.notNull(article);
+		delete(article);
+		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService
+				.get("articleContent");
+		int i = 0;
+		if (article.getIsPublication().booleanValue()) {
+			HashMap<String, Object> localHashMap = new HashMap<String, Object>();
+			localHashMap.put("article", article);
+			for (int j = 1; j <= article.getTotalPages(); j++) {
+				article.setPageNumber(Integer.valueOf(j));
+				i += build(localTemplate.getTemplatePath(), article.getPath(),
+						localHashMap);
+			}
+			article.setPageNumber(null);
+		}
+		return i;
+	}
+	
+	@Transactional(readOnly = true)
+	private int build(String templatePath, String staticPath,
+			Map<String, Object> model) {
+		Assert.hasText(templatePath);
+		Assert.hasText(staticPath);
+		FileOutputStream localFileOutputStream = null;
+		OutputStreamWriter localOutputStreamWriter = null;
+		BufferedWriter localBufferedWriter = null;
+		try {
+			freemarker.template.Template localTemplate = this.freeMarkerConfigurer
+					.getConfiguration().getTemplate(templatePath);
+			File localFile1 = new File(
+					this.servletContext.getRealPath(staticPath));
+			File localFile2 = localFile1.getParentFile();
+			if (!localFile2.exists())
+				localFile2.mkdirs();
+			localFileOutputStream = new FileOutputStream(localFile1);
+			localOutputStreamWriter = new OutputStreamWriter(
+					localFileOutputStream, "UTF-8");
+			localBufferedWriter = new BufferedWriter(localOutputStreamWriter);
+			localTemplate.process(model, localBufferedWriter);
+			localBufferedWriter.flush();
+			return 1;
+		} catch (Exception localException1) {
+			localException1.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(localBufferedWriter);
+			IOUtils.closeQuietly(localOutputStreamWriter);
+			IOUtils.closeQuietly(localFileOutputStream);
+		}
+		return 0;
+	}
+	
+	@Transactional(readOnly = true)
+	public int deleteStaticArticle(Article article) {
+		Assert.notNull(article);
+		int i = 0;
+		for (int j = 1; j <= article.getTotalPages() + 1000; j++) {
+			article.setPageNumber(Integer.valueOf(j));
+			int k = delete(article.getPath());
+			if (k < 1)
+				break;
+			i += k;
+		}
+		article.setPageNumber(null);
+		return i;
+	}
+	
+	@Transactional(readOnly = true)
+	private int delete(String staticPath) {
+		Assert.hasText(staticPath);
+		File localFile = new File(this.servletContext.getRealPath(staticPath));
+		if (localFile.exists()) {
+			localFile.delete();
+			return 1;
+		}
+		return 0;
 	}
 }
