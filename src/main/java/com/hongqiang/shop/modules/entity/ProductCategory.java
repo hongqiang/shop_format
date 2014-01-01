@@ -25,7 +25,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class ProductCategory extends OrderEntity {
 	private static final long serialVersionUID = 1L;
 	public static final String TREE_PATH_SEPARATOR = ",";// 树路径分隔符
-	private static final String filePath = "/product/list";
+//	private static final String filePath = ${frontPath}+"/product/list/";
+	private static final String filePath = "f/product/list/";
 	
 	private String name;// 分类名称
 	private String seoKeywords;// 页面关键词

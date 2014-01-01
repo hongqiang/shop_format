@@ -26,7 +26,5 @@ public class ProductCategoryController extends BaseController {
 //		}
 //		return "modules/product/front/productCategory";
 		return "/shop/product_category/index";
-//		return "modules/index";
-
 	}
 }

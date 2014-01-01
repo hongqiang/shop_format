@@ -497,7 +497,10 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		StringBuilder stringBuilder = new StringBuilder(qlString);
 		
 		addFilter(stringBuilder, filters, parameter);
-		addOrders(stringBuilder, orderList, parameter);
+		if (qlString.indexOf("order by")==-1) {
+			addOrders(stringBuilder, orderList, parameter);
+		}
+		
 		qlString = stringBuilder.toString();
 //		System.out.println("qlstirng= "+qlString);
 		if (qlString.indexOf("order by")==-1) {
@@ -527,7 +530,9 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 			 pageable = new Pageable();
 		 StringBuilder stringBuilder = new StringBuilder(qlString);
 		 addFilter(stringBuilder, pageable, parameter);
-		 addOrders(stringBuilder, pageable, parameter);
+		 if (qlString.indexOf("order by")==-1) {
+			 addOrders(stringBuilder, pageable, parameter);
+		 }
 		 qlString = stringBuilder.toString();
 		 if (qlString.indexOf("order by")==-1) {
 				if (OrderEntity.class.isAssignableFrom(this.entityClass)){

@@ -52,11 +52,11 @@
 	<setting name="flashUploadPath" value="/upload/flash/${.now?string('yyyyMM')}/"/>  
 	<setting name="mediaUploadPath" value="/upload/media/${.now?string('yyyyMM')}/"/>  
 	<setting name="fileUploadPath" value="/upload/file/${.now?string('yyyyMM')}/"/>  
-	<setting name="smtpFromMail" value="test@shophq.net"/>  
-	<setting name="smtpHost" value="smtp.shophq.net"/>  
+	<setting name="smtpFromMail" value="jiangyang118@163.com"/>  
+	<setting name="smtpHost" value="smtp.163.com"/>  
 	<setting name="smtpPort" value="25"/>  
-	<setting name="smtpUsername" value="test"/>  
-	<setting name="smtpPassword" value="test"/>  
+	<setting name="smtpUsername" value="jiangyang118"/>  
+	<setting name="smtpPassword" value="jy5610660"/>  
 	<setting name="currencySign" value="￥"/>  
 	<setting name="currencyUnit" value="元"/>  
 	<setting name="stockAlertCount" value="5"/>  

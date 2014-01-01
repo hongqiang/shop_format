@@ -4,6 +4,7 @@
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
@@ -12,7 +13,8 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.2.xsd
 		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
-		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd"
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
 
 	default-lazy-init="true">
 
@@ -61,7 +63,8 @@
 				<entry key="systemVersion" value="${system.version}" />
 				<entry key="systemDescription" value="${system.description}" />
 				<entry key="systemShowPowered" value="${system.show_powered}" />
-				<entry key="base" value="#{servletContext.contextPath}" />
+				<!-- <entry key="base" value="#{servletContext.contextPath}" /> -->
+				<entry key="base" value="/shop" />
 				<entry key="locale" value="${locale}" />
 				<entry key="setting"
 					value="#{T(com.hongqiang.shop.common.utils..SettingUtils).get()}" />
@@ -87,7 +90,7 @@
 				<entry key="product_category_parent_list" value-ref="productCategoryParentListDirective" />
 				<entry key="product_category_children_list" value-ref="productCategoryChildrenListDirective" />
 				<entry key="review_list" value-ref="reviewListDirective" />
-				<entry key="consultation_list" value-ref="consultationListDirective"/>
+				<entry key="consultation_list" value-ref="consultationListDirective" />
 				<entry key="promotion_list" value-ref="promotionListDirective" />
 			</map>
 		</property>
@@ -131,13 +134,13 @@
 		lazy-init="false" />
 
 	<!-- 使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。 -->
-	<context:component-scan base-package="com.hongqiang.shop" ><!-- base-package 
-			如果多个，用“,”分隔 -->
+	<context:component-scan base-package="com.hongqiang.shop"><!-- 
+			base-package 如果多个，用“,”分隔 -->
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
-			
+
 	</context:component-scan>
-	
+
 	<!-- 配置 JPA Entity Manager -->
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -254,7 +257,7 @@
 	</bean>
 	<!-- 执行定时任务 -->
 	<task:annotation-driven />
-	
+
 
 	<!-- Production 环境 -->
 	<beans profile="production">
