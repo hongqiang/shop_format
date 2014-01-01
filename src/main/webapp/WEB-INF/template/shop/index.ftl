@@ -13,7 +13,7 @@
 		<meta name="description" content="[@seo.description?interpret /]" />
 	[/#if]
 [/@seo]
-<link rel="icon" href="${base}/favicon.ico" type="image/x-icon" />
+<link rel="icon" href="${base}/resources/favicon.ico" type="image/x-icon" />
 <link href="${base}/resources/shop/slider/slider.css" rel="stylesheet" type="text/css" />
 <link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
 <link href="${base}/resources/shop/css/index.css" rel="stylesheet" type="text/css" />

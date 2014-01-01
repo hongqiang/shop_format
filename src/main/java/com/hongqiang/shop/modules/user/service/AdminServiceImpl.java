@@ -131,11 +131,4 @@ public class AdminServiceImpl extends BaseService implements AdminService {
 		}
 		return null;
 	}
-
-	// @Transactional
-	// @CacheEvict(value={"authorization"}, allEntries=true)
-	// public Admin update(Admin admin, String[] ignoreProperties)
-	// {
-	// return (Admin)this.adminDao.update(admin, ignoreProperties);
-	// }
 }

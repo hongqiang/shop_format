@@ -68,8 +68,6 @@ public class Product extends BaseEntity {
 	}
 
 	private static final long serialVersionUID = 2167830430439593293L;
-	public static final String HITS_CACHE_NAME = "productHits";
-	public static final int HITS_CACHE_INTERVAL = 600000;
 	public static final int ATTRIBUTE_VALUE_PROPERTY_COUNT = 20;
 	public static final String ATTRIBUTE_VALUE_PROPERTY_NAME_PREFIX = "attributeValue";
 	public static final String FULL_NAME_SPECIFICATION_PREFIX = "[";

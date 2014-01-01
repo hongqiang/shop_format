@@ -3,8 +3,9 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
-  <display-name>JeeSite</display-name>
-  
+  <display-name>ShopHQ</display-name>
+  <description>ShopHQ网上商城系统 V1.0</description>
+	
   <!-- 加载Spring配置文件 -->
   <context-param>
     <param-name>contextConfigLocation</param-name>
@@ -44,7 +45,42 @@
     <filter-name>openEntityManagerInViewFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
+  <filter>
+		<filter-name>encodingConvertFilter</filter-name>
+		<filter-class>com.hongqiang.shop.common.filter.EncodingConvertFilter</filter-class>
+		<init-param>
+			<param-name>fromEncoding</param-name>
+			<param-value>ISO-8859-1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>toEncoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+  <filter>
+		<filter-name>accessDeniedFilter</filter-name>
+		<filter-class>com.hongqiang.shop.common.filter.AccessDeniedFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>accessDeniedFilter</filter-name>
+		<url-pattern>/install/data/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>accessDeniedFilter</filter-name>
+		<url-pattern>/install/sample/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>accessDeniedFilter</filter-name>
+		<url-pattern>*.properties</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>accessDeniedFilter</filter-name>
+		<url-pattern>*.conf</url-pattern>
+	</filter-mapping>
+	
   <!-- Apache Shiro -->
   <filter>
     <filter-name>shiroFilter</filter-name>
@@ -148,11 +184,23 @@
     <url-pattern>/servlet/validateCodeServlet</url-pattern>
   </servlet-mapping>
   
+  <listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+  
   <!-- Session 配置 -->
   <session-config>
     <session-timeout>20</session-timeout>
   </session-config>
-  
+<!--   欢迎页面配置 -->
+<!--   <welcome-file-list> -->
+<!-- 		<welcome-file>index.html</welcome-file> -->
+<!-- 		<welcome-file>index.jsp</welcome-file> -->
+<!-- 	</welcome-file-list> -->
   <!-- 错误 页面配置 -->
   <error-page>
     <exception-type>java.lang.Throwable</exception-type>

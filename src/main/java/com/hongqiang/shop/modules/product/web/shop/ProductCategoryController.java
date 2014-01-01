@@ -10,7 +10,8 @@ import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 
 @Controller("shopProductCategoryController")
-@RequestMapping(value = "${frontPath}/product_category")
+//@RequestMapping(value = "${frontPath}/product_category")
+@RequestMapping(value = "/product_category")
 public class ProductCategoryController extends BaseController {
 
 	@Autowired
@@ -23,7 +24,9 @@ public class ProductCategoryController extends BaseController {
 //		for(ProductCategory p:list){
 //			System.out.println(p.getName()+","+p.getPath());
 //		}
-		return "modules/product/front/productCategory";
+//		return "modules/product/front/productCategory";
+		return "/shop/product_category/index";
+//		return "modules/index";
 
 	}
 }

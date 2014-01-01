@@ -69,9 +69,8 @@ public class ProductListDirective extends BaseDirective {
 				params);
 		Long localLong3 = (Long) FreeMarkers.getParameter(PROMOTION_ID,
 				Long.class, params);
-		 Long[] arrayOfLong = (Long[])FreeMarkers.getParameters(TAG_IDS,
-		 Long.class, params);
-//		Long[] arrayOfLong = null;
+		 Long[] arrayOfLong = (Long[])FreeMarkers.getParameter(TAG_IDS,
+		 Long[].class, params);
 		Map localMap = (Map) FreeMarkers.getParameter(ATTRIBUTEVALUE,
 				Map.class, params);
 		BigDecimal localBigDecimal1 = (BigDecimal) FreeMarkers.getParameter(

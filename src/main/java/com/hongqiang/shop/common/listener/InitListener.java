@@ -50,8 +50,11 @@ public class InitListener
       }
       else
       {
+    	  System.out.println("we are first");
         this.staticService.buildIndex();
+        System.out.println("we are second");
         this.staticService.buildOther();
+        System.out.println("we are there");
       }
     }
   }

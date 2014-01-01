@@ -89,16 +89,16 @@
 	</mvc:interceptors>
 
 	<!-- 视图文件解析配置 -->
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="${web.view.prefix}" />
-		<property name="suffix" value="${web.view.suffix}" />
-	</bean>
+<!-- 	<bean -->
+<!-- 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
+<!-- 		<property name="prefix" value="${web.view.prefix}" /> -->
+<!-- 		<property name="suffix" value="${web.view.suffix}" /> -->
+<!-- 	</bean> -->
 
-	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"> -->
-	<!-- <property name="contentType" value="text/html; charset=UTF-8" /> -->
-	<!-- <property name="suffix" value="${template.suffix}" /> -->
-	<!-- </bean> -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+	<property name="contentType" value="text/html; charset=UTF-8" />
+	<property name="suffix" value="${template.suffix}" />
+	</bean>
 
 	<!-- 定义无Controller的path<->view直接映射 -->
 	<mvc:view-controller path="/"

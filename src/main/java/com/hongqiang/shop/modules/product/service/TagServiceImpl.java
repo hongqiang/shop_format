@@ -42,6 +42,9 @@ public class TagServiceImpl extends BaseService implements TagService {
 	@Transactional(readOnly = true)
 	public List<Tag> findList(Long[] ids) {
 		List<Tag> tags = new ArrayList<Tag>();
+		if (ids == null) {
+			return tags;
+		}
 		for (Long idLong : ids) {
 			Tag tag = find(idLong);
 			tags.add(tag);

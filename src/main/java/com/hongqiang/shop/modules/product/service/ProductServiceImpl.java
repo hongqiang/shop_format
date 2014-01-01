@@ -49,7 +49,7 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		DisposableBean {
 	private long systemTime = System.currentTimeMillis();
 	public static final String HITS_CACHE_NAME = "productHits";
-
+	public static final int HITS_CACHE_INTERVAL = 600000;
 	private ServletContext servletContext;
 
 	@Autowired
@@ -183,7 +183,7 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		Long returnHits = Long.valueOf(hits.longValue() + 1L);
 		CacheUtils.put(HITS_CACHE_NAME, id, returnHits);
 		long l = System.currentTimeMillis();
-		if (l > this.systemTime + 600000L) {
+		if (l > this.systemTime + HITS_CACHE_INTERVAL) {
 			this.systemTime = l;
 			destroyCache();
 			CacheUtils.removeAll(HITS_CACHE_NAME);

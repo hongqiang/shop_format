@@ -107,105 +107,10 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
 			Boolean isStockAlert, Product.OrderType orderType, Integer count,
 			List<Filter> filters, List<Order> orders) {
-		String sqlString = "select DISTINCT product from Product product where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
-		if (productCategory != null) {
-			sqlString += " and (product.productCategory = ? ";
-			params.add(productCategory);
-			sqlString += " or product.productCategory.treePath like ?) ";
-			params.add("%," + productCategory.getId() + ",%");
-		}
-		if (brand != null) {
-			sqlString += " and product.brand=?";
-			params.add(brand);
-		}
-		if (promotion != null) {
-			sqlString += " and product.promotions =?";
-			params.add(promotion);// 和源码不同,这里把左连接promotion表，左连接productCategory表，以及左连接brand表省略。
-
-		}
-		if (attributeValue != null) {
-			Iterator<Entry<Attribute, String>> localIterator = attributeValue
-					.entrySet().iterator();
-			while (localIterator.hasNext()) {
-				Entry<Attribute, String> pairs = (Entry<Attribute, String>) localIterator
-						.next();
-				String localString = "attributeValue"
-						+ ((Attribute) pairs.getKey()).getPropertyIndex();
-				sqlString += " and product." + localString + " = ? ";
-				params.add(pairs.getValue());
-			}
-		}
-		if ((startPrice != null) && (endPrice != null)
-				&& (startPrice.compareTo(endPrice) > 0)) {
-			BigDecimal localPrice = startPrice;
-			startPrice = endPrice;
-			endPrice = localPrice;
-		}
-		if ((startPrice != null)
-				&& (startPrice.compareTo(new BigDecimal(0)) >= 0)) {
-			sqlString += " and product.price>=?";
-			params.add(startPrice);
-		}
-		if ((endPrice != null) && (endPrice.compareTo(new BigDecimal(0)) >= 0)) {
-			sqlString += " and product.price<=?";
-			params.add(endPrice);
-		}
-		if ((tags != null) && (!tags.isEmpty())) {
-			sqlString += " and product.tags in (?)";
-			params.add(tags);// Specify whether duplicate query results will be
-								// eliminated
-		}
-		if (isMarketable != null) {
-			sqlString += " and product.isMarketable=?";
-			params.add(isMarketable);
-		}
-		if (isList != null) {
-			sqlString += " and product.isList=?";
-			params.add(isList);
-		}
-		if (isTop != null) {
-			sqlString += " and product.isTop=?";
-			params.add(isTop);
-		}
-		if (isGift != null) {
-			sqlString += " and product.isGift=?";
-			params.add(isGift);
-		}
-		if (isOutOfStock != null) {
-			if (isOutOfStock.booleanValue()) {
-				sqlString += " and (product.stock is not null and product.stock<= product.allocatedStock) ";
-			} else {
-				sqlString += " and (product.stock is  null or product.stock> product.allocatedStock)";
-			}
-		}
-		if (isStockAlert != null) {
-			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
-			// Long stockAlertCount = 1L;
-			if (isStockAlert.booleanValue()) {
-				sqlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
-				params.add(stockAlertCount);
-			} else {
-				sqlString += " and (product.stock is null or product.stock> (product.allocatedStock+?)) ";
-				params.add(stockAlertCount);
-			}
-		}
-
-		if (orderType == Product.OrderType.priceAsc) {
-			sqlString += " order by product.price ASC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.priceDesc) {
-			sqlString += " order by product.price DESC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.salesDesc) {
-			sqlString += " order by product.sales DESC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.scoreDesc) {
-			sqlString += " order by product.score DESC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.dateDesc) {
-			sqlString += " order by product.createDate DESC ";
-		} else {
-			sqlString += " order by product.isTop DESC, product.updateDate DESC ";
-		}
-		System.out.println(sqlString);
-		System.out.println(params.toArray());
+		String sqlString =  composeSql( productCategory,  brand,promotion,  tags,
+				 attributeValue,  startPrice,endPrice,  isMarketable,  isList,
+				 isTop,  isGift,  isOutOfStock,isStockAlert,  orderType,params);
 		return super.findList(sqlString, params, null, count, filters, orders);
 	}
 
@@ -241,8 +146,15 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			params.add(goods);
 		}
 		if ((excludes != null) && (!excludes.isEmpty())) {
-			sqlString += " and product not in (?) ";
-			params.add(excludes);
+//			sqlString += " and product not in (?) ";
+//			params.add(excludes);
+			sqlString += " and product not in (";
+			for (Product product : excludes) {
+					sqlString += " ?, ";
+					params.add(product);
+			}
+			sqlString = sqlString.substring(0,sqlString.length()-2);
+			sqlString +=")";
 		}
 		return super.findList(sqlString, params, null, null, null, null);
 	}
@@ -253,103 +165,10 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
 			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
 			Boolean isStockAlert, Product.OrderType orderType, Pageable pageable) {
-		String sqlString = "select DISTINCT product from Product product where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
-		if (productCategory != null) {
-			sqlString += " and (product.productCategory = ? ";
-			params.add(productCategory);
-			sqlString += " or product.productCategory.treePath like ?) ";
-			params.add("%," + productCategory.getId() + ",%");
-		}
-		if (brand != null) {
-			sqlString += " and product.brand=?";
-			params.add(brand);
-		}
-		if (promotion != null) {
-			sqlString += " and product.promotions =?";
-			params.add(promotion);// 和源码不同,这里把左连接promotion表，左连接productCategory表，以及左连接brand表省略。
-
-		}
-		if (attributeValue != null) {
-			Iterator<Entry<Attribute, String>> localIterator = attributeValue
-					.entrySet().iterator();
-			while (localIterator.hasNext()) {
-				Entry<Attribute, String> pairs = (Entry<Attribute, String>) localIterator
-						.next();
-				String localString = "attributeValue"
-						+ ((Attribute) pairs.getKey()).getPropertyIndex();
-				sqlString += " and product." + localString + " = ? ";
-				params.add(pairs.getValue());
-			}
-		}
-		if ((startPrice != null) && (endPrice != null)
-				&& (startPrice.compareTo(endPrice) > 0)) {
-			Object localObject1 = startPrice;
-			startPrice = endPrice;
-			endPrice = (BigDecimal) localObject1;
-		}
-		if ((startPrice != null)
-				&& (startPrice.compareTo(new BigDecimal(0)) >= 0)) {
-			sqlString += " and product.price>=?";
-			params.add(startPrice);
-		}
-		if ((endPrice != null) && (endPrice.compareTo(new BigDecimal(0)) >= 0)) {
-			sqlString += " and product.price<=?";
-			params.add(endPrice);
-		}
-		if ((tags != null) && (!tags.isEmpty())) {
-			sqlString += " and product.tags in (?)";
-			params.add(tags);// Specify whether duplicate query results will be
-								// eliminated
-		}
-		if (isMarketable != null) {
-			sqlString += " and product.isMarketable=?";
-			params.add(isMarketable);
-		}
-		if (isList != null) {
-			sqlString += " and product.isList=?";
-			params.add(isList);
-		}
-		if (isTop != null) {
-			sqlString += " and product.isTop=?";
-			params.add(isTop);
-		}
-		if (isGift != null) {
-			sqlString += " and product.isGift=?";
-			params.add(isGift);
-		}
-		if (isOutOfStock != null) {
-			if (isOutOfStock.booleanValue()) {
-				sqlString += " and (product.stock is not null and product.stock<= product.allocatedStock) ";
-			} else {
-				sqlString += " and (product.stock is  null or product.stock> product.allocatedStock)";
-			}
-		}
-		if (isStockAlert != null) {
-			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
-			// int stockAlertCount = 1;
-			if (isStockAlert.booleanValue()) {
-				sqlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
-				params.add(stockAlertCount);
-			} else {
-				sqlString += " and (product.stock is null or product.stock> (product.allocatedStock+?)) ";
-				params.add(stockAlertCount);
-			}
-		}
-
-		if (orderType == Product.OrderType.priceAsc) {
-			sqlString += " order by product.price ASC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.priceDesc) {
-			sqlString += " order by product.price DESC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.salesDesc) {
-			sqlString += " order by product.sales DESC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.scoreDesc) {
-			sqlString += " order by product.score DESC, product.createDate DESC ";
-		} else if (orderType == Product.OrderType.dateDesc) {
-			sqlString += " order by product.createDate DESC ";
-		} else {
-			sqlString += " order by product.isTop DESC, product.updateDate DESC ";
-		}
+		String sqlString =  composeSql( productCategory,  brand,promotion,  tags,
+				 attributeValue,  startPrice,endPrice,  isMarketable,  isList,
+				 isTop,  isGift,  isOutOfStock,isStockAlert,  orderType, params);
 		Page<Product> productPage = new Page<Product>(pageable.getPageNumber(),
 				pageable.getPageSize());
 		return super.findPage(productPage, sqlString, params, pageable);
@@ -369,17 +188,22 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 	public Page<Product> findPage(Member member, Pageable pageable) {
 		if (member == null)
 			return new Page<Product>(0, 0);
-		String qlString = "select product from Product product where 1=1 and product.favoriteMembers= ?";
+		String qlString = "select product from Product product "+
+			"join product.favoriteMembers favoriteMembers "+
+				"where favoriteMembers= ? ";
 		List<Object> params = new ArrayList<Object>();
 		params.add(member);
 		Page<Product> productPage = new Page<Product>(pageable.getPageNumber(),
 				pageable.getPageSize());
+		System.out.println("sql= "+qlString);
 		return super.findPage(productPage, qlString, params, pageable);
 	}
 
 	public Page<Object> findSalesPage(Date beginDate, Date endDate,
 			Pageable pageable) {
-		String qlString = "select product, sum(orderItems.quantity), sum(orderItems.quantity * orderItems.price) from Product product, OrderItem orderItems, Order order where 1=1 ";
+		String qlString = "select product, sum(orderItems.quantity), "+
+						"sum(orderItems.quantity * orderItems.price) "+
+				"from Product product, OrderItem orderItems, Order order where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		if (beginDate != null) {
 			qlString += " and orderItems.createDate >= ? ";
@@ -416,11 +240,11 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 	public Long count(Member favoriteMember, Boolean isMarketable,
 			Boolean isList, Boolean isTop, Boolean isGift,
 			Boolean isOutOfStock, Boolean isStockAlert) {
-
-		String qlString = "select product from Product product where 1=1 ";
+		String qlString = "select product from Product product "+
+				"join product.favoriteMembers favoriteMembers where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		if (favoriteMember != null) {
-			qlString += " and product.favoriteMembers= ?";
+			qlString += " and favoriteMembers= ?";
 			params.add(favoriteMember);
 		}
 		if (isMarketable != null) {
@@ -552,6 +376,133 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 				setProductFullName(localProduct);
 			}
 		}
+	}
+	
+	private String composeSql(ProductCategory productCategory, Brand brand,
+			Promotion promotion, List<Tag> tags,
+			Map<Attribute, String> attributeValue, BigDecimal startPrice,
+			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
+			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
+			Boolean isStockAlert, Product.OrderType orderType, List<Object> params) {
+		String sqlString = "select DISTINCT product from ";
+		if (promotion != null) {
+			sqlString += " Product product left join product.promotions pPromotion ";
+			sqlString += " left join product.productCategory productCategory ";
+			sqlString += " left join productCategory.promotions pcPromotion";
+			sqlString += " left join product.brand brand ";
+			sqlString += " left join brand.promotions bPromotion";
+		}else{
+			sqlString += " Product product";
+		}
+		if ((tags!=null) && (!tags.isEmpty())) {
+			sqlString += " join product.tags tags ";
+		}
+		sqlString += " where 1=1 ";
+		if (productCategory != null) {
+			sqlString += " and (product.productCategory = ? ";
+			params.add(productCategory);
+			sqlString += " or product.productCategory.treePath like ?) ";
+			params.add("%," + productCategory.getId() + ",%");
+		}
+		if (brand != null) {
+			sqlString += " and product.brand=?";
+			params.add(brand);
+		}
+		if (promotion != null) {
+			sqlString += " and pPromotion =?";
+			params.add(promotion);
+			sqlString += " and pcPromotion =?";
+			params.add(promotion);
+			sqlString += " and bPromotion =?";
+			params.add(promotion);
+		}
+		if (attributeValue != null) {
+			Iterator<Entry<Attribute, String>> localIterator = attributeValue
+					.entrySet().iterator();
+			while (localIterator.hasNext()) {
+				Entry<Attribute, String> pairs = (Entry<Attribute, String>) localIterator
+						.next();
+				String localString = "attributeValue"
+						+ ((Attribute) pairs.getKey()).getPropertyIndex();
+				sqlString += " and product." + localString + " = ? ";
+				params.add(pairs.getValue());
+			}
+		}
+		if ((startPrice != null) && (endPrice != null)
+				&& (startPrice.compareTo(endPrice) > 0)) {
+			BigDecimal localPrice = startPrice;
+			startPrice = endPrice;
+			endPrice = localPrice;
+		}
+		if ((startPrice != null)
+				&& (startPrice.compareTo(new BigDecimal(0)) >= 0)) {
+			sqlString += " and product.price>=?";
+			params.add(startPrice);
+		}
+		if ((endPrice != null) && (endPrice.compareTo(new BigDecimal(0)) >= 0)) {
+			sqlString += " and product.price<=?";
+			params.add(endPrice);
+		}
+		if ((tags != null) && (!tags.isEmpty())) {
+//			sqlString += " and tags in (?)";
+//			params.add(tags);
+			sqlString += " and tags in (";
+			for (Tag tag : tags) {
+					sqlString += " ?, ";
+					params.add(tag);
+			}
+			sqlString = sqlString.substring(0,sqlString.length()-2);
+			sqlString +=")";
+		}
+		if (isMarketable != null) {
+			sqlString += " and product.isMarketable=?";
+			params.add(isMarketable);
+		}
+		if (isList != null) {
+			sqlString += " and product.isList=?";
+			params.add(isList);
+		}
+		if (isTop != null) {
+			sqlString += " and product.isTop=?";
+			params.add(isTop);
+		}
+		if (isGift != null) {
+			sqlString += " and product.isGift=?";
+			params.add(isGift);
+		}
+		if (isOutOfStock != null) {
+			if (isOutOfStock.booleanValue()) {
+				sqlString += " and (product.stock is not null and product.stock<= product.allocatedStock) ";
+			} else {
+				sqlString += " and (product.stock is  null or product.stock> product.allocatedStock)";
+			}
+		}
+		if (isStockAlert != null) {
+			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
+			// Long stockAlertCount = 1L;
+			if (isStockAlert.booleanValue()) {
+				sqlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
+				params.add(stockAlertCount);
+			} else {
+				sqlString += " and (product.stock is null or product.stock> (product.allocatedStock+?)) ";
+				params.add(stockAlertCount);
+			}
+		}
+
+		if (orderType == Product.OrderType.priceAsc) {
+			sqlString += " order by product.price ASC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.priceDesc) {
+			sqlString += " order by product.price DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.salesDesc) {
+			sqlString += " order by product.sales DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.scoreDesc) {
+			sqlString += " order by product.score DESC, product.createDate DESC ";
+		} else if (orderType == Product.OrderType.dateDesc) {
+			sqlString += " order by product.createDate DESC ";
+		} else {
+			sqlString += " order by product.isTop DESC, product.updateDate DESC ";
+		}
+		return sqlString;
 	}
 
 	@Override

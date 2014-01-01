@@ -507,6 +507,11 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 				qlString += "order by createDate DESC";
 			}
 		}
+		System.out.println("productQuery = "+qlString);
+		System.out.println(parameter.size());
+		for (Object object : parameter) {
+			System.out.println("object="+object);
+		}
 		Query query = createQueryByList(qlString, parameter.toArray());
 		if (firstResults != null) {
 			query.setFirstResult(firstResults);

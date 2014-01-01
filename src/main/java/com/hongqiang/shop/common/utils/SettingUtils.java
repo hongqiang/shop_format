@@ -52,7 +52,7 @@ public final class SettingUtils {
 					String str1 = localElement1.attributeValue("name");
 					String str2 = localElement1.attributeValue("value");
 					try {
-						// System.out.println("key= "+str1+" , value= "+str2);
+//						 System.out.println("key= "+str1+" , value= "+str2);
 						beanUtilsBean.setProperty(localSetting, str1, str2);
 					} catch (IllegalAccessException localIllegalAccessException) {
 						localIllegalAccessException.printStackTrace();

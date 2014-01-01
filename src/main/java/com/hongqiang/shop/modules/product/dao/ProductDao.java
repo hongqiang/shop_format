@@ -42,15 +42,13 @@ interface ProductDaoCustom extends BaseDao<Product> {
 	public List<Product> findList(Integer first, Integer count,
 			List<Filter> filters, List<Order> orders);
 
-	public List<Product> findList(ProductCategory paramProductCategory,
-			Brand paramBrand, Promotion paramPromotion, List<Tag> paramList,
-			Map<Attribute, String> paramMap, BigDecimal paramBigDecimal1,
-			BigDecimal paramBigDecimal2, Boolean paramBoolean1,
-			Boolean paramBoolean2, Boolean paramBoolean3,
-			Boolean paramBoolean4, Boolean paramBoolean5,
-			Boolean paramBoolean6, Product.OrderType paramOrderType,
-			Integer paramInteger, List<Filter> paramList1,
-			List<Order> paramList2);
+	public List<Product> findList(ProductCategory productCategory, Brand brand,
+			Promotion promotion, List<Tag> tags,
+			Map<Attribute, String> attributeValue, BigDecimal startPrice,
+			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
+			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
+			Boolean isStockAlert, Product.OrderType orderType, Integer count,
+			List<Filter> filters, List<Order> orders); 
 
 	public List<Product> findList(ProductCategory paramProductCategory,
 			Date paramDate1, Date paramDate2, Integer paramInteger1,

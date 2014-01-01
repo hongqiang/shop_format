@@ -27,6 +27,7 @@ import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.util.service.CacheService;
 import com.hongqiang.shop.modules.util.service.StaticService;
 import com.hongqiang.shop.website.entity.FileInfo;
 import com.hongqiang.shop.website.service.FileService;
@@ -38,16 +39,15 @@ import com.sun.mail.smtp.SMTPSenderFailedException;
 @RequestMapping({ "${adminPath}/setting" })
 public class SettingController extends BaseController {
 
-	@javax.annotation.Resource(name = "fileServiceImpl")
+	@Autowired
 	private FileService fileService;
 
-	@javax.annotation.Resource(name = "mailServiceImpl")
+	@Autowired
 	private MailService mailService;
 
-	// @javax.annotation.Resource(name="cacheServiceImpl")
-	// private CacheService cacheService;
+	@Autowired
+	 private CacheService cacheService;
 
-//	@javax.annotation.Resource(name = "staticServiceImpl")
 	@Autowired
 	private StaticService staticService;
 
@@ -160,7 +160,7 @@ public class SettingController extends BaseController {
 		setting.setCnzzSiteId(localSetting.getCnzzSiteId());
 		setting.setCnzzPassword(localSetting.getCnzzPassword());
 		SettingUtils.set(setting);
-//		this.cacheService.clear();
+		this.cacheService.clear();
 		this.staticService.buildIndex();
 		this.staticService.buildOther();
 		Object localObject1 = null;

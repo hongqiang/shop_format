@@ -48,8 +48,6 @@ import com.hongqiang.shop.common.utils.StringUtils;
 @Table(name = "hq_article")
 public class Article extends BaseEntity {
 	private static final long serialVersionUID = 1475773294701585482L;
-	public static final String HITS_CACHE_NAME = "articleHits";
-	public static final int HITS_CACHE_INTERVAL = 600000;
 	private static final int MAX_PAGE_CONTENT_COUNT = 800;// 内容分页每页最大字数
 	private static final String contentBreake = "<hr class=\"pageBreak\" />";
 	private static final Pattern pattern = Pattern.compile("[,;\\.!?，；。！？]");

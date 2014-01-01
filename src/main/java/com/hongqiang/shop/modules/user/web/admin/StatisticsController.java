@@ -18,13 +18,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.common.web.BaseController;
+import com.hongqiang.shop.modules.util.service.CacheService;
 
 @Controller("statisticsController")
 @RequestMapping({ "${adminPath}/statistics" })
 public class StatisticsController extends BaseController {
 
-//	@Autowired
-//	private CacheService cacheService;
+	@Autowired
+	private CacheService cacheService;
 
 	@RequestMapping(value = { "/view" }, method = RequestMethod.GET)
 	public String view() {
@@ -71,7 +72,7 @@ public class StatisticsController extends BaseController {
 			}
 		localSetting.setIsCnzzEnabled(isEnabled);
 		SettingUtils.set(localSetting);
-//		this.cacheService.clear();
+		this.cacheService.clear();
 		addMessage(redirectAttributes, ADMIN_SUCCESS);
 		return "redirect:setting.jhtml";
 	}
