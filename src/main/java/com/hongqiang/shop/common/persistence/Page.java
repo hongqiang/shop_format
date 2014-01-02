@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort.Order;
 
 import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.CookieUtils;
+import com.hongqiang.shop.common.utils.Filter;
 
 /**
  * 分页类
@@ -53,7 +54,9 @@ public class Page<T> {
 	
 	private String message = ""; // 设置提示消息，显示在“共n条”之后
 
-	private Pageable pageable;
+	 private final List<T> content = new ArrayList<T>();
+	 private final long total;
+	private com.hongqiang.shop.common.utils.Pageable pageable;
 	
 	/**
 	 * 构造方法
@@ -101,6 +104,8 @@ public class Page<T> {
 		if (StringUtils.isNotBlank(orderBy)){
 			this.setOrderBy(orderBy);
 		}
+		this.total = 0L;
+		
 	}
 	
 	/**
@@ -134,6 +139,7 @@ public class Page<T> {
 		this.setPageNo(pageNo);
 		this.pageSize = pageSize;
 		this.setList(list);
+		this.total = 0L;
 	}
 
 	public Page(List<T> resultList, int resultSize,
@@ -141,8 +147,72 @@ public class Page<T> {
 		this.setList(resultList);
 		this.setPageSize(resultSize);
 		this.setPageable(pageable);
+		this.total = 0L;
 	}
 
+	 public Page()
+	  {
+	    this.total = 0L;
+	    this.pageable = new com.hongqiang.shop.common.utils.Pageable();
+	  }
+
+	  public Page(List<T> content, long total, com.hongqiang.shop.common.utils.Pageable pageable)
+	  {
+	    this.content.addAll(content);
+	    this.total = total;
+	    this.pageable = pageable;
+	  }
+
+	  public int getPageNumber()
+	  {
+	    return this.pageable.getPageNumber();
+	  }
+
+	  public String getSearchProperty()
+	  {
+	    return this.pageable.getSearchProperty();
+	  }
+
+	  public String getSearchValue()
+	  {
+	    return this.pageable.getSearchValue();
+	  }
+
+	  public String getOrderProperty()
+	  {
+	    return this.pageable.getOrderProperty();
+	  }
+
+	  public com.hongqiang.shop.common.utils.Order.Direction getOrderDirection()
+	  {
+	    return this.pageable.getOrderDirection();
+	  }
+
+	  public List<com.hongqiang.shop.common.utils.Order> getOrders()
+	  {
+	    return this.pageable.getOrders();
+	  }
+
+	  public List<Filter> getFilters()
+	  {
+	    return this.pageable.getFilters();
+	  }
+
+	  public int getTotalPages()
+	  {
+	    return (int)Math.ceil(getTotal() / getPageSize());
+	  }
+
+	  public List<T> getContent()
+	  {
+	    return this.content;
+	  }
+
+	  public long getTotal()
+	  {
+	    return this.total;
+	  }
+	
 	/**
 	 * 初始化参数
 	 */
@@ -526,11 +596,11 @@ public class Page<T> {
 		this.list = page.getContent();
 	}
 
-	public Pageable getPageable() {
+	public com.hongqiang.shop.common.utils.Pageable getPageable() {
 		return pageable;
 	}
 
-	public void setPageable(Pageable pageable) {
+	public void setPageable(com.hongqiang.shop.common.utils.Pageable pageable) {
 		this.pageable = pageable;
 	}
 	

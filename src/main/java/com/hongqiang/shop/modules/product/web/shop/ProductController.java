@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 //import net.shopxx.Pageable;
 //import net.shopxx.ResourceNotFoundException;
 //import net.shopxx.entity.Attribute;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.utils.ResourceNotFoundException;
 import com.hongqiang.shop.common.web.BaseController;
@@ -156,6 +158,13 @@ public class ProductController extends BaseController {
 				localBrand, localPromotion, tags, null, startPrice, endPrice,
 				Boolean.valueOf(true), Boolean.valueOf(true), null,
 				Boolean.valueOf(false), null, null, orderType, localPageable));
+		Page<Product> products = this.productService.findPage(null,
+				localBrand, localPromotion, tags, null, startPrice, endPrice,
+				Boolean.valueOf(true), Boolean.valueOf(true), null,
+				Boolean.valueOf(false), null, null, orderType, localPageable);
+		for (Product product : products.getList()) {
+			System.out.println("name="+product.getName());
+		}
 		return "/shop/product/list";
 	}
 
