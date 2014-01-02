@@ -17,7 +17,7 @@ import com.hongqiang.shop.modules.sys.entity.JLog;
  * @author ThinkGem
  * @version 2013-06-02
  */
-public interface LogDao extends LogDaoCustom, CrudRepository<JLog, Long> {
+public interface JLogDao extends JLogDaoCustom, CrudRepository<JLog, Long> {
 	
 }
 
@@ -25,7 +25,7 @@ public interface LogDao extends LogDaoCustom, CrudRepository<JLog, Long> {
  * DAO自定义接口
  * @author ThinkGem
  */
-interface LogDaoCustom extends BaseDao<JLog> {
+interface JLogDaoCustom extends BaseDao<JLog> {
 
 }
 
@@ -34,6 +34,6 @@ interface LogDaoCustom extends BaseDao<JLog> {
  * @author ThinkGem
  */
 @Repository
-class LogDaoImpl extends BaseDaoImpl<JLog> implements LogDaoCustom {
+class JLogDaoImpl extends BaseDaoImpl<JLog> implements JLogDaoCustom {
 
 }

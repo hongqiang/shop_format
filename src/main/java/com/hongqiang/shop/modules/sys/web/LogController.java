@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.sys.entity.JLog;
-import com.hongqiang.shop.modules.sys.service.LogService;
+import com.hongqiang.shop.modules.sys.service.JLogService;
 
 /**
  * 日志Controller
@@ -32,7 +32,7 @@ import com.hongqiang.shop.modules.sys.service.LogService;
 public class LogController extends BaseController {
 
 	@Autowired
-	private LogService logService;
+	private JLogService logService;
 	
 	@RequiresPermissions("sys:log:view")
 	@RequestMapping(value = {"list", ""})

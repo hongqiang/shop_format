@@ -20,7 +20,7 @@ import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.DateUtils;
 import com.hongqiang.shop.common.utils.StringUtils;
-import com.hongqiang.shop.modules.sys.dao.LogDao;
+import com.hongqiang.shop.modules.sys.dao.JLogDao;
 import com.hongqiang.shop.modules.sys.entity.JLog;
 
 /**
@@ -30,10 +30,10 @@ import com.hongqiang.shop.modules.sys.entity.JLog;
  */
 @Service
 @Transactional(readOnly = true)
-public class LogService extends BaseService {
+public class JLogService extends BaseService {
 
 	@Autowired
-	private LogDao logDao;
+	private JLogDao logDao;
 	
 	public JLog get(Long id) {
 		return logDao.findOne(id);

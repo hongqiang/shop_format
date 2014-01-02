@@ -17,7 +17,7 @@ import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.SpringContextHolder;
 import com.hongqiang.shop.common.utils.StringUtils;
-import com.hongqiang.shop.modules.sys.dao.LogDao;
+import com.hongqiang.shop.modules.sys.dao.JLogDao;
 import com.hongqiang.shop.modules.sys.entity.JLog;
 import com.hongqiang.shop.modules.sys.entity.User;
 import com.hongqiang.shop.modules.sys.utils.UserUtils;
@@ -29,7 +29,7 @@ import com.hongqiang.shop.modules.sys.utils.UserUtils;
  */
 public class LogInterceptor extends BaseService implements HandlerInterceptor {
 
-	private static LogDao logDao = SpringContextHolder.getBean(LogDao.class);
+	private static JLogDao logDao = SpringContextHolder.getBean(JLogDao.class);
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, 
