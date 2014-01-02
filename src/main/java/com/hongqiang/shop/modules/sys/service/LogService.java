@@ -21,7 +21,7 @@ import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.DateUtils;
 import com.hongqiang.shop.common.utils.StringUtils;
 import com.hongqiang.shop.modules.sys.dao.LogDao;
-import com.hongqiang.shop.modules.sys.entity.Log;
+import com.hongqiang.shop.modules.sys.entity.JLog;
 
 /**
  * 日志Service
@@ -35,11 +35,11 @@ public class LogService extends BaseService {
 	@Autowired
 	private LogDao logDao;
 	
-	public Log get(Long id) {
+	public JLog get(Long id) {
 		return logDao.findOne(id);
 	}
 	
-	public Page<Log> find(Page<Log> page, Map<String, Object> paramMap) {
+	public Page<JLog> find(Page<JLog> page, Map<String, Object> paramMap) {
 		DetachedCriteria dc = logDao.createDetachedCriteria();
 
 		Long createById = StringUtils.toLong(paramMap.get("createById"));
@@ -54,7 +54,7 @@ public class LogService extends BaseService {
 
 		String exception = ObjectUtils.toString(paramMap.get("exception"));
 		if (StringUtils.isNotBlank(exception)){
-			dc.add(Restrictions.eq("type", Log.TYPE_EXCEPTION));
+			dc.add(Restrictions.eq("type", JLog.TYPE_EXCEPTION));
 		}
 		
 		Date beginDate = DateUtils.parseDate(paramMap.get("beginDate"));

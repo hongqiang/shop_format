@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.persistence.BaseDao;
 import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.modules.sys.entity.Log;
+import com.hongqiang.shop.modules.sys.entity.JLog;
 
 /**
  * 日志DAO接口
  * @author ThinkGem
  * @version 2013-06-02
  */
-public interface LogDao extends LogDaoCustom, CrudRepository<Log, Long> {
+public interface LogDao extends LogDaoCustom, CrudRepository<JLog, Long> {
 	
 }
 
@@ -25,7 +25,7 @@ public interface LogDao extends LogDaoCustom, CrudRepository<Log, Long> {
  * DAO自定义接口
  * @author ThinkGem
  */
-interface LogDaoCustom extends BaseDao<Log> {
+interface LogDaoCustom extends BaseDao<JLog> {
 
 }
 
@@ -34,6 +34,6 @@ interface LogDaoCustom extends BaseDao<Log> {
  * @author ThinkGem
  */
 @Repository
-class LogDaoImpl extends BaseDaoImpl<Log> implements LogDaoCustom {
+class LogDaoImpl extends BaseDaoImpl<JLog> implements LogDaoCustom {
 
 }

@@ -32,7 +32,7 @@ import com.hongqiang.shop.common.utils.SettingUtils;
 
 
 import com.hongqiang.shop.common.utils.SpringContextHolder;
-import com.hongqiang.shop.modules.sys.entity.Log;
+import com.hongqiang.shop.modules.sys.entity.JLog;
 
 
 /**
@@ -175,7 +175,7 @@ public abstract class BaseController {
 	    if (paramString != null)
 	    {
 	      RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
-	      localRequestAttributes.setAttribute(Log.LOG_CONTENT_ATTRIBUTE_NAME, paramString, 0);
+	      localRequestAttributes.setAttribute(JLog.LOG_CONTENT_ATTRIBUTE_NAME, paramString, 0);
 	    }
 	  }
 	  

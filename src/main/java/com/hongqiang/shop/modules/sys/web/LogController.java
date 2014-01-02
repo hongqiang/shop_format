@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.web.BaseController;
-import com.hongqiang.shop.modules.sys.entity.Log;
+import com.hongqiang.shop.modules.sys.entity.JLog;
 import com.hongqiang.shop.modules.sys.service.LogService;
 
 /**
@@ -37,7 +37,7 @@ public class LogController extends BaseController {
 	@RequiresPermissions("sys:log:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(@RequestParam Map<String, Object> paramMap, HttpServletRequest request, HttpServletResponse response, Model model) {
-        Page<Log> page = logService.find(new Page<Log>(request, response), paramMap); 
+        Page<JLog> page = logService.find(new Page<JLog>(request, response), paramMap); 
         model.addAttribute("page", page);
         model.addAllAttributes(paramMap);
 		return "modules/sys/logList";

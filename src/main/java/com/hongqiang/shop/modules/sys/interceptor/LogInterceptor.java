@@ -18,7 +18,7 @@ import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.SpringContextHolder;
 import com.hongqiang.shop.common.utils.StringUtils;
 import com.hongqiang.shop.modules.sys.dao.LogDao;
-import com.hongqiang.shop.modules.sys.entity.Log;
+import com.hongqiang.shop.modules.sys.entity.JLog;
 import com.hongqiang.shop.modules.sys.entity.User;
 import com.hongqiang.shop.modules.sys.utils.UserUtils;
 
@@ -64,8 +64,8 @@ public class LogInterceptor extends BaseService implements HandlerInterceptor {
 							? "" : request.getParameter((String)param), 100));
 				}
 				
-				Log log = new Log();
-				log.setType(ex == null ? Log.TYPE_ACCESS : Log.TYPE_EXCEPTION);
+				JLog log = new JLog();
+				log.setType(ex == null ? JLog.TYPE_ACCESS : JLog.TYPE_EXCEPTION);
 				log.setCreateBy(user);
 				log.setCreateDate(new Date());
 				log.setRemoteAddr(StringUtils.getRemoteAddr(request));

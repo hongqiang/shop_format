@@ -37,10 +37,10 @@ import com.hongqiang.shop.common.persistence.BaseEntity;
 @Table(name = "sys_log")
 @DynamicInsert @DynamicUpdate
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Log extends BaseEntity {
+public class JLog extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
-	public static final String LOG_CONTENT_ATTRIBUTE_NAME = Log.class.getName() + ".CONTENT";
+	public static final String LOG_CONTENT_ATTRIBUTE_NAME = JLog.class.getName() + ".CONTENT";
 	private Long id;			// 日志编号
 	private String type; 		// 日志类型（1：接入日志；2：错误日志）
 	private User createBy;		// 创建者
@@ -55,11 +55,11 @@ public class Log extends BaseEntity {
 	public static final String TYPE_ACCESS = "1";
 	public static final String TYPE_EXCEPTION = "2";
 	
-	public Log(){
+	public JLog(){
 		super();
 	}
 	
-	public Log(Long id){
+	public JLog(Long id){
 		this();
 		this.id = id;
 	}
