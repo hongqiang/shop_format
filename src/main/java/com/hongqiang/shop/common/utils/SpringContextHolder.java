@@ -55,6 +55,7 @@ public class SpringContextHolder implements ApplicationContextAware,
 		return applicationContext.getBean(requiredType);
 	}
 
+	//和stringUtils类中的getMessage方法相同， 获得i18n字符串
 	public static String getMessage(String code, Object[] args) {
 		LocaleResolver localLocaleResolver = (LocaleResolver) applicationContext
 				.getBean("localeResolver", LocaleResolver.class);

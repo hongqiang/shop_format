@@ -27,8 +27,9 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 	private static final String USE_CACHE = "useCache";
 	private static final String CACHE_REGION = "cacheRegion";
 	private static final String ID = "id";
-//	private static final String COUNT = "count";
-//	private static final String ORDER_BY = "orderBy";
+	//由页面设定多少个，然后调用findpage或者findlist得到个数为count的结果集，返回给前端
+	private static final String COUNT = "count";
+	private static final String ORDER_BY = "orderBy";
 	private static final String ASTERISK = "\\s*,\\s*";
 	private static final String ADDITION = "\\s+";
 
@@ -53,7 +54,7 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 
 	protected Integer getFreemarkerCount(Map<String, TemplateModel> paramMap)
 			throws TemplateModelException {
-		return FreeMarkers.getParameter("count", Integer.class,
+		return FreeMarkers.getParameter(COUNT, Integer.class,
 				paramMap);
 	}
 
@@ -79,7 +80,7 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 	protected List<Order> getFreemarkerOrder(
 			Map<String, TemplateModel> paramMap, String[] paramArrayOfString) throws TemplateModelException {
 		String str1 = StringUtils.trim(FreeMarkers.getParameter(
-				"orderBy", String.class, paramMap));
+				ORDER_BY, String.class, paramMap));
 		ArrayList<Order> localArrayList = new ArrayList<Order>();
 		if (StringUtils.isNotEmpty(str1)) {
 			String[] arrayOfString1 = str1.split(ASTERISK);

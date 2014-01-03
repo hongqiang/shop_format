@@ -97,6 +97,7 @@
 
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 	<property name="contentType" value="text/html; charset=UTF-8" />
+	<property name="prefix" value="${template.prefix}"/>
 	<property name="suffix" value="${template.suffix}" />
 	</bean>
 
