@@ -525,6 +525,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	public <E> Page<E> findPage(Page<E> page, String qlString, List<Object> parameter,Pageable pageable) {
 		 if (pageable == null)
 			 pageable = new Pageable();
@@ -548,7 +549,12 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		}
 		 page.setPageNo(pageable.getPageNumber());
 		 page.setPageSize(pageable.getPageSize());
-		 return find(page,qlString,parameter.toArray());
+		 System.out.println("query="+qlString);
+		 for (Object object : parameter) {
+			 System.out.println("object="+object);
+		}
+		 Query query = createQuery(qlString,parameter.toArray());
+		return new Page<E>(query.list(),count,pageable);
 	}
 	
 	/**

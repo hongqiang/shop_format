@@ -108,14 +108,14 @@ public class ProductController extends BaseController {
 			Iterator<Attribute> localIterator = attributes.iterator();
 			while (localIterator.hasNext()) {
 				Attribute localAttribute = (Attribute) localIterator.next();
-				String str = request.getParameter("attribute_"
-						+ localAttribute.getId());
+				String str = request.getParameter("attribute_"+ localAttribute.getId());
 				if (!StringUtils.isNotEmpty(str))
 					continue;
 				localHashMap.put(localAttribute, str);
 			}
 		}
 		Pageable pageable = new Pageable(pageNumber, pageSize);
+		System.out.println("pageable="+pageable.getPageNumber()+","+pageable.getPageSize());
 		model.addAttribute("orderTypes", Product.OrderType.values());// 布局类型，从前端页面传过来
 		model.addAttribute("productCategory", localProductCategory);
 		model.addAttribute("brand", localBrand);
@@ -132,6 +132,17 @@ public class ProductController extends BaseController {
 				localHashMap, startPrice, endPrice, Boolean.valueOf(true),
 				Boolean.valueOf(true), null, Boolean.valueOf(false), null,
 				null, orderType, pageable));
+		Page<Product> proPage = this.productService.findPage(
+				localProductCategory, localBrand, localPromotion, tags,
+				localHashMap, startPrice, endPrice, Boolean.valueOf(true),
+				Boolean.valueOf(true), null, Boolean.valueOf(false), null,
+				null, orderType, pageable);
+		System.out.println("pageNumber="+pageNumber);
+		System.out.println("page.Number="+proPage.getPageNumber());
+		System.out.println("pageable="+pageable.getPageNumber()+","+pageable.getPageSize());
+		for (Product product : proPage.getList()) {
+			System.out.println("product="+product.getName());
+		}
 		return "/shop/product/list";
 	}
 

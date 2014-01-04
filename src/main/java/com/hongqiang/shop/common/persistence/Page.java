@@ -143,7 +143,7 @@ public class Page<T> {
 	}
 
 	public Page(List<T> resultList, int resultSize,
-			com.hongqiang.shop.common.utils.Pageable pageable2) {
+			com.hongqiang.shop.common.utils.Pageable pageable) {
 		this.setList(resultList);
 		this.setPageSize(resultSize);
 		this.setPageable(pageable);
