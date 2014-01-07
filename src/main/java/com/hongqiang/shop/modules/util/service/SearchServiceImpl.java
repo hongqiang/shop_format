@@ -140,7 +140,7 @@ public class SearchServiceImpl implements SearchService {
 	@Transactional(readOnly = true)
 	public Page<Article> search(String keyword, Pageable pageable) {
 		if (StringUtils.isEmpty(keyword))
-			return new Page<Article>(0, 0);
+			return new Page<Article>();
 		if (pageable == null)
 			pageable = new Pageable();
 		try {
@@ -178,7 +178,7 @@ public class SearchServiceImpl implements SearchService {
 		} catch (ParseException localParseException1) {
 			localParseException1.printStackTrace();
 		}
-		return new Page<Article>(0, 0);
+		return new Page<Article>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -186,7 +186,7 @@ public class SearchServiceImpl implements SearchService {
 	public Page<Product> search(String keyword, BigDecimal startPrice,
 			BigDecimal endPrice, Product.OrderType orderType, Pageable pageable) {
 		if (StringUtils.isEmpty(keyword))
-			return new Page<Product>(0, 0);
+			return new Page<Product>();
 		if (pageable == null)
 			pageable = new Pageable();
 		try {
@@ -279,7 +279,7 @@ public class SearchServiceImpl implements SearchService {
 				arrayOfSortField = new SortField[] {
 						new SortField("isTop", 3, true),
 						new SortField(null, 0),
-						new SortField("modifyDate", 6, true) };
+						new SortField("updateDate", 6, true) };
 			localFullTextQuery.setSort(new Sort(arrayOfSortField));
 			localFullTextQuery.setFirstResult((pageable.getPageNumber() - 1)
 					* pageable.getPageSize());
@@ -289,6 +289,6 @@ public class SearchServiceImpl implements SearchService {
 		} catch (Exception localException1) {
 			localException1.printStackTrace();
 		}
-		return new Page<Product>(0, 0);
+		return new Page<Product>();
 	}
 }

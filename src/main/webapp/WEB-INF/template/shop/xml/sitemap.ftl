@@ -12,7 +12,7 @@
 	[#list articles as article]
 		<url>
 			<loc>${setting.siteUrl}${article.path}</loc>
-			<lastmod>${article.modifyDate?string("yyyy-MM-dd")}</lastmod>
+			<lastmod>${article.updateDate?string("yyyy-MM-dd")}</lastmod>
 			<changefreq>weekly</changefreq>
 			<priority>0.6</priority>
 		</url>
@@ -21,7 +21,7 @@
 	[#list products as product]
 		<url>
 			<loc>${setting.siteUrl}${product.path}</loc>
-			<lastmod>${product.modifyDate?string("yyyy-MM-dd")}</lastmod>
+			<lastmod>${product.updateDate?string("yyyy-MM-dd")}</lastmod>
 			<changefreq>weekly</changefreq>
 			<priority>0.6</priority>
 		</url>
@@ -30,7 +30,7 @@
 	[#list brands as brand]
 		<url>
 			<loc>${setting.siteUrl}${brand.path}</loc>
-			<lastmod>${brand.modifyDate?string("yyyy-MM-dd")}</lastmod>
+			<lastmod>${brand.updateDate?string("yyyy-MM-dd")}</lastmod>
 			<changefreq>weekly</changefreq>
 			<priority>0.5</priority>
 		</url>
@@ -39,7 +39,7 @@
 	[#list promotions as promotion]
 		<url>
 			<loc>${setting.siteUrl}${promotion.path}</loc>
-			<lastmod>${promotion.modifyDate?string("yyyy-MM-dd")}</lastmod>
+			<lastmod>${promotion.updateDate?string("yyyy-MM-dd")}</lastmod>
 			<changefreq>weekly</changefreq>
 			<priority>0.5</priority>
 		</url>

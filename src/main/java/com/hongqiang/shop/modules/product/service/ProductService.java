@@ -80,7 +80,7 @@ public abstract interface ProductService {
 
 	public boolean isPurchased(Member paramMember, Product paramProduct);
 
-	public long viewHits(String id);
+	public long viewHits(Long id);
 
 	public void save(Product brand);
 

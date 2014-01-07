@@ -948,7 +948,7 @@ public class Product extends BaseEntity {
 		HashMap<String, Object> localHashMap = new HashMap<String, Object>();
 		localHashMap.put("id", getId());
 		localHashMap.put("createDate", getCreateDate());
-		localHashMap.put("modifyDate", getUpdateDate());
+		localHashMap.put("updateDate", getUpdateDate());
 		localHashMap.put("sn", getSn());
 		localHashMap.put("name", getName());
 		localHashMap.put("fullName", getFullName());

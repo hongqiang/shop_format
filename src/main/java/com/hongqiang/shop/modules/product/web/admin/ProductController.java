@@ -423,7 +423,7 @@ public class ProductController extends BaseController {
 						if (j == 0) {
 							BeanUtils.copyProperties(product, localProduct,
 									new String[] { "id", "createDate",
-											"modifyDate", "fullName",
+											"updateDate", "fullName",
 											"allocatedStock", "score",
 											"totalScore", "scoreCount", "hits",
 											"weekHits", "monthHits", "sales",
@@ -500,7 +500,7 @@ public class ProductController extends BaseController {
 			product.setSpecificationValues(null);
 			BeanUtils
 					.copyProperties(product, localProduct, new String[] { "id",
-							"createDate", "modifyDate", "fullName",
+							"createDate", "updateDate", "fullName",
 							"allocatedStock", "score", "totalScore",
 							"scoreCount", "hits", "weekHits", "monthHits",
 							"sales", "weekSales", "monthSales", "weekHitsDate",

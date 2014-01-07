@@ -47,6 +47,7 @@ public class ArticleController extends BaseController
   @RequestMapping(value={"/search"}, method=RequestMethod.GET)
   public String search(String keyword, Integer pageNumber, ModelMap model)
   {
+	  System.out.println("keyword="+keyword);
     if (StringUtils.isEmpty(keyword))
       return SHOP_ERROR_PAGE;
     Pageable localPageable = new Pageable(pageNumber, Integer.valueOf(PAGE_NUMBER));
@@ -57,7 +58,7 @@ public class ArticleController extends BaseController
 
   @RequestMapping(value={"/hits/{id}"}, method=RequestMethod.GET)
   @ResponseBody
-  public Long hits(@PathVariable String id)
+  public Long hits(@PathVariable Long id)
   {
     return Long.valueOf(this.articleService.viewHits(id));
   }

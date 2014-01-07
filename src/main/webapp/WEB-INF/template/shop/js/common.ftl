@@ -1,14 +1,14 @@
 /*
- * Copyright 2005-2013 shopxx.net. All rights reserved.
- * Support: http://www.shopxx.net
- * License: http://www.shopxx.net/license
+ * Copyright 2005-2013 shop.net. All rights reserved.
+ * Support: http://www.shop.net
+ * License: http://www.shop.net/license
  * 
  * JavaScript - Common
  * Version: 3.0
  */
 
-var shopxx = {
-	base: "${base}",
+var shop = {
+	base: "${base}${frontPath}",
 	locale: "${locale}"
 };
 
@@ -137,7 +137,7 @@ function message(code) {
 	$.checkLogin = function() {
 		var result = false;
 		$.ajax({
-			url: shopxx.base + "/login/check.jhtml",
+			url: shop.base + "/login/check.jhtml",
 			type: "GET",
 			dataType: "json",
 			cache: false,
@@ -151,7 +151,7 @@ function message(code) {
 
 	// 跳转登录
 	$.redirectLogin = function (redirectUrl, message) {
-		var href = shopxx.base + "/login.jhtml";
+		var href = shop.base + "/login.jhtml";
 		if (redirectUrl != null) {
 			href += "?redirectUrl=" + encodeURIComponent(redirectUrl);
 		}

@@ -208,7 +208,7 @@ $().ready(function() {
 					<a href="javascript:;" class="sort" name="createDate">${message("admin.productNotify.createDate")}</a>
 				</th>
 				<th>
-					<a href="javascript:;" class="sort" name="modifyDate">${message("admin.productNotify.notifyDate")}</a>
+					<a href="javascript:;" class="sort" name="updateDate">${message("admin.productNotify.notifyDate")}</a>
 				</th>
 				<th>
 					<span>${message("admin.productNotify.status")}</span>
@@ -240,7 +240,7 @@ $().ready(function() {
 					</td>
 					<td>
 						[#if productNotify.hasSent]
-							<span title="${productNotify.modifyDate?string("yyyy-MM-dd HH:mm:ss")}">${productNotify.modifyDate}</span>
+							<span title="${productNotify.updateDate?string("yyyy-MM-dd HH:mm:ss")}">${productNotify.updateDate}</span>
 						[#else]
 							-
 						[/#if]

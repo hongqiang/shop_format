@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,9 +13,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.config.Global;
 //文章分类
 @Entity
 @Table(name="hq_article_category")
@@ -22,7 +26,7 @@ public class ArticleCategory extends OrderEntity
 {
   private static final long serialVersionUID = -5132652107151648662L;
   public static final String TREE_PATH_SEPARATOR = ",";
-  private static final String filePath = "/article/list";
+  private static final String filePath = Global.getFrontPath()+"/article/list/";
 
   private String name;// 分类名称
   private String seoTitle;// 页面标题

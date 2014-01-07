@@ -33,7 +33,6 @@ import com.hongqiang.shop.common.utils.CacheUtils;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
-import com.hongqiang.shop.modules.entity.Article;
 import com.hongqiang.shop.modules.entity.Attribute;
 import com.hongqiang.shop.modules.entity.Brand;
 import com.hongqiang.shop.modules.entity.Member;
@@ -172,16 +171,16 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		return this.productDao.isPurchased(member, product);
 	}
 
-	public long viewHits(String id) {
-		Long hits = (Long) CacheUtils.get(HITS_CACHE_NAME, id);
+	public long viewHits(Long id) {
+		Long hits = (Long) CacheUtils.get(HITS_CACHE_NAME, id.toString());
 		if (hits == null) {
-			Article localArticle = (Article) this.productDao.find(id);
-			if (localArticle == null)
+			Product product = (Product) this.productDao.find(id);
+			if (product == null)
 				return 0L;
-			hits = localArticle.getHits();
+			hits = product.getHits();
 		}
 		Long returnHits = Long.valueOf(hits.longValue() + 1L);
-		CacheUtils.put(HITS_CACHE_NAME, id, returnHits);
+		CacheUtils.put(HITS_CACHE_NAME, id.toString(), returnHits);
 		long l = System.currentTimeMillis();
 		if (l > this.systemTime + HITS_CACHE_INTERVAL) {
 			this.systemTime = l;

@@ -53,14 +53,14 @@ $().ready(function() {
 		<div class="topNav clearfix">
 			<ul>
 				<li id="headerLogin" class="headerLogin">
-					<a href="${base}/login.jhtml">${message("shop.header.login")}</a>|
+					<a href="${base}${frontPath}/login.jhtml">${message("shop.header.login")}</a>|
 				</li>
 				<li id="headerRegister" class="headerRegister">
-					<a href="${base}/register.jhtml">${message("shop.header.register")}</a>|
+					<a href="${base}${frontPath}/register.jhtml">${message("shop.header.register")}</a>|
 				</li>
 				<li id="headerUsername" class="headerUsername"></li>
 				<li id="headerLogout" class="headerLogout">
-					<a href="${base}/logout.jhtml">[${message("shop.header.logout")}]</a>|
+					<a href="${base}${frontPath}/logout.jhtml">[${message("shop.header.logout")}]</a>|
 				</li>
 				[@navigation_list position = "top"]
 					[#list navigations as navigation]
@@ -73,7 +73,7 @@ $().ready(function() {
 			</ul>
 		</div>
 		<div class="cart">
-			<a href="${base}/cart/list.jhtml">${message("shop.header.cart")}</a>
+			<a href="${base}${frontPath}/cart/list.jhtml">${message("shop.header.cart")}</a>
 		</div>
 		[#if setting.phone??]
 			<div class="phone">
@@ -100,7 +100,7 @@ $().ready(function() {
 				[@tag_list type="product" count = 3]
 					[#list tags as tag]
 						<li[#if tag.icon??] class="icon" style="background: url(${tag.icon}) right no-repeat;"[/#if]>
-							<a href="${base}/product/list.jhtml?tagIds=${tag.id}">${tag.name}</a>
+							<a href="${base}${frontPath}/product/list.jhtml?tagIds=${tag.id}">${tag.name}</a>
 						</li>
 					[/#list]
 				[/@tag_list]
@@ -109,12 +109,12 @@ $().ready(function() {
 				[#if setting.hotSearches?has_content]
 					${message("shop.header.hotSearch")}:
 					[#list setting.hotSearches as hotSearch]
-						<a href="${base}/product/search.jhtml?keyword=${hotSearch?url}">${hotSearch}</a>
+						<a href="${base}${frontPath}/product/search.jhtml?keyword=${hotSearch?url}">${hotSearch}</a>
 					[/#list]
 				[/#if]
 			</div>
 			<div class="search">
-				<form id="productSearchForm" action="${base}/product/search.jhtml" method="get">
+				<form id="productSearchForm" action="${base}${frontPath}/product/search.jhtml" method="get">
 					<input name="keyword" class="keyword" value="${productKeyword!message("shop.header.keyword")}" maxlength="30" />
 					<button type="submit">${message("shop.header.search")}</button>
 				</form>

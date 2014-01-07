@@ -70,7 +70,7 @@
 						<a href="${base}/">${message("shop.path.home")}</a>
 					</li>
 					<li>
-						<a href="${base}/brand/list/1.jhtml">${message("shop.brand.title")}</a>
+						<a href="${base}${frontPath}/brand/list/1.jhtml">${message("shop.brand.title")}</a>
 					</li>
 				</ul>
 			</div>
@@ -87,7 +87,7 @@
 				<div class="product">
 					<ul>
 						<li class="title">
-							<a href="${base}/product/list.jhtml?brandId=${brand.id}">${message("shop.brand.product")}</a>
+							<a href="${base}${frontPath}/product/list.jhtml?brandId=${brand.id}">${message("shop.brand.product")}</a>
 						</li>
 						[#list brand.productCategories as productCategory]
 							<li>

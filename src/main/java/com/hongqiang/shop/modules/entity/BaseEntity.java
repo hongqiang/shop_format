@@ -54,6 +54,7 @@ public abstract class BaseEntity implements Serializable {
 	public static final String CREATE_DATE_PROPERTY_NAME = "createDate";
 	public static final String MODIFY_DATE_PROPERTY_NAME = "updateDate";
 	public static final String fileSuffix = ".jhtml";
+//	public static final String fileSuffix = ".html";
 	// 显示/隐藏
 	public static final String SHOW = "1";
 	public static final String HIDE = "0";

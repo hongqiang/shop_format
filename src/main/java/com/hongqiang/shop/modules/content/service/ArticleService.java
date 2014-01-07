@@ -25,7 +25,7 @@ public interface ArticleService
   
   public Article find(Long id);
   
-  public long viewHits(String id);
+  public long viewHits(Long id);
   
   public void save(Article article);
   

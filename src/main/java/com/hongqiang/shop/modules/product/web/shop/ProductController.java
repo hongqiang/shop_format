@@ -1,6 +1,8 @@
 package com.hongqiang.shop.modules.product.web.shop;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,21 +10,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-
-//import net.shopxx.Pageable;
-//import net.shopxx.ResourceNotFoundException;
-//import net.shopxx.entity.Attribute;
-//import net.shopxx.entity.Brand;
-//import net.shopxx.entity.Product;
-//import net.shopxx.entity.Product.OrderType;
-//import net.shopxx.entity.ProductCategory;
-//import net.shopxx.entity.Promotion;
-//import net.shopxx.service.BrandService;
-//import net.shopxx.service.ProductCategoryService;
-//import net.shopxx.service.ProductService;
-//import net.shopxx.service.PromotionService;
-//import net.shopxx.service.SearchService;
-//import net.shopxx.service.TagService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -115,7 +102,6 @@ public class ProductController extends BaseController {
 			}
 		}
 		Pageable pageable = new Pageable(pageNumber, pageSize);
-		System.out.println("pageable="+pageable.getPageNumber()+","+pageable.getPageSize());
 		model.addAttribute("orderTypes", Product.OrderType.values());// 布局类型，从前端页面传过来
 		model.addAttribute("productCategory", localProductCategory);
 		model.addAttribute("brand", localBrand);
@@ -132,17 +118,6 @@ public class ProductController extends BaseController {
 				localHashMap, startPrice, endPrice, Boolean.valueOf(true),
 				Boolean.valueOf(true), null, Boolean.valueOf(false), null,
 				null, orderType, pageable));
-		Page<Product> proPage = this.productService.findPage(
-				localProductCategory, localBrand, localPromotion, tags,
-				localHashMap, startPrice, endPrice, Boolean.valueOf(true),
-				Boolean.valueOf(true), null, Boolean.valueOf(false), null,
-				null, orderType, pageable);
-		System.out.println("pageNumber="+pageNumber);
-		System.out.println("page.Number="+proPage.getPageNumber());
-		System.out.println("pageable="+pageable.getPageNumber()+","+pageable.getPageSize());
-		for (Product product : proPage.getList()) {
-			System.out.println("product="+product.getName());
-		}
 		return "/shop/product/list";
 	}
 
@@ -151,6 +126,7 @@ public class ProductController extends BaseController {
 			BigDecimal startPrice, BigDecimal endPrice,
 			Product.OrderType orderType, Integer pageNumber, Integer pageSize,
 			HttpServletRequest request, ModelMap model) {
+		System.out.println("promotionId="+promotionId);
 		Brand localBrand = (Brand) this.brandService.find(brandId);
 		Promotion localPromotion = (Promotion) this.promotionService
 				.find(promotionId);
@@ -173,6 +149,7 @@ public class ProductController extends BaseController {
 				localBrand, localPromotion, tags, null, startPrice, endPrice,
 				Boolean.valueOf(true), Boolean.valueOf(true), null,
 				Boolean.valueOf(false), null, null, orderType, localPageable);
+		System.out.println("products.getList()="+products.getList().size());
 		for (Product product : products.getList()) {
 			System.out.println("name="+product.getName());
 		}
@@ -182,7 +159,9 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = { "/search" }, method = RequestMethod.GET)
 	public String search(String keyword, BigDecimal startPrice,
 			BigDecimal endPrice, Product.OrderType orderType,
-			Integer pageNumber, Integer pageSize, ModelMap model) {
+			Integer pageNumber, Integer pageSize, ModelMap model) throws UnsupportedEncodingException {
+		System.out.println("keywords="+keyword);
+		System.out.println(URLDecoder.decode(keyword,"UTF-8"));
 		if (StringUtils.isEmpty(keyword))
 			return SHOP_ERROR_PAGE;
 		Pageable localPageable = new Pageable(pageNumber, pageSize);
@@ -198,7 +177,7 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = { "/hits/{id}" }, method = RequestMethod.GET)
 	@ResponseBody
-	public Long hits(@PathVariable String id) {
+	public Long hits(@PathVariable Long id) {
 		return Long.valueOf(this.productService.viewHits(id));
 	}
 

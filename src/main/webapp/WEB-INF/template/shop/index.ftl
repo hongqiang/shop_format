@@ -119,7 +119,7 @@ $().ready(function() {
 		<div class="span18">
 			<div class="hotBrand clearfix">
 				<div class="title">
-					<a href="${base}/brand/list/1.jhtml">${message("shop.index.allBrand")}</a>
+					<a href="${base}${frontPath}/brand/list/1.jhtml">${message("shop.index.allBrand")}</a>
 					<strong>${message("shop.index.hotBrand")}</strong>BRAND
 				</div>
 				<ul>
@@ -134,7 +134,7 @@ $().ready(function() {
 			</div>
 			<div class="hotProductCategory">
 				<div class="title">
-					<a href="${base}/product_category.jhtml">${message("shop.index.allProductCategory")}</a>
+					<a href="${base}${frontPath}/product_category.jhtml">${message("shop.index.allProductCategory")}</a>
 					<strong>${message("shop.index.hotProductCategory")}</strong>CATEGORY
 				</div>
 				<div class="content">
@@ -163,7 +163,7 @@ $().ready(function() {
 					[@promotion_list hasEnded = false count = 2]
 						[#list promotions as promotion]
 							<li>
-								<a href="${base}/product/list.jhtml?promotionId=${promotion.id}" target="_blank">${promotion.name}</a>
+								<a href="${base}${frontPath}/product/list.jhtml?promotionId=${promotion.id}" target="_blank">${promotion.name}</a>
 							</li>
 						[/#list]
 					[/@promotion_list]
@@ -226,7 +226,7 @@ $().ready(function() {
 				[@product_category_root_list count = 3]
 					<div class="title">
 						<strong>${message("shop.index.hotProduct")}</strong>
-						<a href="${base}/product/list.jhtml?tagIds=1" target="_blank"></a>
+						<a href="${base}${frontPath}/product/list.jhtml?tagIds=1" target="_blank"></a>
 					</div>
 					<ul class="tab">
 						[#list productCategories as productCategory]
@@ -257,7 +257,7 @@ $().ready(function() {
 				[@product_category_root_list count = 3]
 					<div class="title">
 						<strong>${message("shop.index.newProduct")}</strong>
-						<a href="${base}/product/list.jhtml?tagIds=2" target="_blank"></a>
+						<a href="${base}${frontPath}/product/list.jhtml?tagIds=2" target="_blank"></a>
 					</div>
 					<ul class="tab">
 						[#list productCategories as productCategory]
@@ -296,7 +296,7 @@ $().ready(function() {
 						[/#list]
 					[/@friend_link_list]
 					<dd class="more">
-						<a href="${base}/friend_link.jhtml">${message("shop.index.more")}</a>
+						<a href="${base}${frontPath}/friend_link.jhtml">${message("shop.index.more")}</a>
 					</dd>
 				</dl>
 			</div>

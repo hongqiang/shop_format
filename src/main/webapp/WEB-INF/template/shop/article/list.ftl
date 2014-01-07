@@ -102,7 +102,7 @@ $().ready(function() {
 			<div class="articleSearch">
 				<div class="title">${message("shop.article.search")}</div>
 				<div class="content">
-					<form id="articleSearchForm" action="${base}/article/search.jhtml" method="get">
+					<form id="articleSearchForm" action="${base}${frontPath}/article/search.jhtml" method="get">
 						<input type="text" name="keyword" value="${message("shop.article.keyword")}" maxlength="30" />
 						<button type="submit">${message("shop.article.searchSubmit")}</button>
 					</form>

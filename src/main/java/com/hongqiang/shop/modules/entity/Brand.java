@@ -3,6 +3,7 @@ package com.hongqiang.shop.modules.entity;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,14 +15,17 @@ import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.config.Global;
 
 @Entity
 @Table(name = "hq_brand")
 public class Brand extends OrderEntity {
 	private static final long serialVersionUID = -6109590619136943215L;
-	private static final String filePath = "/brand/content";
+	private static final String filePath =  Global.getFrontPath()+"/brand/content/";
 	private String name;// 商标名称
 	private Type type;// 商标类型
 	private String logo;// Logo

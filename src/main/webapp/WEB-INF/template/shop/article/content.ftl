@@ -28,7 +28,7 @@ $().ready(function() {
 
 	// 查看点击数
 	$.ajax({
-		url: "${base}/article/hits/${article.id}.jhtml",
+		url: "${base}${frontPath}/article/hits/${article.id}.jhtml",
 		type: "GET",
 		success: function(data) {
 			$hits.text(data);

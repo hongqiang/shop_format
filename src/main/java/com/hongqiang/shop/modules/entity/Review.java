@@ -10,8 +10,11 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.config.Global;
 
 //评论
 @Entity
@@ -23,7 +26,8 @@ public class Review extends BaseEntity {
 	}
 
 	private static final long serialVersionUID = 8795901519290584100L;
-	private static final String filePath = "/review/content";
+//	private static final String filePath = "/review/content/";
+	private static final String filePath = Global.getFrontPath()+"/review/content/";
 	private Integer score;// 评论分数
 	private String content;// 评论内容
 	private Boolean isShow;// 是否显示

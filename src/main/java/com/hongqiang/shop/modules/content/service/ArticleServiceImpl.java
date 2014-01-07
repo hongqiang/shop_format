@@ -91,8 +91,10 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		return this.articleDao.find(id);
 	}
 
-	public long viewHits(String id){
-		Long hits = (Long)CacheUtils.get(HITS_CACHE_NAME, id);
+	public long viewHits(Long id){
+		System.out.println("id="+id);
+		System.out.println("idString="+id.toString());
+		Long hits = (Long)CacheUtils.get(HITS_CACHE_NAME, id.toString());
 		if (hits == null) {
 			Article localArticle = (Article) this.articleDao.find(id);
 			if (localArticle == null)
@@ -100,7 +102,7 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 			hits = localArticle.getHits();
 		}
 		Long returnHits = Long.valueOf(hits.longValue() + 1L);
-		CacheUtils.put(HITS_CACHE_NAME, id, returnHits);
+		CacheUtils.put(HITS_CACHE_NAME, id.toString(), returnHits);
 		long l = System.currentTimeMillis();
 		if (l > this.systemTime + HITS_CACHE_INTERVAL) {
 			this.systemTime = l;

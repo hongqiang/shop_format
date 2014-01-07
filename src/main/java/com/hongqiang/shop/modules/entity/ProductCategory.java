@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,17 +17,19 @@ import javax.persistence.OrderBy;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.hongqiang.shop.common.config.Global;
 
 @Entity
 @Table(name = "hq_product_category")
 public class ProductCategory extends OrderEntity {
 	private static final long serialVersionUID = 1L;
 	public static final String TREE_PATH_SEPARATOR = ",";// 树路径分隔符
-//	private static final String filePath = ${frontPath}+"/product/list/";
-	private static final String filePath = "/f/product/list/";
+	private static final String filePath = Global.getFrontPath()+"/product/list/";
 	
 	private String name;// 分类名称
 	private String seoKeywords;// 页面关键词

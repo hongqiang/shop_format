@@ -59,24 +59,20 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	}
 
 	@Transactional(readOnly = true)
-	public int build(String templatePath, String staticPath,
-			Map<String, Object> model) {
+	public int build(String templatePath, String staticPath,Map<String, Object> model) {
 		Assert.hasText(templatePath);
 		Assert.hasText(staticPath);
 		FileOutputStream localFileOutputStream = null;
 		OutputStreamWriter localOutputStreamWriter = null;
 		BufferedWriter localBufferedWriter = null;
 		try {
-			freemarker.template.Template localTemplate = this.freeMarkerConfigurer
-					.getConfiguration().getTemplate(templatePath);
-			File localFile1 = new File(
-					this.servletContext.getRealPath(staticPath));
+			freemarker.template.Template localTemplate = this.freeMarkerConfigurer.getConfiguration().getTemplate(templatePath);
+			File localFile1 = new File(this.servletContext.getRealPath(staticPath));
 			File localFile2 = localFile1.getParentFile();
 			if (!localFile2.exists())
 				localFile2.mkdirs();
 			localFileOutputStream = new FileOutputStream(localFile1);
-			localOutputStreamWriter = new OutputStreamWriter(
-					localFileOutputStream, "UTF-8");
+			localOutputStreamWriter = new OutputStreamWriter(localFileOutputStream, "UTF-8");
 			localBufferedWriter = new BufferedWriter(localOutputStreamWriter);
 			localTemplate.process(model, localBufferedWriter);
 			localBufferedWriter.flush();
@@ -100,16 +96,14 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	public int build(Article article) {
 		Assert.notNull(article);
 		delete(article);
-		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService
-				.get("articleContent");
+		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService.get("articleContent");
 		int i = 0;
 		if (article.getIsPublication().booleanValue()) {
 			HashMap<String, Object> localHashMap = new HashMap<String, Object>();
 			localHashMap.put("article", article);
 			for (int j = 1; j <= article.getTotalPages(); j++) {
 				article.setPageNumber(Integer.valueOf(j));
-				i += build(localTemplate.getTemplatePath(), article.getPath(),
-						localHashMap);
+				i += build(localTemplate.getTemplatePath(), article.getPath(),localHashMap);
 			}
 			article.setPageNumber(null);
 		}
@@ -120,22 +114,19 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	public int build(Product product) {
 		Assert.notNull(product);
 		delete(product);
-		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService
-				.get("productContent");
+		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService.get("productContent");
 		int i = 0;
 		if (product.getIsMarketable().booleanValue()) {
 			HashMap<String, Object> localHashMap = new HashMap<String, Object>();
 			localHashMap.put("product", product);
-			i += build(localTemplate.getTemplatePath(), product.getPath(),
-					localHashMap);
+			i += build(localTemplate.getTemplatePath(), product.getPath(),localHashMap);
 		}
 		return i;
 	}
 
 	@Transactional(readOnly = true)
 	public int buildIndex() {
-		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService
-				.get("index");
+		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService.get("index");
 		return build(localTemplate.getTemplatePath(),
 				localTemplate.getStaticPath());
 	}
@@ -143,24 +134,22 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 	@Transactional(readOnly = true)
 	public int buildSitemap() {
 		int i = 0;
-		com.hongqiang.shop.modules.utils.Template localTemplate1 = this.templateService
-				.get("sitemapIndex");
-		com.hongqiang.shop.modules.utils.Template localTemplate2 = this.templateService
-				.get("sitemap");
+		com.hongqiang.shop.modules.utils.Template localTemplate1 = this.templateService.get("sitemapIndex");
+		com.hongqiang.shop.modules.utils.Template localTemplate2 = this.templateService.get("sitemap");
 		HashMap<String, Object> localHashMap = new HashMap<String, Object>();
 		ArrayList<String> localArrayList = new ArrayList<String>();
 		int j = 0;
 		int k = 0;
 		int m = 0;
 		int n = STATIC_SIZE.intValue();
-		while (true)
+		while (true){
 			try {
 				localHashMap.put("index", Integer.valueOf(k));
 				String str1 = localTemplate2.getTemplatePath();
-				String str2 = FreeMarkers.renderString(
-						localTemplate2.getStaticPath(), localHashMap);
-				if (j != 0)
+				String str2 = FreeMarkers.renderString(localTemplate2.getStaticPath(), localHashMap);
+				if (j != 0){
 					continue;
+				}
 				List localList = this.articleDao.findList(Integer.valueOf(m),
 						Integer.valueOf(n), null, null);
 				localHashMap.put("articles", localList);
@@ -239,7 +228,7 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				localHashMap.put("staticPaths", localArrayList);
 				i += build(localTemplate1.getTemplatePath(),
 						localTemplate1.getStaticPath(), localHashMap);
-				if (m >= n)//
+				if (m < n)//
 					break;
 				localHashMap.clear();
 				k++;
@@ -250,6 +239,7 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 			} catch (Exception localException) {
 				localException.printStackTrace();
 			}
+		}	
 		return i;
 	}
 
@@ -269,27 +259,25 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 
 	@Transactional(readOnly = true)
 	public int buildAll() {
+		int pageCount =20;
 		int i = 0;
-		List localList;
-		Iterator localIterator;
-		Object localObject;
-		for (int j = 0; j < this.articleDao.count(new Filter[0]); j += 20) {
-			localList = this.articleDao.findList(Integer.valueOf(j),
-					Integer.valueOf(20), null, null);
-			localIterator = localList.iterator();
-			while (localIterator.hasNext()) {
-				localObject = (Article) localIterator.next();
-				i += build((Article) localObject);
+		for (int j = 0; j < this.articleDao.count(new Filter[0]); j += pageCount) {
+			List<Article> articles = this.articleDao.findList(Integer.valueOf(j),
+					Integer.valueOf(pageCount), null, null);
+			Iterator<Article> articleIterator = articles.iterator();
+			while (articleIterator.hasNext()) {
+				Article article = (Article) articleIterator.next();
+				i += build(article);
 			}
 			this.articleDao.clear();
 		}
-		for (int j = 0; j < this.productDao.count(new Filter[0]); j += 20) {
-			localList = this.productDao.findList(Integer.valueOf(j),
-					Integer.valueOf(20), null, null);
-			localIterator = localList.iterator();
-			while (localIterator.hasNext()) {
-				localObject = (Product) localIterator.next();
-				i += build((Product) localObject);
+		for (int j = 0; j < this.productDao.count(new Filter[0]); j += pageCount) {
+			List<Product> products = this.productDao.findList(Integer.valueOf(j),
+					Integer.valueOf(pageCount), null, null);
+			Iterator<Product> productIterator = products.iterator();
+			while (productIterator.hasNext()) {
+				Product product = (Product) productIterator.next();
+				i += build(product);
 			}
 			this.productDao.clear();
 		}

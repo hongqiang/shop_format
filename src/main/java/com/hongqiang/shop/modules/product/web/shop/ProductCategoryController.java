@@ -10,8 +10,7 @@ import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 
 @Controller("shopProductCategoryController")
-//@RequestMapping(value = "${frontPath}/product_category")
-@RequestMapping(value = "/product_category")
+@RequestMapping(value = "${frontPath}/product_category")
 public class ProductCategoryController extends BaseController {
 
 	@Autowired

@@ -409,11 +409,11 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 			params.add(brand);
 		}
 		if (promotion != null) {
-			sqlString += " and pPromotion =?";
+			sqlString += " and (pPromotion =?";
 			params.add(promotion);
-			sqlString += " and pcPromotion =?";
+			sqlString += " or pcPromotion =?";
 			params.add(promotion);
-			sqlString += " and bPromotion =?";
+			sqlString += " or bPromotion =?)";
 			params.add(promotion);
 		}
 		if (attributeValue != null) {

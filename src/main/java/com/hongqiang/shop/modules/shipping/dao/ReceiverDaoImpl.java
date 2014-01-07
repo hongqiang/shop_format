@@ -28,7 +28,7 @@ public class ReceiverDaoImpl extends BaseDaoImpl<Receiver> implements
 					.setParameter("member", member).getSingleResult();
 		} catch (NoResultException localNoResultException2) {
 			try {
-				String str2 = "select receiver from Receiver receiver where receiver.member = :member order by receiver.modifyDate desc";
+				String str2 = "select receiver from Receiver receiver where receiver.member = :member order by receiver.updateDate desc";
 				return (Receiver) this.getEntityManager()
 						.createQuery(str2, Receiver.class)
 						.setFlushMode(FlushModeType.COMMIT)

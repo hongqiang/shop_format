@@ -13,7 +13,6 @@ import com.hongqiang.shop.modules.entity.ProductImage;
 import com.hongqiang.shop.modules.product.service.ProductImageService;
 
 @Controller
-//@RequestMapping({ "${adminPath}/e" })
 public class FileUploadController {
 	
 	@Autowired

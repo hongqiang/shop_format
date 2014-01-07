@@ -57,9 +57,9 @@ public class ReviewServiceImpl extends BaseService implements ReviewService {
 			Review.Type type, Boolean isShow, Integer count,
 			List<Filter> filters, List<Order> orders) {
 		Product product = this.productDao.find(productId);
-		if (product == null) {
-			return null;
-		}
+//		if (product == null) {
+//			return null;
+//		}
 		return this.reviewDao.findList(member, product, type, isShow, count,
 				filters, orders);
 	}
@@ -70,9 +70,9 @@ public class ReviewServiceImpl extends BaseService implements ReviewService {
 			Review.Type type, Boolean isShow, Integer count,
 			List<Filter> filters, List<Order> orders, String cacheRegion) {
 		Product product = this.productDao.find(productId);
-		if (product == null) {
-			return null;
-		}
+//		if (product == null) {
+//			return null;
+//		}
 		return this.reviewDao.findList(member, product, type, isShow, count,
 				filters, orders);
 	}
