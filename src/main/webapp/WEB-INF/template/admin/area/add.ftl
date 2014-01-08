@@ -30,7 +30,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.area.add")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.area.add")}
 	</div>
 	<form id="inputForm" action="save.jhtml" method="post">
 		[#if parent??]

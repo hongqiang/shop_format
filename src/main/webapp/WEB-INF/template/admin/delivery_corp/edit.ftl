@@ -24,7 +24,7 @@ $().ready(function() {
 	
 	// 物流公司选择
 	$.ajax({
-		url: "${base}/resources/admin/xml/delivery_corp.xml",
+		url: "${base}${adminPath}/resources/admin/xml/delivery_corp.xml",
 		type: "GET",
 		dataType: "xml",
 		success: function(xml) {
@@ -71,7 +71,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.deliveryCorp.edit")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.deliveryCorp.edit")}
 	</div>
 	<form id="inputForm" action="update.jhtml" method="post">
 		<input type="hidden" name="id" value="${deliveryCorp.id}" />

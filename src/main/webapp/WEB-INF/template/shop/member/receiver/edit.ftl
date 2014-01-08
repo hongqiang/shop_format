@@ -21,7 +21,7 @@ $().ready(function() {
 	
 	// 地区选择
 	$areaId.lSelect({
-		url: "${base}/common/area.jhtml"
+		url: "${base}${frontPath}/common/area.jhtml"
 	});
 	
 	$.validator.addMethod("requiredOne", 

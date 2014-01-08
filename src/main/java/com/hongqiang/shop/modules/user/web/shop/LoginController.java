@@ -104,8 +104,8 @@ public class LoginController extends BaseController {
 			return Message.error("shop.login.unknownAccount", new Object[0]);
 		if (!localMember.getIsEnabled().booleanValue())
 			return Message.error("shop.login.disabledAccount", new Object[0]);
-		int i;
-		if (localMember.getIsLocked().booleanValue())
+		int i=0;
+		if (localMember.getIsLocked().booleanValue()){
 			if (ArrayUtils.contains(localSetting.getAccountLockTypes(),
 					Setting.AccountLockType.member)) {
 				i = localSetting.getAccountLockTime().intValue();
@@ -129,6 +129,7 @@ public class LoginController extends BaseController {
 				localMember.setLockedDate(null);
 				this.memberService.update(localMember);
 			}
+		}
 		if (!DigestUtils.md5Hex(str).equals(localMember.getPassword())) {
 			i = localMember.getLoginFailureCount().intValue() + 1;
 			if (i >= localSetting.getAccountLockCount().intValue()) {
@@ -148,6 +149,7 @@ public class LoginController extends BaseController {
 		localMember.setLoginDate(new Date());
 		localMember.setLoginFailureCount(Integer.valueOf(0));
 		this.memberService.update(localMember);
+		System.out.println("login here");
 		Cart localCart = this.cartService.getCurrent();
 		if ((localCart != null) && (localCart.getMember() == null)) {
 			this.cartService.merge(localMember, localCart);
@@ -172,6 +174,7 @@ public class LoginController extends BaseController {
 				localMember.getId(), username));
 		CookieUtils.setCookie(request, response, "username",
 				localMember.getUsername());
+		System.out.println("we submit, message = "+SHOP_SUCCESS.toString());
 		return  SHOP_SUCCESS;
 	}
 }

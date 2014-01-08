@@ -255,7 +255,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.promotion.add")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.promotion.add")}
 	</div>
 	<form id="inputForm" action="save.jhtml" method="post">
 		<ul id="tab" class="tab">

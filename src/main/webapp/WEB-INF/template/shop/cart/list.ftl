@@ -199,7 +199,7 @@ $().ready(function() {
 	// 提交
 	$submit.click(function() {
 		if (!$.checkLogin()) {
-			$.redirectLogin("${base}/cart/list.jhtml", "${message("shop.cart.accessDenied")}");
+			$.redirectLogin("${base}${frontPath}/cart/list.jhtml", "${message("shop.cart.accessDenied")}");
 			return false;
 		}
 	});
@@ -280,7 +280,7 @@ $().ready(function() {
 				</div>
 				<div class="bottom">
 					<a href="javascript:;" id="clear" class="clear">${message("shop.cart.clear")}</a>
-					<a href="${base}/member/order/info.jhtml" id="submit" class="submit">${message("shop.cart.submit")}</a>
+					<a href="${base}${frontPath}/member/order/info.jhtml" id="submit" class="submit">${message("shop.cart.submit")}</a>
 				</div>
 			[#else]
 				<p>

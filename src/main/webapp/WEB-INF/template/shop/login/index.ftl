@@ -38,7 +38,7 @@ $().ready(function() {
 	
 	// 更换验证码
 	$captchaImage.click(function() {
-		$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+		$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 	});
 	
 	// 表单验证、记住用户名
@@ -52,7 +52,7 @@ $().ready(function() {
 		},
 		submitHandler: function(form) {
 			$.ajax({
-				url: "${base}/common/public_key.jhtml",
+				url: "${base}${frontPath}/common/public_key.jhtml",
 				type: "GET",
 				dataType: "json",
 				cache: false,
@@ -93,7 +93,7 @@ $().ready(function() {
 								$.message(message);
 								[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberLogin")]
 									$captcha.val("");
-									$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+									$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 								[/#if]
 							}
 						}
@@ -118,7 +118,7 @@ $().ready(function() {
 					<div class="title">
 						<strong>${message("shop.login.title")}</strong>USER LOGIN
 					</div>
-					<form id="loginForm" action="${base}/login/submit.jhtml" method="post">
+					<form id="loginForm" action="${base}${frontPath}/login/submit.jhtml" method="post">
 						<table>
 							<tr>
 								<th>
@@ -147,7 +147,7 @@ $().ready(function() {
 									</th>
 									<td>
 										<span class="fieldSet">
-											<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
+											<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
 										</span>
 									</td>
 								</tr>
@@ -161,7 +161,7 @@ $().ready(function() {
 										<input type="checkbox" id="isRememberUsername" name="isRememberUsername" value="true" />${message("shop.login.isRememberUsername")}
 									</label>
 									<label>
-										&nbsp;&nbsp;<a href="${base}/password/find.jhtml">${message("shop.login.findPassword")}</a>
+										&nbsp;&nbsp;<a href="${base}${frontPath}/password/find.jhtml">${message("shop.login.findPassword")}</a>
 									</label>
 								</td>
 							</tr>
@@ -182,7 +182,7 @@ $().ready(function() {
 										<dt>${message("shop.login.noAccount")}</dt>
 										<dd>
 											${message("shop.login.tips")}
-											<a href="${base}/register.jhtml">${message("shop.login.register")}</a>
+											<a href="${base}${frontPath}/register.jhtml">${message("shop.login.register")}</a>
 										</dd>
 									</dl>
 								</td>

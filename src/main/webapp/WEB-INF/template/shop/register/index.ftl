@@ -32,12 +32,12 @@ $().ready(function() {
 	
 	// 地区选择
 	$areaId.lSelect({
-		url: "${base}/common/area.jhtml"
+		url: "${base}${frontPath}/common/area.jhtml"
 	});
 	
 	// 更换验证码
 	$captchaImage.click(function() {
-		$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+		$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 	});
 	
 	// 注册协议
@@ -53,7 +53,7 @@ $().ready(function() {
 				pattern: /^[0-9a-z_A-Z\u4e00-\u9fa5]+$/,
 				minlength: ${setting.usernameMinLength},
 				remote: {
-					url: "${base}/register/check_username.jhtml",
+					url: "${base}${frontPath}/register/check_username.jhtml",
 					cache: false
 				}
 			},
@@ -71,7 +71,7 @@ $().ready(function() {
 				email: true
 				[#if !setting.isDuplicateEmail]
 					,remote: {
-						url: "${base}/register/check_email.jhtml",
+						url: "${base}${frontPath}/register/check_email.jhtml",
 						cache: false
 					}
 				[/#if]
@@ -103,7 +103,7 @@ $().ready(function() {
 		},
 		submitHandler: function(form) {
 			$.ajax({
-				url: "${base}/common/public_key.jhtml",
+				url: "${base}${frontPath}/common/public_key.jhtml",
 				type: "GET",
 				dataType: "json",
 				cache: false,
@@ -144,7 +144,7 @@ $().ready(function() {
 								$submit.prop("disabled", false);
 								[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("memberRegister")]
 									$captcha.val("");
-									$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+									$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 								[/#if]
 							}
 						}
@@ -166,7 +166,7 @@ $().ready(function() {
 					<div class="title">
 						<strong>${message("shop.register.title")}</strong>USER REGISTER
 					</div>
-					<form id="registerForm" action="${base}/register/submit.jhtml" method="post">
+					<form id="registerForm" action="${base}${frontPath}/register/submit.jhtml" method="post">
 						<table>
 							<tr>
 								<th>
@@ -262,7 +262,7 @@ $().ready(function() {
 									</th>
 									<td>
 										<span class="fieldSet">
-											<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
+											<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
 										</span>
 									</td>
 								</tr>
@@ -300,7 +300,7 @@ $().ready(function() {
 								<dt>${message("shop.register.hasAccount")}</dt>
 								<dd>
 									${message("shop.register.tips")}
-									<a href="${base}/login.jhtml">${message("shop.register.login")}</a>
+									<a href="${base}${frontPath}/login.jhtml">${message("shop.register.login")}</a>
 								</dd>
 							</dl>
 						</div>

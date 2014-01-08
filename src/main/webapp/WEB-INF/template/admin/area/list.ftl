@@ -46,7 +46,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.area.list")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.area.list")}
 	</div>
 	<div class="bar">
 		<a href="add.jhtml[#if parent??]?parentId=${parent.id}[/#if]" class="iconButton">

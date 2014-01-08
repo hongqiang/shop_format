@@ -583,7 +583,7 @@ $().ready(function() {
 				cancel: "${message("admin.dialog.cancel")}",
 				onShow: function() {
 					$("#areaId").lSelect({
-						url: "${base}/common/area.jhtml"
+						url: "${base}${adminPath}/common/area.jhtml"
 					});
 					$.validator.addClassRules({
 						shippingItemsQuantity: {
@@ -800,7 +800,7 @@ $().ready(function() {
 				cancel: "${message("admin.dialog.cancel")}",
 				onShow: function() {
 					$("#areaId").lSelect({
-						url: "${base}/common/area.jhtml"
+						url: "${base}${adminPath}/common/area.jhtml"
 					});
 					$.validator.addClassRules({
 						returnsItemsQuantity: {
@@ -858,7 +858,7 @@ $().ready(function() {
 		<input type="hidden" name="id" value="${order.id}" />
 	</form>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.order.view")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.order.view")}
 	</div>
 	<ul id="tab" class="tab">
 		<li>

@@ -31,7 +31,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.statistics.view")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.statistics.view")}
 	</div>
 	[#if setting.cnzzSiteId?has_content && setting.cnzzPassword?has_content]
 		<iframe frameborder="0" width="100%" height="100%" src="http://intf.cnzz.com/user/companion/shopxx_login.php?site_id=${setting.cnzzSiteId}&password=${setting.cnzzPassword}"></iframe>

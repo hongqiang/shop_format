@@ -27,9 +27,9 @@
 			</div>
 			<div class="bottom">
 				[#if payment.order??]
-					<a href="${base}/member/order/view.jhtml?sn=${payment.order.sn}">${message("shop.payment.viewOrder")}</a>
+					<a href="${base}${frontPath}/member/order/view.jhtml?sn=${payment.order.sn}">${message("shop.payment.viewOrder")}</a>
 				[#else]
-					<a href="${base}/member/deposit/list.jhtml">${message("shop.payment.deposit")}</a>
+					<a href="${base}${frontPath}/member/deposit/list.jhtml">${message("shop.payment.deposit")}</a>
 				[/#if]
 				| <a href="${base}/">${message("shop.payment.index")}</a>
 			</div>

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hongqiang.shop.common.utils.Message;
@@ -15,7 +16,7 @@ import com.hongqiang.shop.modules.product.service.ProductNotifyService;
 import com.hongqiang.shop.modules.user.service.MemberService;
 
 @Controller("shopMemberProductNotifyController")
-@RequestMapping({"/member/product_notify"})
+@RequestMapping({"${memberPath}/product_notify"})
 public class ProductNotifyController extends BaseController
 {
   private static final int PAGE_SIZE = 10;
@@ -26,7 +27,7 @@ public class ProductNotifyController extends BaseController
   @Autowired
   MemberService memberService;
 
-  @RequestMapping(value={"/list"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
+  @RequestMapping(value={"/list"}, method=RequestMethod.GET)
   public String list(Integer pageNumber, Model model)
   {
     Member localMember = this.memberService.getCurrent();

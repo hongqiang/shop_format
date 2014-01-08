@@ -19,7 +19,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.message.list")} <span>(${message("admin.page.total", page.total)})</span>
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.message.list")} <span>(${message("admin.page.total", page.total)})</span>
 	</div>
 	<form id="listForm" action="list.jhtml" method="get">
 		<div class="bar">
@@ -101,11 +101,11 @@ $().ready(function() {
 					</td>
 					<td>
 						[#if !adminMessage.receiver??]
-							<a href="${base}/admin/member/view.jhtml?id=${adminMessage.sender.id}">
+							<a href="${base}${adminPath}/admin/member/view.jhtml?id=${adminMessage.sender.id}">
 								${adminMessage.sender.username}
 							</a>
 						[#else]
-							<a href="${base}/admin/member/view.jhtml?id=${adminMessage.receiver.id}">
+							<a href="${base}${adminPath}/admin/member/view.jhtml?id=${adminMessage.receiver.id}">
 								${adminMessage.receiver.username}
 							</a>
 						[/#if]

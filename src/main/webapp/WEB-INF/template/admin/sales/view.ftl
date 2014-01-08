@@ -39,12 +39,12 @@ $().ready(function() {
 	
 	[@flash_message /]
 	
-	var salesAmountChart = new FusionCharts("${base}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesAmountChart", "800", "300");
+	var salesAmountChart = new FusionCharts("${base}${adminPath}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesAmountChart", "800", "300");
 	salesAmountChart.addParam("wmode", "Opaque");
 	salesAmountChart.setDataXML(salesAmountData);
 	salesAmountChart.render("salesAmountChart");
 	
-	var salesVolumeChart = new FusionCharts("${base}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesVolumeChart", "800", "300");
+	var salesVolumeChart = new FusionCharts("${base}${adminPath}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesVolumeChart", "800", "300");
 	salesVolumeChart.addParam("wmode", "Opaque");
 	salesVolumeChart.setDataXML(salesVolumeData);
 	salesVolumeChart.render("salesVolumeChart");
@@ -68,7 +68,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.sales.view")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.sales.view")}
 	</div>
 	<form id="inputForm" action="view.jhtml" method="get">
 		<table class="input">

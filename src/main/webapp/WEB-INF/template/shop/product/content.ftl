@@ -194,7 +194,7 @@ $().ready(function() {
 			$productNotifyEmail.focus();
 			if ($.trim($productNotifyEmail.val()) == "") {
 				$.ajax({
-					url: "${base}/product_notify/email.jhtml",
+					url: "${base}${frontPath}/product_notify/email.jhtml",
 					type: "GET",
 					dataType: "json",
 					cache: false,
@@ -219,7 +219,7 @@ $().ready(function() {
 		},
 		submitHandler: function(form) {
 			$.ajax({
-				url: "${base}/product_notify/save.jhtml",
+				url: "${base}${frontPath}/product_notify/save.jhtml",
 				type: "POST",
 				data: {productId: ${product.id}, email: $productNotifyEmail.val()},
 				dataType: "json",
@@ -286,7 +286,7 @@ $().ready(function() {
 		var quantity = $quantity.val();
 		if (/^\d*[1-9]\d*$/.test(quantity) && parseInt(quantity) > 0) {
 			$.ajax({
-				url: "${base}/cart/add.jhtml",
+				url: "${base}${frontPath}/cart/add.jhtml",
 				type: "POST",
 				data: {id: ${product.id}, quantity: quantity},
 				dataType: "json",
@@ -303,7 +303,7 @@ $().ready(function() {
 	// 添加商品收藏
 	$addFavorite.click(function() {
 		$.ajax({
-			url: "${base}/member/favorite/add.jhtml?id=${product.id}",
+			url: "${base}${frontPath}/member/favorite/add.jhtml?id=${product.id}",
 			type: "POST",
 			dataType: "json",
 			cache: false,
@@ -351,7 +351,7 @@ $().ready(function() {
 			if ($.checkLogin()) {
 				return true;
 			} else {
-				$.redirectLogin("${base}/review/add/${product.id}.jhtml", "${message("shop.product.addReviewNotAllowed")}");
+				$.redirectLogin("${base}${frontPath}/review/add/${product.id}.jhtml", "${message("shop.product.addReviewNotAllowed")}");
 				return false;
 			}
 		});
@@ -363,7 +363,7 @@ $().ready(function() {
 			if ($.checkLogin()) {
 				return true;
 			} else {
-				$.redirectLogin("${base}/consultation/add/${product.id}.jhtml", "${message("shop.product.addConsultationNotAllowed")}");
+				$.redirectLogin("${base}${frontPath}/consultation/add/${product.id}.jhtml", "${message("shop.product.addConsultationNotAllowed")}");
 				return false;
 			}
 		});
@@ -384,7 +384,7 @@ $().ready(function() {
 	}
 	addCookie("historyProduct", historyProductIds.join(","), {path: "${base}/"});
 	$.ajax({
-		url: "${base}/product/history.jhtml",
+		url: "${base}${frontPath}/product/history.jhtml",
 		type: "GET",
 		data: {ids: historyProductIds},
 		dataType: "json",
@@ -407,7 +407,7 @@ $().ready(function() {
 	
 	// 点击数
 	$.ajax({
-		url: "${base}/product/hits/${product.id}.jhtml",
+		url: "${base}${frontPath}/product/hits/${product.id}.jhtml",
 		type: "GET"
 	});
 	
@@ -578,7 +578,7 @@ $().ready(function() {
 						</div>
 					[/#if]
 					[#if product.isOutOfStock]
-						<form id="productNotifyForm" action="${base}/product_notify/save.jhtml" method="post">
+						<form id="productNotifyForm" action="${base}${frontPath}/product_notify/save.jhtml" method="post">
 							<dl id="productNotify" class="productNotify">
 								<dt>${message("shop.product.productNotifyEmail")}:</dt>
 								<dd>
@@ -713,7 +713,7 @@ $().ready(function() {
 								</ul>
 							</div>
 							<div class="handle">
-								<a href="${base}/review/add/${product.id}.jhtml" id="addReview">${message("shop.product.addReview")}</a>
+								<a href="${base}${frontPath}/review/add/${product.id}.jhtml" id="addReview">${message("shop.product.addReview")}</a>
 							</div>
 							[@review_list productId = product.id count = 5]
 								[#if reviews?has_content]
@@ -736,13 +736,13 @@ $().ready(function() {
 										[/#list]
 									</table>
 									<p>
-										<a href="${base}/review/content/${product.id}.jhtml">[${message("shop.product.viewReview")}]</a>
+										<a href="${base}${frontPath}/review/content/${product.id}.jhtml">[${message("shop.product.viewReview")}]</a>
 									</p>
 								[/#if]
 							[/@review_list]
 						[#else]
 							<p>
-								${message("shop.product.noReview")} <a href="${base}/review/add/${product.id}.jhtml" id="addReview">[${message("shop.product.addReview")}]</a>
+								${message("shop.product.noReview")} <a href="${base}${frontPath}/review/add/${product.id}.jhtml" id="addReview">[${message("shop.product.addReview")}]</a>
 							</p>
 						[/#if]
 					</div>
@@ -781,12 +781,12 @@ $().ready(function() {
 									[/#list]
 								</ul>
 								<p>
-									<a href="${base}/consultation/add/${product.id}.jhtml" id="addConsultation">[${message("shop.product.addConsultation")}]</a>
-									<a href="${base}/consultation/content/${product.id}.jhtml">[${message("shop.product.viewConsultation")}]</a>
+									<a href="${base}${frontPath}/consultation/add/${product.id}.jhtml" id="addConsultation">[${message("shop.product.addConsultation")}]</a>
+									<a href="${base}${frontPath}/consultation/content/${product.id}.jhtml">[${message("shop.product.viewConsultation")}]</a>
 								</p>
 							[#else]
 								<p>
-									${message("shop.product.noConsultation")} <a href="${base}/consultation/add/${product.id}.jhtml" id="addConsultation">[${message("shop.product.addConsultation")}]</a>
+									${message("shop.product.noConsultation")} <a href="${base}${frontPath}/consultation/add/${product.id}.jhtml" id="addConsultation">[${message("shop.product.addConsultation")}]</a>
 								</p>
 							[/#if]
 						[/@consultation_list]

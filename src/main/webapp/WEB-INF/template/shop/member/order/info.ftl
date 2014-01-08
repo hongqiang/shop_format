@@ -57,7 +57,7 @@ $().ready(function() {
 	
 	// 地区选择
 	$areaId.lSelect({
-		url: "${base}/common/area.jhtml"
+		url: "${base}${frontPath}/common/area.jhtml"
 	});
 	
 	// 收货地址
@@ -257,7 +257,7 @@ $().ready(function() {
 		},
 		submitHandler: function(form) {
 			$.ajax({
-				url: "${base}/member/order/save_receiver.jhtml",
+				url: "${base}${memberPath}/order/save_receiver.jhtml",
 				type: "POST",
 				data: $receiverForm.serialize(),
 				dataType: "json",
@@ -529,7 +529,7 @@ $().ready(function() {
 					</div>
 					<div class="span24">
 						<div class="bottom">
-							<a href="${base}/cart/list.jhtml" class="back">${message("shop.order.back")}</a>
+							<a href="${base}${frontPath}/cart/list.jhtml" class="back">${message("shop.order.back")}</a>
 							<a href="javascript:;" id="submit" class="submit">${message("shop.order.submit")}</a>
 						</div>
 					</div>

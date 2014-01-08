@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.hongqiang.shop.modules.user.service.MemberService;
@@ -22,7 +23,7 @@ public class MemberInterceptor extends HandlerInterceptorAdapter
   private static final String REDIRECT = "redirect:";
   private static final String REDIRECT_URL = "redirectUrl";
   private static final String MEMBER = "member";
-  private static final String LOGIN_URL = "/login.jhtml";
+  private static final String LOGIN_URL = Global.getFrontPath()+"/login.jhtml";
   private String loginUrl = LOGIN_URL;
 
   @Value("${url_escaping_charset}")
@@ -46,7 +47,10 @@ public class MemberInterceptor extends HandlerInterceptorAdapter
     }
     if (request.getMethod().equalsIgnoreCase("GET"))
     {
+    	System.out.println("request.getQueryString()="+request.getQueryString());
+    	System.out.println("request.getRequestURI()="+request.getRequestURI());
       String str2 = request.getQueryString() != null ? request.getRequestURI() + "?" + request.getQueryString() : request.getRequestURI();
+      System.out.println("str2="+str2);
       response.sendRedirect(request.getContextPath() + this.loginUrl + "?" + REDIRECT_URL + "=" + URLEncoder.encode(str2, this.url_escaping_charset));
     }
     else

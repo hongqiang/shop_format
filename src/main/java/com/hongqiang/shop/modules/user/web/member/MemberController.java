@@ -50,6 +50,7 @@ public class MemberController extends BaseController
   @RequestMapping(value={"/index"}, method=RequestMethod.GET)
   public String index(Integer pageNumber, ModelMap model)
   {
+	  System.out.println("we are in member index");
     Member localMember = this.memberService.getCurrent();
     model.addAttribute("waitingPaymentOrderCount", this.orderService.waitingPaymentCount(localMember));
     model.addAttribute("waitingShippingOrderCount", this.orderService.waitingShippingCount(localMember));

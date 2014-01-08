@@ -19,7 +19,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.navigation.list")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.navigation.list")}
 	</div>
 	<form id="listForm" action="list.jhtml" method="get">
 		<div class="bar">

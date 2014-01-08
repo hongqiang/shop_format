@@ -55,7 +55,7 @@ $().ready(function() {
 		<tr>
 			<th class="logo">
 				<a href="main.jhtml">
-					<img src="${base}/resources/admin/images/header_logo.gif" alt="SHOP++" />
+					<img src="${base}${adminPath}/resources/admin/images/header_logo.gif" alt="SHOP++" />
 				</a>
 			</th>
 			<th>
@@ -118,7 +118,7 @@ $().ready(function() {
 							[/@shiro.hasPermission]
 						[/#list]
 						<li>
-							<a href="${base}/" target="_blank">${message("admin.main.home")}</a>
+							<a href="${base}${adminPath}/" target="_blank">${message("admin.main.home")}</a>
 						</li>
 					</ul>
 				</div>

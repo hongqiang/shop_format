@@ -20,7 +20,7 @@ $().ready(function() {
 			if ($.checkLogin()) {
 				return true;
 			} else {
-				$.redirectLogin("${base}/consultation/add/${product.id}.jhtml", "${message("shop.consultation.accessDenied")}");
+				$.redirectLogin("${base}${frontPath}/consultation/add/${product.id}.jhtml", "${message("shop.consultation.accessDenied")}");
 				return false;
 			}
 		});
@@ -94,7 +94,7 @@ $().ready(function() {
 						<a href="${base}${product.path}">${abbreviate(product.name, 60, "...")}</a>
 					</td>
 					<td class="handle" rowspan="3">
-						<a href="${base}/consultation/add/${product.id}.jhtml" id="addConsultation">[${message("shop.consultation.add")}]</a>
+						<a href="${base}${frontPath}/consultation/add/${product.id}.jhtml" id="addConsultation">[${message("shop.consultation.add")}]</a>
 					</td>
 				</tr>
 				<tr>

@@ -43,7 +43,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.navigation.add")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.navigation.add")}
 	</div>
 	<form id="inputForm" action="save.jhtml" method="post">
 		<table class="input">
@@ -62,10 +62,10 @@ $().ready(function() {
 				<td>
 					<select id="systemUrl">
 						<option value="">------------</option>
-						<option value="${base}/">${message("admin.navigation.home")}</option>
-						<option value="${base}/product_category.jhtml">${message("admin.navigation.productCategory")}</option>
-						<option value="${base}/friend_link.jhtml">${message("admin.navigation.friendLink")}</option>
-						<option value="${base}/member/index.jhtml">${message("admin.navigation.member")}</option>
+						<option value="${base}${adminPath}/">${message("admin.navigation.home")}</option>
+						<option value="${base}${adminPath}/product_category.jhtml">${message("admin.navigation.productCategory")}</option>
+						<option value="${base}${adminPath}/friend_link.jhtml">${message("admin.navigation.friendLink")}</option>
+						<option value="${base}${adminPath}/member/index.jhtml">${message("admin.navigation.member")}</option>
 						[#list articleCategoryTree as articleCategory]
 							<option value="${base}${articleCategory.path}">
 								[#if articleCategory.grade != 0]

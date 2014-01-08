@@ -206,7 +206,7 @@ $().ready(function() {
 					<li class="last">${message("shop.product.path", productKeyword)}</li>
 				</ul>
 			</div>
-			<form id="productForm" action="${base}/product/search.jhtml" method="get">
+			<form id="productForm" action="${base}${frontPath}/product/search.jhtml" method="get">
 				<input type="hidden" id="keyword" name="keyword" value="${productKeyword}" />
 				<input type="hidden" id="orderType" name="orderType" value="${orderType}" />
 				<input type="hidden" id="pageNumber" name="pageNumber" value="${page.pageNumber}" />

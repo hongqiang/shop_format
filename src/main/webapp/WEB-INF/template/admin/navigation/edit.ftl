@@ -43,7 +43,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.navigation.edit")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.navigation.edit")}
 	</div>
 	<form id="inputForm" action="update.jhtml" method="post">
 		<input type="hidden" name="id" value="${navigation.id}" />
@@ -63,10 +63,10 @@ $().ready(function() {
 				<td>
 					<select id="systemUrl">
 						<option value="">------------</option>
-						<option value="${base}/"[#if navigation.url == base + "/"] selected="selected"[/#if]>${message("admin.navigation.home")}</option>
-						<option value="${base}/product_category.jhtml"[#if navigation.url == base + "/product_category.jhtml"] selected="selected"[/#if]>${message("admin.navigation.productCategory")}</option>
-						<option value="${base}/friend_link.jhtml"[#if navigation.url == base + "/friend_link.jhtml"] selected="selected"[/#if]>${message("admin.navigation.friendLink")}</option>
-						<option value="${base}/member/index.jhtml"[#if navigation.url == base + "/member/index.jhtml"] selected="selected"[/#if]>${message("admin.navigation.member")}</option>
+						<option value="${base}${adminPath}/"[#if navigation.url == base + "/"] selected="selected"[/#if]>${message("admin.navigation.home")}</option>
+						<option value="${base}${adminPath}/product_category.jhtml"[#if navigation.url == base + "/product_category.jhtml"] selected="selected"[/#if]>${message("admin.navigation.productCategory")}</option>
+						<option value="${base}${adminPath}/friend_link.jhtml"[#if navigation.url == base + "/friend_link.jhtml"] selected="selected"[/#if]>${message("admin.navigation.friendLink")}</option>
+						<option value="${base}${adminPath}/member/index.jhtml"[#if navigation.url == base + "/member/index.jhtml"] selected="selected"[/#if]>${message("admin.navigation.member")}</option>
 						[#list articleCategoryTree as articleCategory]
 							<option value="${base}${articleCategory.path}"[#if base + articleCategory.path == navigation.url] selected="selected"[/#if]>
 								[#if articleCategory.grade != 0]

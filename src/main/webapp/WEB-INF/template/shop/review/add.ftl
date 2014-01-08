@@ -32,7 +32,7 @@ $().ready(function() {
 	
 	// 更换验证码
 	$captchaImage.click(function() {
-		$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+		$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 	});
 	
 	// 表单验证
@@ -59,13 +59,13 @@ $().ready(function() {
 					if (message.type == "success") {
 						setTimeout(function() {
 							$submit.prop("disabled", false);
-							location.href = "${base}/review/content/${product.id}.jhtml";
+							location.href = "${base}${frontPath}/review/content/${product.id}.jhtml";
 						}, 3000);
 					} else {
 						$submit.prop("disabled", false);
 						[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("review")]
 							$captcha.val("");
-							$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+							$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 						[/#if]
 					}
 				}
@@ -161,7 +161,7 @@ $().ready(function() {
 					</td>
 				</tr>
 			</table>
-			<form id="reviewForm" action="${base}/review/save.jhtml" method="post">
+			<form id="reviewForm" action="${base}${frontPath}/review/save.jhtml" method="post">
 				<input type="hidden" name="id" value="${product.id}" />
 				[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("review")]
 					<input type="hidden" name="captchaId" value="${captchaId}" />
@@ -196,7 +196,7 @@ $().ready(function() {
 								</th>
 								<td>
 									<span class="fieldSet">
-										<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
+										<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
 									</span>
 								</td>
 							</tr>

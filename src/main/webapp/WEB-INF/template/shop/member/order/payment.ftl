@@ -172,7 +172,7 @@ $().ready(function() {
 				[#if order.paymentStatus != "paid"]
 					[#if order.paymentMethod.type == "online"]
 						[#if paymentPlugins??]
-							<form id="paymentForm" action="${base}/payment/submit.jhtml" method="post" target="_blank">
+							<form id="paymentForm" action="${base}${frontPath}/payment/submit.jhtml" method="post" target="_blank">
 								<input type="hidden" name="sn" value="${order.sn}" />
 								<table id="paymentPlugin" class="paymentPlugin">
 									<tr>

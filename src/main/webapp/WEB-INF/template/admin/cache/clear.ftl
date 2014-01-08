@@ -20,7 +20,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.cache.clear")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.cache.clear")}
 	</div>
 	<form id="inputForm" action="clear.jhtml" method="post">
 		<table class="input">

@@ -59,7 +59,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.message.send")}
+		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.message.send")}
 	</div>
 	<form id="inputForm" action="send.jhtml" method="post">
 		<input type="hidden" name="draftMessageId" value="${(draftMessage.id)!}" />

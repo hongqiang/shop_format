@@ -21,7 +21,7 @@ $().ready(function() {
 	
 	// 更换验证码
 	$captchaImage.click(function() {
-		$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+		$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 	});
 	
 	// 表单验证
@@ -59,7 +59,7 @@ $().ready(function() {
 						$submit.prop("disabled", false);
 						[#if setting.captchaTypes?? && setting.captchaTypes?seq_contains("resetPassword")]
 							$captcha.val("");
-							$captchaImage.attr("src", "${base}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
+							$captchaImage.attr("src", "${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}&timestamp=" + (new Date()).valueOf());
 						[/#if]
 					}
 				}
@@ -115,7 +115,7 @@ $().ready(function() {
 									</th>
 									<td>
 										<span class="fieldSet">
-											<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
+											<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="${base}${frontPath}/common/captcha.jhtml?captchaId=${captchaId}" title="${message("shop.captcha.imageTitle")}" />
 										</span>
 									</td>
 								</tr>

@@ -27,7 +27,7 @@ import com.hongqiang.shop.modules.user.service.DepositService;
 import com.hongqiang.shop.modules.user.service.MemberService;
 
 @Controller("shopMemberDepositController")
-@RequestMapping({"/member/deposit"})
+@RequestMapping({"${memberPath}/deposit"})
 public class DepositController extends BaseController
 {
   private static final int PAGE_SIZE = 10;

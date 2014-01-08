@@ -71,7 +71,7 @@ public class RegisterController extends BaseController {
 	@Autowired
 	private CartService cartService;
 
-	@RequestMapping(value = { "/check_username" }, method = { org.springframework.web.bind.annotation.RequestMethod.GET })
+	@RequestMapping(value = { "/check_username" }, method = RequestMethod.GET)
 	@ResponseBody
 	public boolean checkUsername(String username) {
 		if (StringUtils.isEmpty(username))
@@ -80,7 +80,7 @@ public class RegisterController extends BaseController {
 				&& (!this.memberService.usernameExists(username));
 	}
 
-	@RequestMapping(value = { "/check_email" }, method = { org.springframework.web.bind.annotation.RequestMethod.GET })
+	@RequestMapping(value = { "/check_email" }, method = RequestMethod.GET)
 	@ResponseBody
 	public boolean checkEmail(String email) {
 		if (StringUtils.isEmpty(email))
@@ -254,7 +254,6 @@ public class RegisterController extends BaseController {
 				localMember.getId(), localMember.getUsername()));
 		CookieUtils.setCookie(request, response, "username",
 				localMember.getUsername());
-		return (Message) (Message) (Message) (Message) (Message) Message
-				.success("shop.register.success", new Object[0]);
+		return  Message.success("shop.register.success", new Object[0]);
 	}
 }
