@@ -139,7 +139,7 @@ $().ready(function() {
 			$this.addClass("currentTable");
 			$listType.removeClass("currentList");
 			$result.removeClass("list").addClass("table");
-			addCookie("layoutType", "tableType", {path: "${base}/"});
+			addCookie("layoutType", "tableType", {path: "${base}${frontPath}/"});
 		}
 	});
 	
@@ -149,7 +149,7 @@ $().ready(function() {
 			$this.addClass("currentList");
 			$tableType.removeClass("currentTable");
 			$result.removeClass("table").addClass("list");
-			addCookie("layoutType", "listType", {path: "${base}/"});
+			addCookie("layoutType", "listType", {path: "${base}${frontPath}/"});
 		}
 	});
 	
@@ -333,7 +333,7 @@ $().ready(function() {
 					[/#if]
 				</ul>
 			</div>
-			<form id="productForm" action="${base}${(productCategory.path)!"/product/list.jhtml"}" method="get">
+			<form id="productForm" action="${base}${(productCategory.path)!"${frontPath}/product/list.jhtml"}" method="get">
 				<input type="hidden" id="brandId" name="brandId" value="${(brand.id)!}" />
 				<input type="hidden" id="promotionId" name="promotionId" value="${(promotion.id)!}" />
 				<input type="hidden" id="orderType" name="orderType" value="${orderType}" />

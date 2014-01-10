@@ -137,7 +137,7 @@ public class LoginController extends BaseController {
 				localMember.setLockedDate(new Date());
 			}
 			localMember.setLoginFailureCount(Integer.valueOf(i));
-			this.memberService.update(localMember);
+//			this.memberService.update(localMember);
 			if (ArrayUtils.contains(localSetting.getAccountLockTypes(),
 					Setting.AccountLockType.member))
 				return Message.error("shop.login.accountLockCount",
@@ -148,7 +148,9 @@ public class LoginController extends BaseController {
 		localMember.setLoginIp(request.getRemoteAddr());
 		localMember.setLoginDate(new Date());
 		localMember.setLoginFailureCount(Integer.valueOf(0));
-		this.memberService.update(localMember);
+//		this.memberService.update(localMember);
+//		String[] ignoreStrings = {"username","registerIp"};
+//		this.memberService.update(localMember,ignoreStrings);
 		System.out.println("login here");
 		Cart localCart = this.cartService.getCurrent();
 		if ((localCart != null) && (localCart.getMember() == null)) {
@@ -175,6 +177,7 @@ public class LoginController extends BaseController {
 		CookieUtils.setCookie(request, response, "username",
 				localMember.getUsername());
 		System.out.println("we submit, message = "+SHOP_SUCCESS.toString());
+		
 		return  SHOP_SUCCESS;
 	}
 }

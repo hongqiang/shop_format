@@ -714,6 +714,7 @@ public enum ShippingStatus
   @PrePersist
   public void prePersist()
   {
+	  super.prePersist();
     if (getArea() != null)
       setAreaName(getArea().getFullName());
     if (getPaymentMethod() != null)
@@ -725,6 +726,7 @@ public enum ShippingStatus
   @PreUpdate
   public void preUpdate()
   {
+	  super.preUpdate();
     if (getArea() != null)
       setAreaName(getArea().getFullName());
     if (getPaymentMethod() != null)

@@ -94,7 +94,7 @@ public class SnDaoImpl implements SnDao, InitializingBean {
 	public void afterPropertiesSet() {
 		this.product = new HiloOptimizer(this, Sn.Type.product,
 				this.snProductPrefix, this.snProductMaxLo);
-		this.order = new HiloOptimizer(this, Sn.Type.order, this.snOrderPrefix,
+		this.order = new HiloOptimizer(this, Sn.Type.orders, this.snOrderPrefix,
 				this.snOrderMaxLo);
 		this.payment = new HiloOptimizer(this, Sn.Type.payment,
 				this.snPaymentPrefix, this.snPaymentMaxLo);
@@ -110,7 +110,7 @@ public class SnDaoImpl implements SnDao, InitializingBean {
 		Assert.notNull(type);
 		if (type == Sn.Type.product)
 			return this.product.generate();
-		if (type == Sn.Type.order)
+		if (type == Sn.Type.orders)
 			return this.order.generate();
 		if (type == Sn.Type.payment)
 			return this.payment.generate();
@@ -125,10 +125,12 @@ public class SnDaoImpl implements SnDao, InitializingBean {
 
 	private long process(Sn.Type paramType) {
 		String str = "select sn from Sn sn where sn.type = :type";
+//		Sn localSn = (Sn) this.entityManager.createQuery(str, Sn.class)
+//				.setFlushMode(FlushModeType.COMMIT)
+//				.setParameter("type", paramType)
+//				.setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
 		Sn localSn = (Sn) this.entityManager.createQuery(str, Sn.class)
-				.setFlushMode(FlushModeType.COMMIT)
-				.setParameter("type", paramType)
-				.setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
+				.setParameter("type", paramType).getSingleResult();
 		long l = localSn.getLastValue().longValue();
 
 		localSn.setLastValue(Long.valueOf(l + 1L));

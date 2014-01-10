@@ -96,7 +96,7 @@ public class OrderController extends BaseController {
 		}
 		receiver.setMember(localMember);
 		this.receiverService.save(receiver);
-		localHashMap.put("message", SHOP_ERROR);
+		localHashMap.put("message", SHOP_SUCCESS);
 		localHashMap.put("receiver", receiver);
 		return localHashMap;
 	}
@@ -247,7 +247,10 @@ public class OrderController extends BaseController {
 			String invoiceTitle,
 			@RequestParam(defaultValue = "false") Boolean useBalance,
 			String memo) {
+		
 		Cart localCart = this.cartService.getCurrent();
+		System.out.println("cartToken="+cartToken);
+		System.out.println("localCart.getToken()="+localCart.getToken());
 		if ((localCart == null) || (localCart.isEmpty()))
 			return Message.warn("shop.order.cartNotEmpty", new Object[0]);
 		if (!StringUtils.equals(localCart.getToken(), cartToken))

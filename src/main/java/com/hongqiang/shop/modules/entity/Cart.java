@@ -319,7 +319,7 @@ public class Cart extends BaseEntity
         localHashCodeBuilder.append(localCartItem.getProduct()).append(localCartItem.getQuantity()).append(localCartItem.getUnitPrice());
       }
     }
-    return DigestUtils.md5Hex(localHashCodeBuilder.toString());
+    return DigestUtils.md5Hex(String.valueOf(localHashCodeBuilder.toHashCode()));
   }
 
   @Transient

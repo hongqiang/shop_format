@@ -114,19 +114,6 @@
 
 	<!-- <cache:annotation-driven cache-manager="cacheManager" /> -->
 
-	<!-- <bean id="ehCacheManager" -->
-	<!-- class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"> -->
-	<!-- <property name="configLocation" value="classpath:/ehcache.xml" /> -->
-	<!-- <property name="shared" value="true" /> -->
-	<!-- </bean> -->
-
-	<!-- <bean id="cacheManager2" class="org.springframework.cache.ehcache.EhCacheCacheManager"> -->
-	<!-- <property name="cacheManager" ref="ehCacheManager" /> -->
-	<!-- </bean> -->
-
-
-
-
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
 		<property name="defaultLocale" value="${locale}" />
@@ -141,7 +128,6 @@
 			base-package 如果多个，用“,”分隔 -->
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
-
 	</context:component-scan>
 
 	<!-- 配置 JPA Entity Manager -->
@@ -190,7 +176,7 @@
 		<property name="databaseSchemaUpdate" value="false" />
 		<property name="jobExecutorActivate" value="false" />
 		<property name="history" value="full" />
-		<!-- 自动部署 -->
+<!-- 		自动部署 -->
 		<property name="deploymentResources">
 			<list>
 				<value>classpath*:/deployments/*</value>
@@ -220,8 +206,9 @@
 
 	<!-- 配置 JSR303 Bean Validator 定义 -->
 	<bean id="validator"
-		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" >
+<!-- 		<property name="validationMessageSource" ref="messageSource" /> -->
+	</bean>
 
 	<!-- Multi-Action 用来标识method的变量名定义 -->
 	<bean id="methodNameResolver"
@@ -234,11 +221,11 @@
 		</property>
 	</bean>
 
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<!-- 	<bean id="multipartResolver" -->
+<!-- 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
 		<!-- one of the properties available; the maximum file size in bytes -->
-		<property name="maxUploadSize" value="10000000" />
-	</bean>
+<!-- 		<property name="maxUploadSize" value="10000000" /> -->
+<!-- 	</bean> -->
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="javaMailProperties">
@@ -263,54 +250,56 @@
 
 
 	<!-- Production 环境 -->
-	<beans profile="production">
-
-		<!-- 数据源配置, 使用 BoneCP 数据库连接池 -->
-		<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
-			init-method="init" destroy-method="close">
-			<!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
-			<property name="driverClassName" value="${jdbc.driver}" />
-
+ 	<beans profile="production">
+ 		
+ 	    <!-- 数据源配置, 使用 BoneCP 数据库连接池 -->
+		<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
+		    <!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+		    <property name="driverClassName" value="${jdbc.driver}" />
+		    
 			<!-- 基本属性 url、user、password -->
 			<property name="url" value="${jdbc.url}" />
 			<property name="username" value="${jdbc.username}" />
 			<property name="password" value="${jdbc.password}" />
-
+			
 			<!-- 配置初始化大小、最小、最大 -->
 			<property name="initialSize" value="${pool.minIdle}" />
-			<property name="minIdle" value="${pool.minIdle}" />
+			<property name="minIdle" value="${pool.minIdle}" /> 
 			<property name="maxActive" value="${pool.maxActive}" />
-
+			
 			<!-- 配置获取连接等待超时的时间 -->
 			<property name="maxWait" value="60000" />
-
+			
 			<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
 			<property name="timeBetweenEvictionRunsMillis" value="60000" />
-
+			
 			<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
 			<property name="minEvictableIdleTimeMillis" value="300000" />
-
+			
 			<property name="validationQuery" value="SELECT 'x'" />
 			<property name="testWhileIdle" value="true" />
 			<property name="testOnBorrow" value="false" />
 			<property name="testOnReturn" value="false" />
-
-			<!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用） <property name="poolPreparedStatements" 
-				value="true" /> <property name="maxPoolPreparedStatementPerConnectionSize" 
-				value="20" /> -->
-
+			
+			<!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用）
+			<property name="poolPreparedStatements" value="true" />
+			<property name="maxPoolPreparedStatementPerConnectionSize" value="20" /> -->
+			
 			<!-- 配置监控统计拦截的filters -->
-			<property name="filters" value="stat" />
+		    <property name="filters" value="stat" /> 
 		</bean>
-
-		<!-- 数据源配置, 使用应用服务器的数据库连接池 <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/jeesite" 
-			/> -->
-
-		<!-- 数据源配置, 不使用连接池 <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
-			<property name="driverClassName" value="${jdbc.driver}" /> <property name="url" 
-			value="${jdbc.url}" /> <property name="username" value="${jdbc.username}"/> 
-			<property name="password" value="${jdbc.password}"/> </bean> -->
-
+		
+		<!-- 数据源配置, 使用应用服务器的数据库连接池 
+		<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/jeesite" />-->
+	
+		<!-- 数据源配置, 不使用连接池 
+		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${jdbc.driver}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}"/>
+			<property name="password" value="${jdbc.password}"/>
+		</bean>-->
+		
 	</beans>
 
 </beans>

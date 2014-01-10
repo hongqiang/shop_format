@@ -36,9 +36,9 @@ public class OrderDaoImpl extends
 			List<Order> orders) {
 		if (member == null)
 			return Collections.emptyList();
-		String qlString = "select order from Order order where 1=1 and order.member = ? ";
+		String qlString = "select o from Order o where 1=1 and o.member = ? ";
 		List<Object> parameter = new ArrayList<Object>();
-		parameter.add(parameter);
+		parameter.add(member);
 		return super
 				.findList(qlString, parameter, null, count, filters, orders);
 	}
@@ -48,9 +48,9 @@ public class OrderDaoImpl extends
 			Member member, Pageable pageable) {
 		if (member == null)
 			return new Page<com.hongqiang.shop.modules.entity.Order>(0,0);
-		String qlString = "select order from Order order where 1=1 and order.member = ? ";
+		String qlString = "select o from Order o where 1=1 and o.member = ? ";
 		List<Object> parameter = new ArrayList<Object>();
-		parameter.add(parameter);
+		parameter.add(member);
 		Page<com.hongqiang.shop.modules.entity.Order> orderPage = new Page<com.hongqiang.shop.modules.entity.Order>(
 				pageable.getPageNumber(), pageable.getPageSize());
 		return super.findPage(orderPage, qlString, parameter, pageable);
@@ -62,27 +62,27 @@ public class OrderDaoImpl extends
 			com.hongqiang.shop.modules.entity.Order.PaymentStatus paymentStatus,
 			com.hongqiang.shop.modules.entity.Order.ShippingStatus shippingStatus,
 			Boolean hasExpired, Pageable pageable) {
-		String qlString = "select order from Order order where 1=1 ";
+		String qlString = "select o from Order o where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		if (orderStatus != null) {
-			qlString += " and order.orderStatus= ? ";
+			qlString += " and o.orderStatus= ? ";
 			parameter.add(orderStatus);
 		}
 		if (paymentStatus != null) {
-			qlString += " and order.paymentStatus= ? ";
+			qlString += " and o.paymentStatus= ? ";
 			parameter.add(paymentStatus);
 		}
 		if (shippingStatus != null) {
-			qlString += " and order.shippingStatus= ? ";
+			qlString += " and o.shippingStatus= ? ";
 			parameter.add(shippingStatus);
 		}
 		Date nowadays = new Date();
 		if (hasExpired != null) {
 			if (hasExpired.booleanValue()) {
-				qlString += " and order.expire is not null and  order.expire < ? ";
+				qlString += " and o.expire is not null and  o.expire < ? ";
 				parameter.add(nowadays);
 			} else {
-				qlString += " and (order.expire is null or  order.expire >= ?) ";
+				qlString += " and (o.expire is null or  o.expire >= ?) ";
 				parameter.add(nowadays);
 			}
 		}
@@ -97,27 +97,27 @@ public class OrderDaoImpl extends
 			com.hongqiang.shop.modules.entity.Order.PaymentStatus paymentStatus,
 			com.hongqiang.shop.modules.entity.Order.ShippingStatus shippingStatus,
 			Boolean hasExpired) {
-		String qlString = "select count(*) from Order order where 1=1 ";
+		String qlString = "select o from Order o where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		if (orderStatus != null) {
-			qlString += " and order.orderStatus= ? ";
+			qlString += " and o.orderStatus= ? ";
 			parameter.add(orderStatus);
 		}
 		if (paymentStatus != null) {
-			qlString += " and order.paymentStatus= ? ";
+			qlString += " and o.paymentStatus= ? ";
 			parameter.add(paymentStatus);
 		}
 		if (shippingStatus != null) {
-			qlString += " and order.shippingStatus= ? ";
+			qlString += " and o.shippingStatus= ? ";
 			parameter.add(shippingStatus);
 		}
 		Date nowadays = new Date();
 		if (hasExpired != null) {
 			if (hasExpired.booleanValue()) {
-				qlString += " and order.expire is not null and  order.expire < ? ";
+				qlString += " and o.expire is not null and  o.expire < ? ";
 				parameter.add(nowadays);
 			} else {
-				qlString += " and (order.expire is null or  order.expire >= ?) ";
+				qlString += " and (o.expire is null or  o.expire >= ?) ";
 				parameter.add(nowadays);
 			}
 		}
@@ -127,25 +127,25 @@ public class OrderDaoImpl extends
 
 	@Override
 	public Long waitingPaymentCount(Member member) {
-		String qlString = "select count(*) from Order order where 1=1 ";
+		String qlString = "select o from Order o where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		qlString += " and order.orderStatus <> ? and order.orderStatus <> ? ";
+		qlString += " and o.orderStatus <> ? and o.orderStatus <> ? ";
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.completed);
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.cancelled);
 
-		qlString += " and (order.paymentStatus = ?  or order.paymentStatus = ?)";
+		qlString += " and (o.paymentStatus = ?  or o.paymentStatus = ?)";
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid);
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment);
 
-		qlString += " and (order.expire is null and  order.expire >= ? )";
+		qlString += " and (o.expire is null or  o.expire >= ? )";
 		parameter.add(new Date());
 
 		if (member != null) {
-			qlString += " and order.member = ? ";
+			qlString += " and o.member = ? ";
 			parameter.add(member);
 		}
 		StringBuilder stringBuilder = new StringBuilder(qlString);
@@ -154,25 +154,25 @@ public class OrderDaoImpl extends
 
 	@Override
 	public Long waitingShippingCount(Member member) {
-		String qlString = "select order from Order order where 1=1 ";
+		String qlString = "select o from Order o where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		qlString += " and order.orderStatus <> ? and order.orderStatus <> ? ";
+		qlString += " and o.orderStatus <> ? and o.orderStatus <> ? ";
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.completed);
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.cancelled);
 
-		qlString += " and (order.paymentStatus = ?  and order.shippingStatus = ?)";
+		qlString += " and (o.paymentStatus = ?  and o.shippingStatus = ?)";
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
 		parameter
 				.add(com.hongqiang.shop.modules.entity.Order.ShippingStatus.unshipped);
 
-		qlString += " and (order.expire is null or  order.expire >= ? )";
+		qlString += " and (o.expire is null or  o.expire >= ? )";
 		parameter.add(new Date());
 
 		if (member != null) {
-			qlString += " and order.member = ? ";
+			qlString += " and o.member = ? ";
 			parameter.add(member);
 		}
 		StringBuilder stringBuilder = new StringBuilder(qlString);

@@ -351,7 +351,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		}
 		localOrder = build(cart, receiver, paymentMethod, shippingMethod,
 				couponCode, isInvoice, invoiceTitle, useBalance, memo);
-		localOrder.setSn(this.snDao.generate(Sn.Type.order));
+		localOrder.setSn(this.snDao.generate(Sn.Type.orders));
 		if (paymentMethod.getType() == PaymentMethod.Type.online) {
 			localOrder.setLockExpire(DateUtils.addSeconds(new Date(), 10));
 			localOrder.setOperator(operator);

@@ -11,7 +11,7 @@ public class Sn extends BaseEntity
 //sn编号类型：货物，订单，付款，退款，运货，退货，用于自动生成这些类型的单子的编号
 public enum Type
 {
-  product, order, payment, refunds, shipping, returns;
+  product, orders, payment, refunds, shipping, returns;
 }
 
   private static final long serialVersionUID = -2330598144835706164L;

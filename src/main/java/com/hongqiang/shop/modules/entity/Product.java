@@ -1039,6 +1039,7 @@ public class Product extends BaseEntity {
 
 	@PrePersist
 	public void prePersist() {
+		super.prePersist();
 		if (getStock() == null)
 			setAllocatedStock(Integer.valueOf(0));
 		setScore(Float.valueOf(0.0F));
@@ -1046,6 +1047,7 @@ public class Product extends BaseEntity {
 
 	@PreUpdate
 	public void preUpdate() {
+		super.preUpdate();
 		if (getStock() == null)
 			setAllocatedStock(Integer.valueOf(0));
 		if ((getTotalScore() != null) && (getScoreCount() != null)

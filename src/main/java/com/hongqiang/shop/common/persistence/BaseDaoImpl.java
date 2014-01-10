@@ -379,6 +379,11 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	public Long count(StringBuilder qlString, List<Filter> filters, List<Object> params) {
 		addFilter(qlString, filters, params);
 		Query query = createQuery(qlString.toString(), params.toArray());
+		System.out.println("basedao.count.query = "+query);
+		System.out.println("basedao.count.size = "+params.size());
+		for (Object object : params) {
+			System.out.println("basedao.count.object = "+object);
+		}
 		List<Object> list = query.list();
 		return new Long((long)list.size());
 	}

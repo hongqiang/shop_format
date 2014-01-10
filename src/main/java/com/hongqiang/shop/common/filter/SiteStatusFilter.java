@@ -11,14 +11,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 
 @Component("siteStatusFilter")
 public class SiteStatusFilter extends OncePerRequestFilter
 {
-  private static final String[] ADMIN_PATH = { "${adminPath}/**" };
-  private static final String COMMON_URL = "/common/site_close.jhtml";
+  private static final String[] ADMIN_PATH = { Global.getAdminPath()+"/**" };
+  private static final String COMMON_URL = Global.getAdminPath()+"/common/site_close.jhtml";
   private static AntPathMatcher antPathMatcher = new AntPathMatcher();
   private String[] ignoreUrlPatterns = ADMIN_PATH;
   private String redirectUrl = COMMON_URL;

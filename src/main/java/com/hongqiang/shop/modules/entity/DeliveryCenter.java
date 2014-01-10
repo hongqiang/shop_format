@@ -148,6 +148,7 @@ public class DeliveryCenter extends BaseEntity
   @PrePersist
   public void prePersist()
   {
+	  super.prePersist();
     if (getArea() != null)
       setAreaName(getArea().getFullName());
   }
@@ -155,6 +156,7 @@ public class DeliveryCenter extends BaseEntity
   @PreUpdate
   public void preUpdate()
   {
+	  super.preUpdate();
     if (getArea() != null)
       setAreaName(getArea().getFullName());
   }

@@ -84,7 +84,7 @@ public class CouponCodeDaoImpl extends BaseDaoImpl<CouponCode> implements
 	@Override
 	public Long count(Coupon coupon, Member member, Boolean hasBegun,
 			Boolean hasExpired, Boolean isUsed) {
-		String sqlString = " select count(*) from CouponCode couponCode where 1=1 ";
+		String sqlString = " select couponCode from CouponCode couponCode where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		if (coupon != null) {
 			sqlString += " and couponCode.coupon = ? ";

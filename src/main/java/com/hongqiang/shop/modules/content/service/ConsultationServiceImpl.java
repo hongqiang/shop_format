@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.hongqiang.shop.common.persistence.Page;
@@ -34,7 +35,7 @@ import com.hongqiang.shop.modules.util.service.TemplateService;
 
 @Service
 public class ConsultationServiceImpl extends BaseService
-  implements ConsultationService
+  implements ConsultationService, ServletContextAware
 {
 
 	private ServletContext servletContext;
@@ -50,6 +51,14 @@ public class ConsultationServiceImpl extends BaseService
 
 //	 @Autowired
 //	 private StaticService staticService;
+  
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+
+	public ServletContext getServletContext() {
+		return this.servletContext;
+	}
 
   @Transactional(readOnly=true)
   public List<Consultation> findList(Member member, Product product, Boolean isShow, Integer count, List<Filter> filters, List<Order> orders)

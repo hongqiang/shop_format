@@ -280,7 +280,7 @@ $().ready(function() {
 				</div>
 				<div class="bottom">
 					<a href="javascript:;" id="clear" class="clear">${message("shop.cart.clear")}</a>
-					<a href="${base}${frontPath}/member/order/info.jhtml" id="submit" class="submit">${message("shop.cart.submit")}</a>
+					<a href="${base}${memberPath}/order/info.jhtml" id="submit" class="submit">${message("shop.cart.submit")}</a>
 				</div>
 			[#else]
 				<p>

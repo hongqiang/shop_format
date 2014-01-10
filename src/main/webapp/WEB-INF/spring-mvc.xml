@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-
+<!-- 	default-lazy-init="true"> -->
 	<description>Spring MVC Configuration</description>
 
 	<!-- 加载配置属性文件 -->
@@ -35,9 +35,6 @@
 	<!-- 默认的注解映射的支持，org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping -->
 	<mvc:annotation-driven />
 <!-- 	<mvc:annotation-driven validator="validator" /> -->
-<!-- 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"> -->
-<!-- 		<property name="validationMessageSource" ref="messageSource" /> -->
-<!-- 	</bean> -->
 
 	<!-- 对静态资源文件的访问， 将无法mapping到Controller的path交给default servlet handler处理 -->
 	<mvc:default-servlet-handler />
@@ -59,7 +56,7 @@
 		<!-- <mvc:interceptor> <mvc:mapping path="/admin/**" /> <bean id="executeTimeInterceptor" 
 			class="net.shopxx.interceptor.ExecuteTimeInterceptor" /> </mvc:interceptor> -->
 		<mvc:interceptor>
-			<mvc:mapping path="/a/**" />
+			<mvc:mapping path="${adminPath}/**" />
 			<bean id="webContentInterceptor"
 				class="org.springframework.web.servlet.mvc.WebContentInterceptor">
 				<property name="cacheSeconds" value="0" />
@@ -73,46 +70,39 @@
 			</bean>
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/a/**" />
+			<mvc:mapping path="${adminPath}/**" />
 			<bean id="listInterceptor" class="com.hongqiang.shop.common.interceptor.ListInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/a/**" />
+			<mvc:mapping path="${adminPath}/**" />
 			<bean id="logInterceptor" class="com.hongqiang.shop.common.interceptor.LogInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<!-- 视图文件解析配置 -->
-<!-- 	<bean -->
-<!-- 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
-<!-- 		<property name="prefix" value="${web.view.prefix}" /> -->
-<!-- 		<property name="suffix" value="${web.view.suffix}" /> -->
-<!-- 	</bean> -->
-
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 	<property name="contentType" value="text/html; charset=UTF-8" />
-	<property name="prefix" value="${template.prefix}"/>
 	<property name="suffix" value="${template.suffix}" />
 	</bean>
 
-	<!-- 定义无Controller的path<->view直接映射 -->
-	<mvc:view-controller path="/"
-		view-name="redirect:${web.view.index}" />
+	<!-- 定义无Controller的path<->view直接映射   有最下面的defaulterrorview，用不到这里-->
+<!-- 	<mvc:view-controller path="/" -->
+<!-- 		view-name="redirect:${web.view.index}" /> -->
 
 	<!-- 支持Shiro对Controller的方法级AOP安全控制 begin -->
-	<bean
-		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-		depends-on="lifecycleBeanPostProcessor">
-		<property name="proxyTargetClass" value="true" />
-	</bean>
-	<bean
-		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop key="org.apache.shiro.authz.UnauthorizedException">error/403</prop>
-			</props>
-		</property>
-	</bean>
+<!-- 	<bean -->
+<!-- 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" -->
+<!-- 		depends-on="lifecycleBeanPostProcessor"> -->
+<!-- 		<property name="proxyTargetClass" value="true" /> -->
+<!-- 	</bean> -->
+<!-- 	<bean -->
+<!-- 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> -->
+<!-- 		<property name="exceptionMappings"> -->
+<!-- 			<props> -->
+<!-- 				<prop key="org.apache.shiro.authz.UnauthorizedException">error/403</prop> -->
+<!-- 			</props> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 	<!-- Shiro end -->
 
 	<!-- 上传文件拦截，设置最大上传文件大小 10M=10*1024*1024(B)=10485760 bytes -->

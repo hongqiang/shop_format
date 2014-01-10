@@ -122,6 +122,7 @@ public class Area extends OrderEntity {
 
 	@PrePersist
 	public void prePersist() {
+		super.prePersist();
 		Area localArea = getParent();
 		if (localArea != null) {
 			setFullName(localArea.getFullName() + getName());
@@ -135,6 +136,7 @@ public class Area extends OrderEntity {
 
 	@PreUpdate
 	public void preUpdate() {
+		super.preUpdate();
 		Area localArea = getParent();
 		if (localArea != null)
 			setFullName(localArea.getFullName() + getName());

@@ -64,7 +64,7 @@ ConsultationDaoCustom {
 
 	@Override
 	public Long count(Member member, Product product, Boolean isShow) {
-		String sqlString = "select count(*) from Consultation consultation where 1=1 ";
+		String sqlString = "select consultation from Consultation consultation where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		sqlString += " and consultation.forConsultation != null ";
 		if (member != null) {

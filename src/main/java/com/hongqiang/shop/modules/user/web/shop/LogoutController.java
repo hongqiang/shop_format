@@ -13,13 +13,13 @@ import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.entity.Member;
 
 @Controller("shopLogoutController")
+@RequestMapping({ "${frontPath}" })
 public class LogoutController extends BaseController
 {
 	
   @RequestMapping(value={"/logout"}, method=RequestMethod.GET)
   public String execute(HttpServletRequest request, HttpServletResponse response, HttpSession session)
   {
-	  System.out.println("we leave there");
     session.removeAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
     CookieUtils.removeCookie(request, response, "username");
     return "redirect:/";
