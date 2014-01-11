@@ -10,11 +10,11 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
 import com.hongqiang.shop.modules.entity.ArticleCategory;
 
 @Repository
-public class ArticleCategoryDaoImpl extends BaseDaoImpl<ArticleCategory>
+public class ArticleCategoryDaoImpl extends BaseDaoImpl<ArticleCategory,Long>
   implements ArticleCategoryDaoCustom
 {
   public List<ArticleCategory> findRoots(Integer count)

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
 import com.hongqiang.shop.modules.entity.ArticleCategory;
 
 public interface ArticleCategoryDao extends ArticleCategoryDaoCustom, CrudRepository<ArticleCategory, Long> {
@@ -17,7 +17,7 @@ public interface ArticleCategoryDao extends ArticleCategoryDaoCustom, CrudReposi
  * @author Jack
  * 
  */
-interface ArticleCategoryDaoCustom extends BaseDao<ArticleCategory> {
+interface ArticleCategoryDaoCustom extends BaseDao<ArticleCategory,Long> {
   public List<ArticleCategory> findRoots(Integer paramInteger);
 
   public List<ArticleCategory> findParents(ArticleCategory paramArticleCategory, Integer paramInteger);

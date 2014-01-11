@@ -1,8 +1,6 @@
 package com.hongqiang.shop.modules.product.web.admin;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
@@ -120,36 +117,36 @@ public class SpecificationController extends BaseController
   
   @RequestMapping(value={"/dospe"},method=RequestMethod.GET)
 	public void doit(){
-		Specification specification= this.specificationService.find(1L);
-		System.out.println(specification.getName()+","+specification.getMemo());
-		System.out.println("==============================================");
-		
-		Pageable pageable = new Pageable(1,40);
-		Page<Specification> page=this.specificationService.findPage(pageable);
-		for (Specification o : page.getList()) {
-		System.out.print(o.getName()+", "+o.getMemo()+"\n");
-	}
-		System.out.println("==============================================");
-		
-		Specification specification2 = new Specification();
-		specification2.setName("gogogo");
-		specification2.setType(Specification.Type.text);
-		
-		List<SpecificationValue> list = new ArrayList<SpecificationValue>();
-		for(int i=0;i<3;i++){
-			SpecificationValue specificationValue = new SpecificationValue();
-			specificationValue.setName("a"+i);
-			specificationValue.setSpecification(specification2);
-			list.add(specificationValue);
-		}
-		specification2.setSpecificationValues(list);
-		this.specificationService.save(specification2);
-		
-		specification.setName("new go");
-		this.specificationService.update(specification);
-		
-		//不可删除
-		this.specificationService.delete(6L);
-		this.specificationService.delete(specification);
+//		Specification specification= this.specificationService.find(1L);
+//		System.out.println(specification.getName()+","+specification.getMemo());
+//		System.out.println("==============================================");
+//		
+//		Pageable pageable = new Pageable(1,40);
+//		Page<Specification> page=this.specificationService.findPage(pageable);
+//		for (Specification o : page.getList()) {
+//		System.out.print(o.getName()+", "+o.getMemo()+"\n");
+//	}
+//		System.out.println("==============================================");
+//		
+//		Specification specification2 = new Specification();
+//		specification2.setName("gogogo");
+//		specification2.setType(Specification.Type.text);
+//		
+//		List<SpecificationValue> list = new ArrayList<SpecificationValue>();
+//		for(int i=0;i<3;i++){
+//			SpecificationValue specificationValue = new SpecificationValue();
+//			specificationValue.setName("a"+i);
+//			specificationValue.setSpecification(specification2);
+//			list.add(specificationValue);
+//		}
+//		specification2.setSpecificationValues(list);
+//		this.specificationService.save(specification2);
+//		
+//		specification.setName("new go");
+//		this.specificationService.update(specification);
+//		
+//		//不可删除
+//		this.specificationService.delete(6L);
+//		this.specificationService.delete(specification);
 	}
 }

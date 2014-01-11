@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.account.dao.CouponCodeDao;

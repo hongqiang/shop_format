@@ -1,8 +1,12 @@
-package com.hongqiang.shop.common.utils;
+package com.hongqiang.shop.common.base.persistence;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hongqiang.shop.common.utils.Filter;
+import com.hongqiang.shop.common.utils.Order;
+import com.hongqiang.shop.common.utils.Pageable;
 
 public class Page<T>
   implements Serializable
@@ -67,7 +71,7 @@ public class Page<T>
 
   public int getTotalPages()
   {
-    return (int)Math.ceil(getTotal() / getPageSize());
+    return (int)Math.ceil((double)getTotal() / getPageSize());
   }
 
   public List<T> getContent()

@@ -7,12 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
-import com.hongqiang.shop.modules.entity.Product;
-import com.hongqiang.shop.modules.entity.ProductNotify;
 import com.hongqiang.shop.modules.product.service.ProductNotifyService;
 import com.hongqiang.shop.modules.product.service.ProductService;
 
@@ -55,41 +52,41 @@ public class ProductNotifyController extends BaseController
  
   @RequestMapping(value={"/donoti"},method=RequestMethod.GET)
 	public void doit(){
-		//test findid
-		ProductNotify productNotify = this.productNotifyService.find(1L);
-		System.out.println(productNotify.getEmail());
-		System.out.println("==============================================");
-		//test findpage
-		Pageable pageable = new Pageable(1,40);
-		Page<ProductNotify> page = this.productNotifyService.findPage(null, true, true,true,pageable);
-		if(page.getList().size()>0){
-			for (ProductNotify o : page.getList()) {
-				System.out.print(o.getEmail()+"\n");
-			}
-		}
-		else{
-			System.out.print("nothing\n");
-		}
-		System.out.println("==============================================");
-		//test exists
-		Product product = this.productService.find(1L);
-		boolean ig = this.productNotifyService.exists(product, "test");
-		System.out.print("ig="+ig+"\n");
-		//test save
-		ProductNotify pr=new ProductNotify();
-		pr.setEmail("hello@126.com");
-		pr.setProduct(product);
-		pr.setHasSent(true);
-		this.productNotifyService.save(pr);
-		//test send
-		Long [] longs = new Long[4];
-		for(int i=0;i<4;++i){
-			longs[i]=(long)i+1;
-		}
-		
-		
-		this.productNotifyService.send(longs);
-		//test delete
-		this.productNotifyService.delete(longs);
+//		//test findid
+//		ProductNotify productNotify = this.productNotifyService.find(1L);
+//		System.out.println(productNotify.getEmail());
+//		System.out.println("==============================================");
+//		//test findpage
+//		Pageable pageable = new Pageable(1,40);
+//		Page<ProductNotify> page = this.productNotifyService.findPage(null, true, true,true,pageable);
+//		if(page.getList().size()>0){
+//			for (ProductNotify o : page.getList()) {
+//				System.out.print(o.getEmail()+"\n");
+//			}
+//		}
+//		else{
+//			System.out.print("nothing\n");
+//		}
+//		System.out.println("==============================================");
+//		//test exists
+//		Product product = this.productService.find(1L);
+//		boolean ig = this.productNotifyService.exists(product, "test");
+//		System.out.print("ig="+ig+"\n");
+//		//test save
+//		ProductNotify pr=new ProductNotify();
+//		pr.setEmail("hello@126.com");
+//		pr.setProduct(product);
+//		pr.setHasSent(true);
+//		this.productNotifyService.save(pr);
+//		//test send
+//		Long [] longs = new Long[4];
+//		for(int i=0;i<4;++i){
+//			longs[i]=(long)i+1;
+//		}
+//		
+//		
+//		this.productNotifyService.send(longs);
+//		//test delete
+//		this.productNotifyService.delete(longs);
 	}
 }

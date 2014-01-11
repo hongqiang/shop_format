@@ -7,15 +7,15 @@ import javax.persistence.FlushModeType;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductNotify;
 
 @Repository
-public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
+public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify,Long> implements
 		ProductNotifyDaoCustom {
 	public boolean exists(Product product, String email) {
 		String str = "select count(*) from ProductNotify productNotify "+
@@ -37,9 +37,7 @@ public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
 
 		sqlString=inquerySql(sqlString, params, member, isMarketable, isOutOfStock,
 				hasSent);
-		Page<ProductNotify> productPage = new Page<ProductNotify>(
-				pageable.getPageNumber(), pageable.getPageSize());
-		return super.findPage(productPage,  sqlString,  params, pageable) ;
+		return super.findPage(sqlString,  params, pageable) ;
 	}
 
 	public Long count(Member member, Boolean isMarketable,
@@ -47,13 +45,10 @@ public class ProductNotifyDaoImpl extends BaseDaoImpl<ProductNotify> implements
 		String sqlString = "select DISTINCT productNotify from ProductNotify productNotify "+
 			"where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
-
 		sqlString=inquerySql(sqlString, params, member, isMarketable, isOutOfStock,
 				hasSent);
-
-		List<ProductNotify> listProductNotify = this.find(sqlString,
-				params.toArray());// 测试下jeesite的函数能用不
-		return (long) listProductNotify.size();
+		StringBuilder stringBuffer = new StringBuilder(sqlString);
+		return super.count(stringBuffer,null,params);
 	}
 
 	private String inquerySql(String sqlString, List<Object> params,

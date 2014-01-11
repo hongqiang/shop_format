@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
 import com.hongqiang.shop.modules.entity.Area;
 
 public interface AreaDao extends AreaDaoCustom, CrudRepository<Area, Long>{
@@ -18,7 +18,7 @@ public interface AreaDao extends AreaDaoCustom, CrudRepository<Area, Long>{
  * @author Jack
  * 
  */
-interface AreaDaoCustom extends BaseDao<Area> {
+interface AreaDaoCustom extends BaseDao<Area,Long> {
 
   public List<Area> findRoots(Integer paramInteger);
   

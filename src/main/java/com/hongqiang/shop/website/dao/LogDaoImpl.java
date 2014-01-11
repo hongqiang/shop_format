@@ -7,13 +7,13 @@ import javax.persistence.FlushModeType;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.website.entity.Log;
 
 @Repository
-public class LogDaoImpl extends BaseDaoImpl<Log> implements LogDaoCustom {
+public class LogDaoImpl extends BaseDaoImpl<Log,Long> implements LogDaoCustom {
 	@Override
 	public void removeAll() {
 		String str = "delete from Log log";
@@ -23,10 +23,8 @@ public class LogDaoImpl extends BaseDaoImpl<Log> implements LogDaoCustom {
 
 	@Override
 	public Page<Log> findPage(Pageable pageable) {
-		Page<Log> logPage = new Page<Log>(pageable.getPageNumber(),
-				pageable.getPageSize());
 		String qlString = "select Log from Log Log where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(logPage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 }

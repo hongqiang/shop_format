@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Message;
 
 @Repository
-public class MessageDaoImpl extends BaseDaoImpl<Message>
+public class MessageDaoImpl extends BaseDaoImpl<Message,Long>
   implements MessageDaoCustom
 {
   public Page<Message> findPage(Member member, Pageable pageable)
@@ -29,8 +29,7 @@ public class MessageDaoImpl extends BaseDaoImpl<Message>
 		sqlString +=" and ((message.sender is null and message.senderDelete = false) "+
 							"or (message.receiver is null and message.receiverDelete = false))";
 	}
-	Page<Message> messagePage = new Page<Message>(pageable.getPageNumber(),pageable.getPageSize());
-	return super.findPage(messagePage,  sqlString,  params, pageable);
+	return super.findPage(sqlString,  params, pageable);
   }
 
   public Page<Message> findDraftPage(Member sender, Pageable pageable)
@@ -44,8 +43,7 @@ public class MessageDaoImpl extends BaseDaoImpl<Message>
     else{
 		sqlString +=" and message.sender is null";
 	}
-	Page<Message> messagePage = new Page<Message>(pageable.getPageNumber(),pageable.getPageSize());
-	return super.findPage(messagePage,  sqlString,  params, pageable);
+	return super.findPage(sqlString,  params, pageable);
   }
 
   public Long count(Member member, Boolean read)

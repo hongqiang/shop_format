@@ -10,14 +10,12 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.ProductCategory;
-
-import org.springframework.util.Assert;
 
 /**
  * DAO自定义接口实现
@@ -25,7 +23,7 @@ import org.springframework.util.Assert;
  * @author ThinkGem
  */
 @Repository
-class ProductCategoryDaoImpl extends BaseDaoImpl<ProductCategory> implements
+class ProductCategoryDaoImpl extends BaseDaoImpl<ProductCategory,Long> implements
 		ProductCategoryDaoCustom {
 
 	@Override
@@ -98,12 +96,9 @@ class ProductCategoryDaoImpl extends BaseDaoImpl<ProductCategory> implements
 
 	@Override
 	public Page<ProductCategory> findPage(Pageable pageable) {
-		Page<ProductCategory> productCategoryPage = new Page<ProductCategory>(
-				pageable.getPageNumber(), pageable.getPageSize());
 		String qlString = "select productCategory from ProductCategory productCategory where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(productCategoryPage, qlString, parameter,
-				pageable);
+		return super.findPage(qlString, parameter,pageable);
 	}
 
 	@Override
@@ -111,8 +106,7 @@ class ProductCategoryDaoImpl extends BaseDaoImpl<ProductCategory> implements
 			List<Filter> filters, List<Order> orders) {
 		String qlString = "select productCategory from ProductCategory productCategory where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findList(qlString, parameter, first, count, filters,
-				orders);
+		return super.findList(qlString, parameter, first, count, filters,orders);
 	}
 
 	@Override
@@ -122,14 +116,12 @@ class ProductCategoryDaoImpl extends BaseDaoImpl<ProductCategory> implements
 
 	@Override
 	public void persist(ProductCategory productCategory) {
-		Assert.notNull(productCategory);
 		setProductCategoryOfTreepathAndGrade(productCategory);
 		super.persist(productCategory);
 	}
 
 	@Override
 	public ProductCategory merge(ProductCategory productCategory) {
-		Assert.notNull(productCategory);
 		setProductCategoryOfTreepathAndGrade(productCategory);
 		Iterator<ProductCategory> localIterator = findChildren(productCategory,
 				null).iterator();

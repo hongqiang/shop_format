@@ -9,8 +9,8 @@ import javax.persistence.NoResultException;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -18,7 +18,7 @@ import com.hongqiang.shop.modules.entity.MemberRank;
 import com.hongqiang.shop.modules.entity.Product;
 
 @Repository
-public class MemberRankDaoImpl extends BaseDaoImpl<MemberRank> implements
+public class MemberRankDaoImpl extends BaseDaoImpl<MemberRank,Long> implements
 		MemberRankDaoCustom {
 	@Override
 	public boolean nameExists(String name) {
@@ -72,11 +72,9 @@ public class MemberRankDaoImpl extends BaseDaoImpl<MemberRank> implements
 
 	@Override
 	public Page<MemberRank> findPage(Pageable pageable) {
-		Page<MemberRank> memberRankPage = new Page<MemberRank>(
-				pageable.getPageNumber(), pageable.getPageSize());
 		String sqlString = "select memberRank from MemberRank memberRank";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(memberRankPage,  sqlString,  parameter, pageable);
+		return super.findPage(sqlString,  parameter, pageable);
 	}
 
 	@Override

@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -25,7 +25,7 @@ public interface MemberRankDao extends MemberRankDaoCustom,
  * @author Jack
  * 
  */
-interface MemberRankDaoCustom extends BaseDao<MemberRank> {
+interface MemberRankDaoCustom extends BaseDao<MemberRank,Long> {
 	public boolean nameExists(String paramString);
 
 	public boolean amountExists(BigDecimal paramBigDecimal);

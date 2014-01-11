@@ -1,6 +1,6 @@
 package com.hongqiang.shop.website.service;
 
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.website.entity.Log;
 

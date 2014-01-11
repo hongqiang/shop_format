@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Coupon;
 import com.hongqiang.shop.modules.entity.CouponCode;
@@ -24,7 +24,7 @@ public interface CouponCodeDao extends CouponCodeDaoCustom, CrudRepository<Coupo
  * @author Jack
  * 
  */
-interface CouponCodeDaoCustom extends BaseDao<CouponCode> {
+interface CouponCodeDaoCustom extends BaseDao<CouponCode,Long> {
   public boolean codeExists(String paramString);
 
   public CouponCode build(Coupon paramCoupon, Member paramMember);

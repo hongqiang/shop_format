@@ -303,7 +303,7 @@ $().ready(function() {
 	// 添加商品收藏
 	$addFavorite.click(function() {
 		$.ajax({
-			url: "${base}${frontPath}/member/favorite/add.jhtml?id=${product.id}",
+			url: "${base}${memberPath}/favorite/add.jhtml?id=${product.id}",
 			type: "POST",
 			dataType: "json",
 			cache: false,

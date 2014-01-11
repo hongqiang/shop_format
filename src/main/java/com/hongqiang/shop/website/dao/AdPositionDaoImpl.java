@@ -5,23 +5,22 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.website.entity.AdPosition;
 
 @Repository
-public class AdPositionDaoImpl extends BaseDaoImpl<AdPosition>
+public class AdPositionDaoImpl extends BaseDaoImpl<AdPosition,Long>
   implements AdPositionDaoCustom{
   
 	@Override
 	public Page<AdPosition>  findPage(Pageable pageable){
-		Page<AdPosition> adPositionPage = new Page<AdPosition>(pageable.getPageNumber(),pageable.getPageSize());
 		String qlString = "select adPosition from AdPosition adPosition where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(adPositionPage,  qlString,  parameter, pageable) ;
+		return super.findPage( qlString,  parameter, pageable) ;
 	}
 	
 	@Override

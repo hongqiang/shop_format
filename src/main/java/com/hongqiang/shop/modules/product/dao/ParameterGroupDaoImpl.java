@@ -10,26 +10,23 @@ import javax.persistence.FlushModeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Parameter;
 import com.hongqiang.shop.modules.entity.ParameterGroup;
 import com.hongqiang.shop.modules.entity.Product;
 
 @Repository
-public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup>
+public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup,Long>
 		implements ParameterGroupDaoCustom {
 	@Autowired
 	private ParameterDao parameterDao;
 
 	public Page<ParameterGroup> findPage(Pageable pageable) {
-		Page<ParameterGroup> parameterGroupPage = new Page<ParameterGroup>(
-				pageable.getPageNumber(), pageable.getPageSize());
 		String qlString = "select parameterGroup from ParameterGroup parameterGroup";
 		List<Object> parameter = new ArrayList<Object>();
-		return super
-				.findPage(parameterGroupPage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 
 	public ParameterGroup merge(ParameterGroup parameterGroup) {

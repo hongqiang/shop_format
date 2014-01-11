@@ -163,12 +163,14 @@ $().ready(function() {
 	
 	$previousPage.click(function() {
 		$pageNumber.val(${page.pageNumber - 1});
+		$pageSize.val(${page.pageSize});
 		$productForm.submit();
 		return false;
 	});
 	
 	$nextPage.click(function() {
 		$pageNumber.val(${page.pageNumber + 1});
+		$pageSize.val(${page.pageSize});
 		$productForm.submit();
 		return false;
 	});

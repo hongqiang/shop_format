@@ -18,7 +18,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.utils.Setting;

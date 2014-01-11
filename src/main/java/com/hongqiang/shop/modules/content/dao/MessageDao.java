@@ -2,8 +2,8 @@ package com.hongqiang.shop.modules.content.dao;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Message;
@@ -18,7 +18,7 @@ public interface MessageDao extends MessageDaoCustom, CrudRepository<Message, Lo
  * @author Jack
  * 
  */
-interface MessageDaoCustom extends BaseDao<Message> {
+interface MessageDaoCustom extends BaseDao<Message,Long> {
   public Page<Message> findPage(Member paramMember, Pageable paramPageable);
 
   public Page<Message> findDraftPage(Member paramMember, Pageable paramPageable);

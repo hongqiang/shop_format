@@ -6,15 +6,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Coupon;
 
 @Repository
-public class CouponDaoImpl extends BaseDaoImpl<Coupon> implements
+public class CouponDaoImpl extends BaseDaoImpl<Coupon,Long> implements
 		CouponDaoCustom {
 	@Override
 	public Page<Coupon> findPage(Boolean isEnabled, Boolean isExchange,
@@ -39,18 +39,14 @@ public class CouponDaoImpl extends BaseDaoImpl<Coupon> implements
 				params.add(nowadays);
 			}
 		}
-		Page<Coupon> couponPage = new Page<Coupon>(pageable.getPageNumber(),
-				pageable.getPageSize());
-		return super.findPage(couponPage, sqlString, params, pageable);
+		return super.findPage(sqlString, params, pageable);
 	}
 
 	@Override
 	public Page<Coupon> findPage(Pageable pageable) {
-		Page<Coupon> couponPage = new Page<Coupon>(pageable.getPageNumber(),
-				pageable.getPageSize());
 		String qlString = "select coupon from Coupon coupon where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(couponPage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 
 	@Override

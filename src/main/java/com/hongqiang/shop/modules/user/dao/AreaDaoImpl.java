@@ -7,11 +7,11 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
 import com.hongqiang.shop.modules.entity.Area;
 
 @Repository
-public class AreaDaoImpl extends BaseDaoImpl<Area> implements AreaDaoCustom {
+public class AreaDaoImpl extends BaseDaoImpl<Area,Long> implements AreaDaoCustom {
 	@Override
 	public List<Area> findRoots(Integer count) {
 		String str = "select area from Area area where area.parent is null order by area.order asc";

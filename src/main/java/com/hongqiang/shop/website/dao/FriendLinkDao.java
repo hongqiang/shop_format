@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -21,7 +21,7 @@ public interface FriendLinkDao extends FriendLinkDaoCustom, CrudRepository<Frien
  * @author Jack
  * 
  */
-interface FriendLinkDaoCustom extends BaseDao<FriendLink> {
+interface FriendLinkDaoCustom extends BaseDao<FriendLink,Long> {
   public List<FriendLink> findList(FriendLink.Type paramType);
   
   public  List<FriendLink> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders);

@@ -9,8 +9,8 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -32,7 +32,7 @@ public interface ProductDao extends ProductDaoCustom,
 
 }
 
-interface ProductDaoCustom extends BaseDao<Product> {
+interface ProductDaoCustom extends BaseDao<Product,Long> {
 
 	public boolean snExists(String paramString);
 

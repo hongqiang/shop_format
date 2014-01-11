@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -21,7 +21,7 @@ public abstract interface DeliveryCorpDao extends DeliveryCorpDaoCustom, CrudRep
  * @author Jack
  * 
  */
-interface DeliveryCorpDaoCustom extends BaseDao<DeliveryCorp> {
+interface DeliveryCorpDaoCustom extends BaseDao<DeliveryCorp,Long> {
 
 	public Page<DeliveryCorp>  findPage(Pageable pageable);
 	

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
@@ -125,44 +124,44 @@ public class MemberRankController extends BaseController
   
   @RequestMapping(value={"/dorank"},method=RequestMethod.GET)
 	public void doit(){
-	  //test find id
-	  MemberRank admin1= this.memberRankService.find(1L);
-	  System.out.println(admin1.getName()+","+admin1.getAmount());
-	  //test find page
-	  Pageable pageable = new Pageable(1,40);
-  	Page<MemberRank> page=this.memberRankService.findPage(pageable);
-  	for (MemberRank o : page.getList()) {
-			System.out.print(o.getName()+", "+o.getAmount()+"\n");
-		}
-	  //test nameunique
-	  boolean sboo1=this.memberRankService.nameUnique(admin1.getName(), "do it");
-	  System.out.println("sboo1= "+sboo1);//true
-	  //test name exists
-	  boolean sboo2=this.memberRankService.nameExists(admin1.getName());
-	  System.out.println("sboo2= "+sboo2);//true
-	  //test amount exists
-	  boolean sboo3=this.memberRankService.amountExists(admin1.getAmount());
-	  System.out.println("sboo3= "+sboo3);//true
-	  //test save
-	  MemberRank memberRank = new MemberRank();
-	  memberRank.setName("do do");
-      memberRank.setAmount(null);
-	  memberRank.setMembers(null);
-      memberRank.setPromotions(null);
-      memberRank.setIsDefault(true);
-      memberRank.setIsSpecial(true);
-      memberRank.setScale(admin1.getScale());
-	  this.memberRankService.save(memberRank);
-	  //test count
-//	  long l = this.memberRankService.count();
-//	  System.out.println("count= "+count);
-	  //test find deflaut
-	  MemberRank mm = this.memberRankService.findDefault();
-	  System.out.println(mm.getName()+","+mm.getAmount());
-	  //test find amount
-	  mm = this.memberRankService.findByAmount(admin1.getAmount());
-	  System.out.println(mm.getName()+","+mm.getAmount());
-	  //test delete 
-	  this.memberRankService.delete(mm);
+//	  //test find id
+//	  MemberRank admin1= this.memberRankService.find(1L);
+//	  System.out.println(admin1.getName()+","+admin1.getAmount());
+//	  //test find page
+//	  Pageable pageable = new Pageable(1,40);
+//  	Page<MemberRank> page=this.memberRankService.findPage(pageable);
+//  	for (MemberRank o : page.getList()) {
+//			System.out.print(o.getName()+", "+o.getAmount()+"\n");
+//		}
+//	  //test nameunique
+//	  boolean sboo1=this.memberRankService.nameUnique(admin1.getName(), "do it");
+//	  System.out.println("sboo1= "+sboo1);//true
+//	  //test name exists
+//	  boolean sboo2=this.memberRankService.nameExists(admin1.getName());
+//	  System.out.println("sboo2= "+sboo2);//true
+//	  //test amount exists
+//	  boolean sboo3=this.memberRankService.amountExists(admin1.getAmount());
+//	  System.out.println("sboo3= "+sboo3);//true
+//	  //test save
+//	  MemberRank memberRank = new MemberRank();
+//	  memberRank.setName("do do");
+//      memberRank.setAmount(null);
+//	  memberRank.setMembers(null);
+//      memberRank.setPromotions(null);
+//      memberRank.setIsDefault(true);
+//      memberRank.setIsSpecial(true);
+//      memberRank.setScale(admin1.getScale());
+//	  this.memberRankService.save(memberRank);
+//	  //test count
+////	  long l = this.memberRankService.count();
+////	  System.out.println("count= "+count);
+//	  //test find deflaut
+//	  MemberRank mm = this.memberRankService.findDefault();
+//	  System.out.println(mm.getName()+","+mm.getAmount());
+//	  //test find amount
+//	  mm = this.memberRankService.findByAmount(admin1.getAmount());
+//	  System.out.println(mm.getName()+","+mm.getAmount());
+//	  //test delete 
+//	  this.memberRankService.delete(mm);
 	}
 }

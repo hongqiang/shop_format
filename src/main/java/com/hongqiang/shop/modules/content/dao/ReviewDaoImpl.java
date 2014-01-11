@@ -7,8 +7,8 @@ import javax.persistence.FlushModeType;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -17,7 +17,7 @@ import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.Review;
 
 @Repository
-public class ReviewDaoImpl extends BaseDaoImpl<Review> implements
+public class ReviewDaoImpl extends BaseDaoImpl<Review,Long> implements
 		ReviewDaoCustom {
 	@Override
 	public List<Review> findList(Member member, Product product,
@@ -34,9 +34,7 @@ public class ReviewDaoImpl extends BaseDaoImpl<Review> implements
 			Review.Type type, Boolean isShow, Pageable pageable) {
 		List<Object> parameter = new ArrayList<Object>();
 		String qlString = composeSql(parameter, member, product, type, isShow);
-		Page<Review> reviewPage = new Page<Review>(pageable.getPageNumber(),
-				pageable.getPageSize());
-		return super.findPage(reviewPage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 
 	@Override

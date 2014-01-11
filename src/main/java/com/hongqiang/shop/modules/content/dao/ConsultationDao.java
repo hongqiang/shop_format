@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -23,7 +23,7 @@ public interface ConsultationDao extends ConsultationDaoCustom, CrudRepository<C
  * @author Jack
  * 
  */
-interface ConsultationDaoCustom extends BaseDao<Consultation> {
+interface ConsultationDaoCustom extends BaseDao<Consultation,Long> {
 
   public List<Consultation> findList(Member paramMember, Product paramProduct, Boolean paramBoolean, Integer paramInteger, List<Filter> paramList, List<Order> paramList1);
 

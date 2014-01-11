@@ -9,15 +9,15 @@ import javax.persistence.FlushModeType;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Coupon;
 import com.hongqiang.shop.modules.entity.CouponCode;
 import com.hongqiang.shop.modules.entity.Member;
 
 @Repository
-public class CouponCodeDaoImpl extends BaseDaoImpl<CouponCode> implements
+public class CouponCodeDaoImpl extends BaseDaoImpl<CouponCode,Long> implements
 		CouponCodeDaoCustom {
 	@Override
 	public boolean codeExists(String code) {
@@ -67,18 +67,14 @@ public class CouponCodeDaoImpl extends BaseDaoImpl<CouponCode> implements
 			sqlString += " and couponCode.member = ? ";
 			params.add(member);
 		}
-		Page<CouponCode> couponCodePage = new Page<CouponCode>(
-				pageable.getPageNumber(), pageable.getPageSize());
-		return super.findPage(couponCodePage, sqlString, params, pageable);
+		return super.findPage(sqlString, params, pageable);
 	}
 
 	@Override
 	public Page<CouponCode> findPage(Pageable pageable) {
-		Page<CouponCode> couponCodePage = new Page<CouponCode>(
-				pageable.getPageNumber(), pageable.getPageSize());
 		String qlString = "select couponCode from CouponCode couponCode where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(couponCodePage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 
 	@Override

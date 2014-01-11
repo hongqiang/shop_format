@@ -1,16 +1,19 @@
 package com.hongqiang.shop.modules.user.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.FlushModeType;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Admin;
 
 @Repository
-public class AdminDaoImpl extends BaseDaoImpl<Admin> implements AdminDaoCustom {
+public class AdminDaoImpl extends BaseDaoImpl<Admin,Long> implements AdminDaoCustom {
 	@Override
 	public boolean usernameExists(String username) {
 		if (username == null)
@@ -25,9 +28,8 @@ public class AdminDaoImpl extends BaseDaoImpl<Admin> implements AdminDaoCustom {
 
 	@Override
 	public Page<Admin> findPage(Pageable pageable) {
-		Page<Admin> adminPage = new Page<Admin>(pageable.getPageNumber(),
-				pageable.getPageSize());
-		String sqlString = "select admin from Admin admin";
-		return super.find(adminPage, sqlString);
+		String sqlString = "select admin from Admin admin where 1=1 ";
+		List<Object> paramsList = new ArrayList<Object>();
+		return super.findPage(sqlString, paramsList, pageable);
 	}
 }

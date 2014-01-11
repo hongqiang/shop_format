@@ -2,7 +2,7 @@ package com.hongqiang.shop.modules.shipping.service;
 
 import java.util.Map;
 
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Shipping;
 

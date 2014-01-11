@@ -8,14 +8,14 @@ import javax.persistence.NoResultException;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Receiver;
 
 @Repository
-public class ReceiverDaoImpl extends BaseDaoImpl<Receiver> implements
+public class ReceiverDaoImpl extends BaseDaoImpl<Receiver,Long> implements
 		ReceiverDaoCustom {
 	public Receiver findDefault(Member member) {
 		if (member == null)
@@ -47,9 +47,7 @@ public class ReceiverDaoImpl extends BaseDaoImpl<Receiver> implements
 			sqlString += " and receiver.member = ? ";
 			params.add(member);
 		}
-		Page<Receiver> receiverPage = new Page<Receiver>(
-				pageable.getPageNumber(), pageable.getPageSize());
-		return super.findPage(receiverPage, sqlString, params, pageable);
+		return super.findPage(sqlString, params, pageable);
 	}
 
 	public void persist(Receiver receiver) {

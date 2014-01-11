@@ -2,8 +2,8 @@ package com.hongqiang.shop.modules.user.dao;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Admin;
 
@@ -21,7 +21,7 @@ public  interface AdminDao extends AdminDaoCustom, CrudRepository<Admin, Long>{
  * @author Jack
  * 
  */
-interface AdminDaoCustom extends BaseDao<Admin> {
+interface AdminDaoCustom extends BaseDao<Admin,Long> {
   public  boolean usernameExists(String paramString);
 
   

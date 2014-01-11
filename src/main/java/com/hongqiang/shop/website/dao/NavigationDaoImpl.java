@@ -11,12 +11,12 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.website.entity.Navigation;
 
 @Repository
-public class NavigationDaoImpl extends BaseDaoImpl<Navigation> implements
+public class NavigationDaoImpl extends BaseDaoImpl<Navigation,Long> implements
 		NavigationDaoCustom {
 	@Override
 	public List<Navigation> findList(Navigation.Position position) {
@@ -41,7 +41,6 @@ public class NavigationDaoImpl extends BaseDaoImpl<Navigation> implements
 			List<com.hongqiang.shop.common.utils.Order> orders) {
 		String qlString = "select navigation from Navigation navigation where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findList(qlString, parameter, first, count, filters,
-				orders);
+		return super.findList(qlString, parameter, first, count, filters,orders);
 	}
 }

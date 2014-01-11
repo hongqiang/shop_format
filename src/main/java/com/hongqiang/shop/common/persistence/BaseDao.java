@@ -8,7 +8,6 @@ package com.hongqiang.shop.common.persistence;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -19,9 +18,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.transform.ResultTransformer;
-
-import com.hongqiang.shop.common.utils.Filter;
-import com.hongqiang.shop.common.utils.Pageable;
 
 /**
  * DAO支持接口
@@ -51,37 +47,10 @@ public interface BaseDao<T> {
 	 */
 	public void clear();
 	
-	//save
-	public  void persist(T paramT);
-
-	//get id
-	public Long getIdentifier(T entity);
-	
-	//get entity
-	 public T find(Long id);
-	
-	//update
-	public  T merge(T paramT);
-
-	//update-igore
-	 public T update(T entity, String[] ignoreProperties);
-	
-	//delete
-	public  void remove(T paramT);
-	
-	//update
-	public  void refresh(T paramT);
-
-	public  boolean isManaged(T paramT);
-
-	public  void detach(T paramT);
-
-	public  void lock(T paramT, LockModeType paramLockModeType);
-	
-	public Long count(StringBuilder qlString, List<Filter> filters, List<Object> params);
-	
 	// -------------- QL Query --------------
 
+	public T update(T entity, String[] ignoreProperties);
+	
 	/**
 	 * QL 分页查询
 	 * @param page
@@ -91,38 +60,7 @@ public interface BaseDao<T> {
 	 */
     public <E> Page<E> find(Page<E> page, String qlString, Object... parameter);
     
-	/**
-	 * QL 分页查询-shop 传递数组形式的参数
-	 * @param page
-	 * @param qlString
-	 * @param parameter
-	 * @return
-	 */
-    public <E> Page<E> findPage(Page<E> page, String qlString, Object[] parameter);
-    
-    /**
-     * QL 查询
-     * @param qlString 完整的sql语句
-     * @param parameter sql语句中的参数
-     * @param firstResults 返回firstResults个结果
-     * @param MaxResults 限制最大结果数
-     * @param filters  sql的where条件
-     * @param orderList sql的order条件
-     * @return
-     */
-    public <E> List<E> findList(String qlString, List<Object> parameter,
-			Integer firstResults, Integer MaxResults, List<Filter> filters,
-			List<com.hongqiang.shop.common.utils.Order> orderList);
-    
-    /**
-     * QL 分页查询
-     * @param page 
-     * @param qlString sql语句
-     * @param parameter sql语句中的参数
-     * @param pageable 
-     * @return
-     */
-    public <E> Page<E> findPage(Page<E> page, String qlString, List<Object> parameter,Pageable pageable) ;
+//    public <E> Page<E> findList(Page<E> page, String qlString, Object[] parameter);
     
     /**
 	 * QL 查询
@@ -132,6 +70,8 @@ public interface BaseDao<T> {
 	 */
 	public <E> List<E> find(String qlString, Object... parameter);
     
+	public <E> List<E> findList(String qlString, Object[] parameter,Integer firstResults, Integer MaxResults);
+	
 	/**
 	 * QL 更新
 	 * @param sqlString
@@ -300,5 +240,4 @@ public interface BaseDao<T> {
 	 * @param fields 字段名
 	 */
 	public List<T> keywordsHighlight(BooleanQuery query, List<T> list, int subLength, String... fields);
-
 }

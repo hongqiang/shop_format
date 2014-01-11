@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
 import com.hongqiang.shop.modules.entity.Parameter;
 import com.hongqiang.shop.modules.entity.ParameterGroup;
 
@@ -19,7 +19,7 @@ public abstract interface ParameterDao extends ParameterDaoCustom, CrudRepositor
  * @author Jack
  *
  */
-interface ParameterDaoCustom extends BaseDao<Parameter> {
+interface ParameterDaoCustom extends BaseDao<Parameter,Long> {
 
 	  public abstract List<Parameter> findList(ParameterGroup parameterGroup, Set<Parameter> excludes);
 }

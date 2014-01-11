@@ -7,11 +7,11 @@ import javax.persistence.FlushModeType;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
 import com.hongqiang.shop.modules.entity.Cart;
 
 @Repository
-public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDaoCustom {
+public class CartDaoImpl extends BaseDaoImpl<Cart,Long> implements CartDaoCustom {
 	// 7*24*60*60
 	private final int COOKIE_TIME = -604800;
 

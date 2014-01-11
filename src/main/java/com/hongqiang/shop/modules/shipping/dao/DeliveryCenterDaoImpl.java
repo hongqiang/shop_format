@@ -8,15 +8,15 @@ import javax.persistence.NoResultException;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.DeliveryCenter;
 
 @Repository
-public class DeliveryCenterDaoImpl extends BaseDaoImpl<DeliveryCenter>
+public class DeliveryCenterDaoImpl extends BaseDaoImpl<DeliveryCenter,Long>
 		implements DeliveryCenterDaoCustom {
 	@Override
 	public DeliveryCenter findDefault() {
@@ -45,10 +45,9 @@ public class DeliveryCenterDaoImpl extends BaseDaoImpl<DeliveryCenter>
 	
 	@Override
 	 public Page<DeliveryCenter> findPage(Pageable pageable){
-	    	Page<DeliveryCenter> deliveryCenterPage = new Page<DeliveryCenter>(pageable.getPageNumber(),pageable.getPageSize());
 			String qlString = "select deliveryCenter from DeliveryCenter deliveryCenter where 1=1 ";
 			List<Object> parameter = new ArrayList<Object>();
-			return super.findPage(deliveryCenterPage,  qlString,  parameter, pageable) ;
+			return super.findPage(qlString,  parameter, pageable) ;
 	    }
 	
 	@Override

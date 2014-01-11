@@ -5,17 +5,18 @@ import javax.persistence.NoResultException;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
 import com.hongqiang.shop.website.entity.PluginConfig;
 
 @Repository
-public class PluginConfigDaoImpl extends BaseDaoImpl<PluginConfig> implements
-		PluginConfigDaoCustom {
+public class PluginConfigDaoImpl extends BaseDaoImpl<PluginConfig, Long>
+		implements PluginConfigDaoCustom {
 	@Override
 	public boolean pluginIdExists(String pluginId) {
 		if (pluginId == null)
 			return false;
-		String str = "select count(*) from PluginConfig pluginConfig where pluginConfig.pluginId = :pluginId";
+		String str = "select count(*) from PluginConfig pluginConfig "+
+						"where pluginConfig.pluginId = :pluginId";
 		Long localLong = (Long) this.getEntityManager()
 				.createQuery(str, Long.class)
 				.setFlushMode(FlushModeType.COMMIT)
@@ -28,12 +29,14 @@ public class PluginConfigDaoImpl extends BaseDaoImpl<PluginConfig> implements
 		if (pluginId == null)
 			return null;
 		try {
-			String str = "select pluginConfig from PluginConfig pluginConfig where pluginConfig.pluginId = :pluginId";
+			String str = "select pluginConfig from PluginConfig pluginConfig "+
+					"where pluginConfig.pluginId = :pluginId";
 			return (PluginConfig) this.getEntityManager()
 					.createQuery(str, PluginConfig.class)
 					.setFlushMode(FlushModeType.COMMIT)
 					.setParameter("pluginId", pluginId).getSingleResult();
 		} catch (NoResultException localNoResultException1) {
+			localNoResultException1.printStackTrace();
 		}
 		return null;
 	}

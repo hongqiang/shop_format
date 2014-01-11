@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -17,7 +17,7 @@ import com.hongqiang.shop.modules.entity.ArticleCategory;
 import com.hongqiang.shop.modules.entity.Tag;
 
 @Repository
-public class ArticleDaoImpl extends BaseDaoImpl<Article>
+public class ArticleDaoImpl extends BaseDaoImpl<Article,Long>
   implements ArticleDaoCustom
 {
   @Override
@@ -71,10 +71,9 @@ public class ArticleDaoImpl extends BaseDaoImpl<Article>
 
   @Override  
   public Page<Article> findPage(Pageable pageable){
-	Page<Article> articlePage = new Page<Article>(pageable.getPageNumber(),pageable.getPageSize());
 	String qlString = "select article from Article article where 1=1 ";
 	List<Object> parameter = new ArrayList<Object>();
-	return super.findPage(articlePage,  qlString,  parameter, pageable) ;
+	return super.findPage(qlString,  parameter, pageable) ;
   }
   
   @Override
@@ -92,9 +91,7 @@ public class ArticleDaoImpl extends BaseDaoImpl<Article>
 		parameter.add(tags);
     }
 	qlString += " order by article.isTop DESC ";
-    Page<Article> articlePage = new Page<Article>(pageable.getPageNumber(),pageable.getPageSize());
- 
-    return super.findPage(articlePage, qlString, parameter, pageable);
+    return super.findPage(qlString, parameter, pageable);
   }
   
   @Override

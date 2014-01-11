@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Role;
 
@@ -21,7 +21,7 @@ public abstract interface RoleDao extends RoleDaoCustom,
  * @author Jack
  * 
  */
-interface RoleDaoCustom extends BaseDao<Role> {
+interface RoleDaoCustom extends BaseDao<Role,Long> {
 
 	public Page<Role> findPage(Pageable pageable);
 

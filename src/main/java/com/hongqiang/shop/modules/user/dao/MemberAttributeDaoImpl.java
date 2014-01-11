@@ -7,15 +7,15 @@ import javax.persistence.FlushModeType;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.MemberAttribute;
 
 @Repository
-public class MemberAttributeDaoImpl extends BaseDaoImpl<MemberAttribute>
+public class MemberAttributeDaoImpl extends BaseDaoImpl<MemberAttribute,Long>
 		implements MemberAttributeDaoCustom {
 	@Override
 	public Integer findUnusedPropertyIndex() {
@@ -34,11 +34,9 @@ public class MemberAttributeDaoImpl extends BaseDaoImpl<MemberAttribute>
 
 	@Override
 	public Page<MemberAttribute> findPage(Pageable pageable) {
-		Page<MemberAttribute> memberAttributePage = new Page<MemberAttribute>(
-				pageable.getPageNumber(), pageable.getPageSize());
 		String qlString = "select memberAttribute from MemberAttribute memberAttribute";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(memberAttributePage,  qlString,  parameter, pageable);
+		return super.findPage(qlString,  parameter, pageable);
 	}
 
 	@Override

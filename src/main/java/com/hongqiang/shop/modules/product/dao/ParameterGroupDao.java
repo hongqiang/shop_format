@@ -2,8 +2,8 @@ package com.hongqiang.shop.modules.product.dao;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.ParameterGroup;
 
@@ -20,7 +20,7 @@ public abstract interface ParameterGroupDao extends ParameterGroupDaoCustom, Cru
  * @author Jack
  * 
  */
-interface ParameterGroupDaoCustom extends BaseDao<ParameterGroup> {
+interface ParameterGroupDaoCustom extends BaseDao<ParameterGroup,Long> {
 
 	public Page<ParameterGroup> findPage(Pageable pageable);
 	

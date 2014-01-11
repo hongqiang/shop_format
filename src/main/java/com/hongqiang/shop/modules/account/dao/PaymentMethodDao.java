@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -22,10 +22,11 @@ public interface PaymentMethodDao extends PaymentMethodDaoCustom,
  * @author Jack
  * 
  */
-interface PaymentMethodDaoCustom extends BaseDao<PaymentMethod> {
+interface PaymentMethodDaoCustom extends BaseDao<PaymentMethod, Long> {
 	public Page<PaymentMethod> findPage(Pageable pageable);
-	
+
 	public List<PaymentMethod> findAll();
-	
-	public  List<PaymentMethod> findList(Integer first, Integer count, List<Filter> filters, List<Order> orders);
+
+	public List<PaymentMethod> findList(Integer first, Integer count,
+			List<Filter> filters, List<Order> orders);
 }

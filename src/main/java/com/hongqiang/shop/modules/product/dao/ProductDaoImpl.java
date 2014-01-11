@@ -17,11 +17,12 @@ import javax.persistence.FlushModeType;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -38,7 +39,7 @@ import com.hongqiang.shop.modules.entity.SpecificationValue;
 import com.hongqiang.shop.modules.entity.Tag;
 
 @Repository
-class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
+class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCustom {
 
 	class SortSpecificationValue implements Comparator<SpecificationValue> {
 		public int compare(SpecificationValue a1, SpecificationValue a2) {
@@ -169,9 +170,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 		String sqlString =  composeSql( productCategory,  brand,promotion,  tags,
 				 attributeValue,  startPrice,endPrice,  isMarketable,  isList,
 				 isTop,  isGift,  isOutOfStock,isStockAlert,  orderType, params);
-		Page<Product> productPage = new Page<Product>(pageable.getPageNumber(),
-				pageable.getPageSize());
-		return super.findPage(productPage, sqlString, params, pageable);
+		return super.findPage(sqlString, params, pageable);
 	}
 
 	@Override
@@ -186,19 +185,21 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 	}
 
 	public Page<Product> findPage(Member member, Pageable pageable) {
-		if (member == null)
-			return new Page<Product>(0, 0);
+		if (member == null){
+			List<Product> products = new ArrayList<Product>();
+			return new Page<Product>(products,0L,pageable);
+		}
 		String qlString = "select product from Product product "+
-			"join product.favoriteMembers favoriteMembers "+
-				"where favoriteMembers= ? ";
+			"join product.favoriteMembers favoriteMember "+
+				"where favoriteMember= ? ";
+		qlString += " order by product.createDate DESC";
 		List<Object> params = new ArrayList<Object>();
 		params.add(member);
-		Page<Product> productPage = new Page<Product>(pageable.getPageNumber(),
-				pageable.getPageSize());
 		System.out.println("sql= "+qlString);
-		return super.findPage(productPage, qlString, params, pageable);
+		return super.findPage(qlString, params, pageable);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Page<Object> findSalesPage(Date beginDate, Date endDate,
 			Pageable pageable) {
 		String qlString = "select product, sum(orderItems.quantity), "+
@@ -231,9 +232,11 @@ class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDaoCustom {
 		// 和shopxx不同
 		// int first = (pageable.getPageNumber() - 1)* pageable.getPageSize();
 		// int count = pageable.getPageSize();
-		Page<Object> productPage = new Page<Object>(pageable.getPageNumber(),
-				pageable.getPageSize());
-		return super.findPage(productPage, qlString, params, pageable);
+		Query query = createQuery(qlString,params.toArray());
+		 query.setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize());
+		query.setMaxResults(pageable.getPageSize());
+		return new Page<Object>(query.list(),localLong.longValue(),pageable);
+//		return super.findPage(qlString, params, pageable);
 
 	}
 

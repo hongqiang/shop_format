@@ -1,8 +1,6 @@
 package com.hongqiang.shop.modules.product.web.admin;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
@@ -105,41 +102,41 @@ public class ParameterGroupController extends BaseController
   
   @RequestMapping(value={"/dopara"},method=RequestMethod.GET)
 	public void doit(){
-	  	ParameterGroup parameterGroup = this.parameterGroupService.find(1L);
-	  	System.out.println(parameterGroup.getName()+","+parameterGroup.getProductCategory());
-	  	List<Parameter> params = parameterGroup.getParameters();
-		for (Parameter op : params) {
-		System.out.print(op.getName()+", "+op.getParameterGroup()+"\n");
-	}
-		System.out.println("==============================================");
-		
-		Pageable pageable = new Pageable(1,40);
-		Page<ParameterGroup> page=this.parameterGroupService.findPage(pageable);
-		for (ParameterGroup o : page.getList()) {
-		System.out.print(o.getName()+", "+o.getProductCategory()+"\n");
-	}
-		System.out.println("==============================================");
-		
-		ProductCategory productCategory = new ProductCategory();
-		productCategory.setId(1L);
-		
-
-		
-		ParameterGroup parameterGroup2 = new ParameterGroup();
-		parameterGroup2.setName("hego");
-		parameterGroup2.setProductCategory(productCategory);
-		List<Parameter> lisp = new ArrayList<Parameter>();
-		for(int i=0;i<5;++i){
-			Parameter parameter = new Parameter();
-			parameter.setName("ab"+i);
-			parameter.setParameterGroup(parameterGroup2);
-			lisp.add(parameter);
-		}
-		parameterGroup2.setParameters(lisp);
-		this.parameterGroupService.save(parameterGroup2);
-		
-		parameterGroup.setName("lenght");
-		ParameterGroup aGroup = this.parameterGroupService.update(parameterGroup);
-		System.out.println(aGroup.getName()+","+aGroup.getProductCategory());
+//	  	ParameterGroup parameterGroup = this.parameterGroupService.find(1L);
+//	  	System.out.println(parameterGroup.getName()+","+parameterGroup.getProductCategory());
+//	  	List<Parameter> params = parameterGroup.getParameters();
+//		for (Parameter op : params) {
+//		System.out.print(op.getName()+", "+op.getParameterGroup()+"\n");
+//	}
+//		System.out.println("==============================================");
+//		
+//		Pageable pageable = new Pageable(1,40);
+//		Page<ParameterGroup> page=this.parameterGroupService.findPage(pageable);
+//		for (ParameterGroup o : page.getList()) {
+//		System.out.print(o.getName()+", "+o.getProductCategory()+"\n");
+//	}
+//		System.out.println("==============================================");
+//		
+//		ProductCategory productCategory = new ProductCategory();
+//		productCategory.setId(1L);
+//		
+//
+//		
+//		ParameterGroup parameterGroup2 = new ParameterGroup();
+//		parameterGroup2.setName("hego");
+//		parameterGroup2.setProductCategory(productCategory);
+//		List<Parameter> lisp = new ArrayList<Parameter>();
+//		for(int i=0;i<5;++i){
+//			Parameter parameter = new Parameter();
+//			parameter.setName("ab"+i);
+//			parameter.setParameterGroup(parameterGroup2);
+//			lisp.add(parameter);
+//		}
+//		parameterGroup2.setParameters(lisp);
+//		this.parameterGroupService.save(parameterGroup2);
+//		
+//		parameterGroup.setName("lenght");
+//		ParameterGroup aGroup = this.parameterGroupService.update(parameterGroup);
+//		System.out.println(aGroup.getName()+","+aGroup.getProductCategory());
   }
 }

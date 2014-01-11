@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Member;
 
@@ -22,7 +22,7 @@ public interface MemberDao extends MemberDaoCustom,
  * @author Jack
  * 
  */
-interface MemberDaoCustom extends BaseDao<Member> {
+interface MemberDaoCustom extends BaseDao<Member,Long> {
 
 	public Member findByUsername(String paramString);
 

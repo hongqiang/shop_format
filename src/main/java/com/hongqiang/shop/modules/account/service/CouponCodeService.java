@@ -2,7 +2,7 @@ package com.hongqiang.shop.modules.account.service;
 
 import java.util.List;
 
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Coupon;
 import com.hongqiang.shop.modules.entity.CouponCode;

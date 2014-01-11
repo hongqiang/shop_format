@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.utils.ResourceNotFoundException;
 import com.hongqiang.shop.common.web.BaseController;
@@ -111,8 +110,10 @@ public class ProductController extends BaseController {
 		model.addAttribute("startPrice", startPrice);
 		model.addAttribute("endPrice", endPrice);
 		model.addAttribute("orderType", orderType);
-		model.addAttribute("pageNumber", pageNumber);
-		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("pageNumber", pageable.getPageNumber());
+		model.addAttribute("pageSize", pageable.getPageSize());
+//		model.addAttribute("pageNumber", pageNumber);
+//		model.addAttribute("pageSize", pageSize);
 		model.addAttribute("page", this.productService.findPage(
 				localProductCategory, localBrand, localPromotion, tags,
 				localHashMap, startPrice, endPrice, Boolean.valueOf(true),
@@ -145,14 +146,6 @@ public class ProductController extends BaseController {
 				localBrand, localPromotion, tags, null, startPrice, endPrice,
 				Boolean.valueOf(true), Boolean.valueOf(true), null,
 				Boolean.valueOf(false), null, null, orderType, localPageable));
-		Page<Product> products = this.productService.findPage(null,
-				localBrand, localPromotion, tags, null, startPrice, endPrice,
-				Boolean.valueOf(true), Boolean.valueOf(true), null,
-				Boolean.valueOf(false), null, null, orderType, localPageable);
-		System.out.println("products.getList()="+products.getList().size());
-		for (Product product : products.getList()) {
-			System.out.println("name="+product.getName());
-		}
 		return "/shop/product/list";
 	}
 

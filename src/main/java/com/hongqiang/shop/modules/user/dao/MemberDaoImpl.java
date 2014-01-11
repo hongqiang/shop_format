@@ -5,19 +5,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 
+import org.hibernate.Query;
+import javax.persistence.FlushModeType;
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Order;
 
 @Repository
-public class MemberDaoImpl extends BaseDaoImpl<Member> implements
+public class MemberDaoImpl extends BaseDaoImpl<Member,Long> implements
 		MemberDaoCustom {
 
 	@Override
@@ -45,11 +46,31 @@ public class MemberDaoImpl extends BaseDaoImpl<Member> implements
 				.setParameter("email", email).getResultList();
 	}
 
+	public Long count(Date beginDate, Date endDate) {
+		String sqlString = "select DISTINCT member "
+				+"from Member member, Order order where 1=1 ";
+		List<Object> params = new ArrayList<Object>();
+	    if (beginDate != null){
+			sqlString += " and order.createDate >= ?";
+			params.add(beginDate);
+		}
+	    if (endDate != null){
+			sqlString += " and order.createDate <= ?";
+			params.add(endDate);
+		}
+		sqlString += " and order.orderStatus = ?";
+		params.add(Order.OrderStatus.completed);
+		StringBuilder stringBuilder = new StringBuilder(sqlString);
+		return super.count(stringBuilder, null, params);
+	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Page<Object> findPurchasePage(Date beginDate, Date endDate,
 			Pageable pageable) {
 
-		String sqlString = "select DISTINCT member, sum(order.amountPaid) from Member member, Order order where 1=1 ";
+		String sqlString = "select DISTINCT member, sum(order.amountPaid) "
+					+"from Member member, Order order where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 	    if (beginDate != null){
 			sqlString += " and order.createDate >= ?";
@@ -67,18 +88,21 @@ public class MemberDaoImpl extends BaseDaoImpl<Member> implements
 		
 		sqlString += " group by member.id";
 		sqlString += " order by sum(order.amountPaid) DESC";
-	    
-		Page<Object> memberPage = new Page<Object>(pageable.getPageNumber(),pageable.getPageSize());
-		return super.findPage(memberPage,  sqlString,  params, pageable);//和他的源码逻辑不一样，等测试的时候不合适再做修改
+		Long count = count(beginDate, endDate);
+		int i = (int)Math.ceil(count.longValue() / pageable.getPageSize());
+		if (i < pageable.getPageNumber())
+		      pageable.setPageNumber(i);
+		 Query query = createQuery(sqlString,params.toArray());
+		 query.setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize());
+		query.setMaxResults(pageable.getPageSize());
+		return new Page<Object>(query.list(),count,pageable);
 	}
 
 	@Override
 	public Page<Member> findPage(Pageable pageable) {
-		Page<Member> memberPage = new Page<Member>(pageable.getPageNumber(),
-				pageable.getPageSize());
 		String sqlString = "select members from Member members";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(memberPage,  sqlString,  parameter, pageable);
+		return super.findPage(sqlString,  parameter, pageable);
 
 	}
 

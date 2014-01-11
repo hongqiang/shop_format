@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
@@ -112,11 +111,11 @@ public class BrandController extends BaseController
 //		System.out.println("save success.");
 //		this.brandService.delete(aBrand2.getId());
 //	}
-  		Pageable pageable = new Pageable(1,40);
-  		Page<Brand> page=this.brandService.findPage(pageable);
-  		for (Brand o : page.getList()) {
-			System.out.print(o.getName()+", "+o.getIntroduction()+"\n");
-		}
+//  		Pageable pageable = new Pageable(1,40);
+//  		Page<Brand> page=this.brandService.findPage(pageable);
+//  		for (Brand o : page.getList()) {
+//			System.out.print(o.getName()+", "+o.getIntroduction()+"\n");
+//		}
 
   	}
 }

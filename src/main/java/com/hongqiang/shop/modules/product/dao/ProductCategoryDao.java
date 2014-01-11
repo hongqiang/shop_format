@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -28,7 +28,7 @@ public interface ProductCategoryDao extends ProductCategoryDaoCustom,
  * 
  * @author ThinkGem
  */
-interface ProductCategoryDaoCustom extends BaseDao<ProductCategory> {
+interface ProductCategoryDaoCustom extends BaseDao<ProductCategory,Long> {
 
 	/**
 	 * 获取所有顶级商品分类集合;

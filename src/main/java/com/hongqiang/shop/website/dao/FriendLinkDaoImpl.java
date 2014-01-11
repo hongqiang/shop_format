@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.website.entity.FriendLink;
 
 @Repository
-public class FriendLinkDaoImpl extends BaseDaoImpl<FriendLink>
+public class FriendLinkDaoImpl extends BaseDaoImpl<FriendLink,Long>
   implements FriendLinkDaoCustom
 {
  @Override
@@ -34,9 +34,8 @@ public class FriendLinkDaoImpl extends BaseDaoImpl<FriendLink>
  
   @Override
 	public Page<FriendLink>  findPage(Pageable pageable){
-		Page<FriendLink> friendLinkPage = new Page<FriendLink>(pageable.getPageNumber(),pageable.getPageSize());
 		String qlString = "select friendLink from FriendLink friendLink where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(friendLinkPage,  qlString,  parameter, pageable) ;
+		return super.findPage(qlString,  parameter, pageable) ;
 	}
 }

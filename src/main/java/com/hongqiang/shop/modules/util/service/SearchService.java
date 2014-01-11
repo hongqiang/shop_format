@@ -1,7 +1,7 @@
 package com.hongqiang.shop.modules.util.service;
 
 import java.math.BigDecimal;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Article;
 import com.hongqiang.shop.modules.entity.Product;

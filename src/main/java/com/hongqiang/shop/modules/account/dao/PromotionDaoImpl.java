@@ -6,15 +6,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Promotion;
 
 @Repository
-public class PromotionDaoImpl extends BaseDaoImpl<Promotion> implements
+public class PromotionDaoImpl extends BaseDaoImpl<Promotion,Long> implements
 		PromotionDaoCustom {
 	public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded,
 			Integer count, List<Filter> filters, List<Order> orders) {
@@ -45,11 +45,9 @@ public class PromotionDaoImpl extends BaseDaoImpl<Promotion> implements
 
 	@Override
 	public Page<Promotion> findPage(Pageable pageable) {
-		Page<Promotion> promotionPage = new Page<Promotion>(
-				pageable.getPageNumber(), pageable.getPageSize());
 		String qlString = "select promotion from Promotion promotion where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(promotionPage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 
 	@Override

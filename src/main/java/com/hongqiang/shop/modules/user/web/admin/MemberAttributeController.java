@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.hongqiang.shop.common.persistence.Page;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.common.web.BaseController;
@@ -127,32 +126,32 @@ public class MemberAttributeController extends BaseController {
 	@RequestMapping(value = { "/domematt" }, method = RequestMethod.GET)
 	public void doit() {
 		// test find id
-		MemberAttribute memberAttribute = this.memberAttributeService.find(1L);
-		System.out.println(memberAttribute.getName());
-		// test find page
-		Pageable pageable = new Pageable(1, 40);
-		Page<MemberAttribute> page = this.memberAttributeService
-				.findPage(pageable);
-		for (MemberAttribute o : page.getList()) {
-			System.out.print(o.getName() + "\n");
-		}
-		// test find list
-		List<MemberAttribute> lis = this.memberAttributeService.findList();
-		for (MemberAttribute o : lis) {
-			System.out.print(o.getName() + "\n");
-		}
-		// test find unused
-		Integer inr = this.memberAttributeService.findUnusedPropertyIndex();
-		System.out.println("inr= " + inr);
-		// test count
-		// long count = this.memberAttributeService.count();
-		// System.out.println("count= "+count);
-		// test update
-		memberAttribute.setName("nothing");
-		this.memberAttributeService.update(memberAttribute);
-		// test save
-		// next
-		// test delete T
-		this.memberAttributeService.delete(memberAttribute);
+//		MemberAttribute memberAttribute = this.memberAttributeService.find(1L);
+//		System.out.println(memberAttribute.getName());
+//		// test find page
+//		Pageable pageable = new Pageable(1, 40);
+//		Page<MemberAttribute> page = this.memberAttributeService
+//				.findPage(pageable);
+//		for (MemberAttribute o : page.getList()) {
+//			System.out.print(o.getName() + "\n");
+//		}
+//		// test find list
+//		List<MemberAttribute> lis = this.memberAttributeService.findList();
+//		for (MemberAttribute o : lis) {
+//			System.out.print(o.getName() + "\n");
+//		}
+//		// test find unused
+//		Integer inr = this.memberAttributeService.findUnusedPropertyIndex();
+//		System.out.println("inr= " + inr);
+//		// test count
+//		// long count = this.memberAttributeService.count();
+//		// System.out.println("count= "+count);
+//		// test update
+//		memberAttribute.setName("nothing");
+//		this.memberAttributeService.update(memberAttribute);
+//		// test save
+//		// next
+//		// test delete T
+//		this.memberAttributeService.delete(memberAttribute);
 	}
 }

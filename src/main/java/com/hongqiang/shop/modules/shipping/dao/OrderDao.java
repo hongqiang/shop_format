@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -23,7 +23,7 @@ public interface OrderDao extends OrderDaoCustom, CrudRepository<com.hongqiang.s
  * @author Jack
  * 
  */
-interface OrderDaoCustom extends BaseDao<com.hongqiang.shop.modules.entity.Order> {
+interface OrderDaoCustom extends BaseDao<com.hongqiang.shop.modules.entity.Order,Long> {
 
 	public List<com.hongqiang.shop.modules.entity.Order> findList(Member paramMember, Integer paramInteger,
 			List<Filter> paramList, List<Order> paramList1);

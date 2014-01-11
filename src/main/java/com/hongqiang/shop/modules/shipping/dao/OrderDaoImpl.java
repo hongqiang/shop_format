@@ -16,8 +16,8 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
-import com.hongqiang.shop.common.persistence.BaseDaoImpl;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -27,7 +27,7 @@ import com.hongqiang.shop.modules.entity.Product;
 
 @Repository
 public class OrderDaoImpl extends
-		BaseDaoImpl<com.hongqiang.shop.modules.entity.Order> implements
+		BaseDaoImpl<com.hongqiang.shop.modules.entity.Order,Long> implements
 		OrderDaoCustom {
 
 	@Override
@@ -46,14 +46,15 @@ public class OrderDaoImpl extends
 	@Override
 	public Page<com.hongqiang.shop.modules.entity.Order> findPage(
 			Member member, Pageable pageable) {
-		if (member == null)
-			return new Page<com.hongqiang.shop.modules.entity.Order>(0,0);
+		if (member == null){
+			List<com.hongqiang.shop.modules.entity.Order> orders = 
+					new ArrayList<com.hongqiang.shop.modules.entity.Order>();
+			return new Page<com.hongqiang.shop.modules.entity.Order>(orders,0L,pageable);
+		}
 		String qlString = "select o from Order o where 1=1 and o.member = ? ";
 		List<Object> parameter = new ArrayList<Object>();
 		parameter.add(member);
-		Page<com.hongqiang.shop.modules.entity.Order> orderPage = new Page<com.hongqiang.shop.modules.entity.Order>(
-				pageable.getPageNumber(), pageable.getPageSize());
-		return super.findPage(orderPage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 
 	@Override
@@ -86,9 +87,7 @@ public class OrderDaoImpl extends
 				parameter.add(nowadays);
 			}
 		}
-		Page<com.hongqiang.shop.modules.entity.Order> orderPage = new Page<com.hongqiang.shop.modules.entity.Order>(
-				pageable.getPageNumber(), pageable.getPageSize());
-		return super.findPage(orderPage, qlString, parameter, pageable);
+		return super.findPage(qlString, parameter, pageable);
 	}
 
 	@Override

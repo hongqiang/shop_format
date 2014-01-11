@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.hongqiang.shop.common.persistence.BaseDao;
-import com.hongqiang.shop.common.persistence.Page;
+import com.hongqiang.shop.common.base.persistence.BaseDao;
+import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.utils.Filter;
 import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.common.utils.Pageable;
@@ -22,7 +22,7 @@ public interface PromotionDao extends PromotionDaoCustom,
  * @author Jack
  * 
  */
-interface PromotionDaoCustom extends BaseDao<Promotion> {
+interface PromotionDaoCustom extends BaseDao<Promotion,Long> {
 	public List<Promotion> findList(Boolean hasBegun, Boolean hasEnded,
 			Integer count, List<Filter> filters, List<Order> orders);
 
