@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 
 import com.hongqiang.shop.common.utils.RSAUtils;
 
-@Service
+@Service("rsaServiceImpl")
 public class RSAServiceImpl
   implements RSAService
 {

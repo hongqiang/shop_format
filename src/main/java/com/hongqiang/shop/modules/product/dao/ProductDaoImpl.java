@@ -223,20 +223,20 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		qlString += " group by product.id ";
 
 		StringBuilder stringBuilder = new StringBuilder(qlString);
-		Long localLong = super.count(stringBuilder, null, params);
-		int i = (int) Math.ceil(localLong.longValue() / pageable.getPageSize());
+		Long count = super.count(stringBuilder, null, params);
+		int i = (int) Math.ceil(count.longValue() / pageable.getPageSize());
 		if (i < pageable.getPageNumber())
 			pageable.setPageNumber(i);
-
 		qlString += " order by sum(orderItems.quantity * orderItems.price) DESC ";
-		// 和shopxx不同
-		// int first = (pageable.getPageNumber() - 1)* pageable.getPageSize();
-		// int count = pageable.getPageSize();
 		Query query = createQuery(qlString,params.toArray());
 		 query.setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize());
 		query.setMaxResults(pageable.getPageSize());
-		return new Page<Object>(query.list(),localLong.longValue(),pageable);
-//		return super.findPage(qlString, params, pageable);
+		List<Object> list = query.list();
+       if (list.size() > 0){
+       	return new Page<Object>(query.list(),count,pageable);
+       }
+       List<Object> listTemp = new ArrayList<Object>();
+		return new Page<Object>(listTemp,count,pageable);
 
 	}
 

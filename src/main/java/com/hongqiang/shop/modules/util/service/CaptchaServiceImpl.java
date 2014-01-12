@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 
-@Service
+@Service("captchaServiceImpl")
 public class CaptchaServiceImpl
   implements CaptchaService
 {

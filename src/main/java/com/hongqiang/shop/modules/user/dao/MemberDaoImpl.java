@@ -8,7 +8,9 @@ import java.util.List;
 import javax.persistence.NoResultException;
 
 import org.hibernate.Query;
+
 import javax.persistence.FlushModeType;
+
 import org.springframework.stereotype.Repository;
 
 import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
@@ -18,7 +20,7 @@ import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Order;
 
 @Repository
-public class MemberDaoImpl extends BaseDaoImpl<Member,Long> implements
+public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements
 		MemberDaoCustom {
 
 	@Override
@@ -48,13 +50,13 @@ public class MemberDaoImpl extends BaseDaoImpl<Member,Long> implements
 
 	public Long count(Date beginDate, Date endDate) {
 		String sqlString = "select DISTINCT member "
-				+"from Member member, Order order where 1=1 ";
+				+ "from Member member, Order order where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
-	    if (beginDate != null){
+		if (beginDate != null) {
 			sqlString += " and order.createDate >= ?";
 			params.add(beginDate);
 		}
-	    if (endDate != null){
+		if (endDate != null) {
 			sqlString += " and order.createDate <= ?";
 			params.add(endDate);
 		}
@@ -63,46 +65,52 @@ public class MemberDaoImpl extends BaseDaoImpl<Member,Long> implements
 		StringBuilder stringBuilder = new StringBuilder(sqlString);
 		return super.count(stringBuilder, null, params);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Page<Object> findPurchasePage(Date beginDate, Date endDate,
 			Pageable pageable) {
 
 		String sqlString = "select DISTINCT member, sum(order.amountPaid) "
-					+"from Member member, Order order where 1=1 ";
+				+ "from Member member, Order order where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
-	    if (beginDate != null){
+		if (beginDate != null) {
 			sqlString += " and order.createDate >= ?";
 			params.add(beginDate);
 		}
-	    if (endDate != null){
+		if (endDate != null) {
 			sqlString += " and order.createDate <= ?";
 			params.add(endDate);
 		}
 		sqlString += " and order.orderStatus = ?";
 		params.add(Order.OrderStatus.completed);
-		
+
 		sqlString += " and order.paymentStatus = ?";
 		params.add(Order.PaymentStatus.paid);
-		
+
 		sqlString += " group by member.id";
 		sqlString += " order by sum(order.amountPaid) DESC";
 		Long count = count(beginDate, endDate);
-		int i = (int)Math.ceil(count.longValue() / pageable.getPageSize());
+		int i = (int) Math.ceil(count.longValue() / pageable.getPageSize());
 		if (i < pageable.getPageNumber())
-		      pageable.setPageNumber(i);
-		 Query query = createQuery(sqlString,params.toArray());
-		 query.setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize());
+			pageable.setPageNumber(i);
+		Query query = createQuery(sqlString, params.toArray());
+		query.setFirstResult((pageable.getPageNumber() - 1)
+				* pageable.getPageSize());
 		query.setMaxResults(pageable.getPageSize());
-		return new Page<Object>(query.list(),count,pageable);
+		List<Object> list = query.list();
+		if (list.size() > 0) {
+			return new Page<Object>(query.list(), count, pageable);
+		}
+		List<Object> listTemp = new ArrayList<Object>();
+		return new Page<Object>(listTemp, count, pageable);
 	}
 
 	@Override
 	public Page<Member> findPage(Pageable pageable) {
 		String sqlString = "select members from Member members";
 		List<Object> parameter = new ArrayList<Object>();
-		return super.findPage(sqlString,  parameter, pageable);
+		return super.findPage(sqlString, parameter, pageable);
 
 	}
 

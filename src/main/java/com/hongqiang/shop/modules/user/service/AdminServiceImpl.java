@@ -19,7 +19,7 @@ import com.hongqiang.shop.modules.entity.Admin;
 import com.hongqiang.shop.modules.entity.Role;
 import com.hongqiang.shop.modules.user.dao.AdminDao;
 
-@Service
+@Service("adminServiceImpl")
 public class AdminServiceImpl extends BaseService implements AdminService {
 
 	@Autowired

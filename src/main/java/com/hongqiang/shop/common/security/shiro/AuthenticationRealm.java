@@ -50,11 +50,11 @@ public class AuthenticationRealm extends AuthorizingRealm
     String str3 = localAuthenticationToken.getCaptchaId();
     String str4 = localAuthenticationToken.getCaptcha();
     String str5 = localAuthenticationToken.getHost();
-    if (!this.captchaService.isValid(Setting.CaptchaType.adminLogin, str3, str4))
+    if (!this.getCaptchaService().isValid(Setting.CaptchaType.adminLogin, str3, str4))
       throw new UnsupportedTokenException();
     if ((str1 != null) && (str2 != null))
     {
-      Admin localAdmin = this.adminService.findByUsername(str1);
+      Admin localAdmin = this.getAdminService().findByUsername(str1);
       if (localAdmin == null)
         throw new UnknownAccountException();
       if (!localAdmin.getIsEnabled().booleanValue())
@@ -74,7 +74,7 @@ public class AuthenticationRealm extends AuthorizingRealm
             localAdmin.setLoginFailureCount(Integer.valueOf(0));
             localAdmin.setIsLocked(Boolean.valueOf(false));
             localAdmin.setLockedDate(null);
-            this.adminService.update(localAdmin);
+            this.getAdminService().update(localAdmin);
           }
           else
           {
@@ -86,7 +86,7 @@ public class AuthenticationRealm extends AuthorizingRealm
           localAdmin.setLoginFailureCount(Integer.valueOf(0));
           localAdmin.setIsLocked(Boolean.valueOf(false));
           localAdmin.setLockedDate(null);
-          this.adminService.update(localAdmin);
+          this.getAdminService().update(localAdmin);
         }
       if (!DigestUtils.md5Hex(str2).equals(localAdmin.getPassword()))
       {
@@ -97,13 +97,13 @@ public class AuthenticationRealm extends AuthorizingRealm
           localAdmin.setLockedDate(new Date());
         }
         localAdmin.setLoginFailureCount(Integer.valueOf(i));
-        this.adminService.update(localAdmin);
+        this.getAdminService().update(localAdmin);
         throw new IncorrectCredentialsException();
       }
       localAdmin.setLoginIp(str5);
       localAdmin.setLoginDate(new Date());
       localAdmin.setLoginFailureCount(Integer.valueOf(0));
-      this.adminService.update(localAdmin);
+      this.getAdminService().update(localAdmin);
       return new SimpleAuthenticationInfo(new Principal(localAdmin.getId(), str1), str2, getName());
     }
     throw new UnknownAccountException();
@@ -118,7 +118,7 @@ public class AuthenticationRealm extends AuthorizingRealm
     Principal localPrincipal = (Principal)principals.fromRealm(getName()).iterator().next();
     if (localPrincipal != null)
     {
-      List<String> localList = this.adminService.findAuthorities(localPrincipal.getId());
+      List<String> localList = this.getAdminService().findAuthorities(localPrincipal.getId());
       if (localList != null)
       {
         SimpleAuthorizationInfo localSimpleAuthorizationInfo = new SimpleAuthorizationInfo();
