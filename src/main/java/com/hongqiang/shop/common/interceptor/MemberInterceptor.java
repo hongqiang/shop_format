@@ -14,8 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.hongqiang.shop.common.config.Global;
+import com.hongqiang.shop.common.utils.Principal;
 import com.hongqiang.shop.modules.entity.Member;
-import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.hongqiang.shop.modules.user.service.MemberService;
 
 public class MemberInterceptor extends HandlerInterceptorAdapter

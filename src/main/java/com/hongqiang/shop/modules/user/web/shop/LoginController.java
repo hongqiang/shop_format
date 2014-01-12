@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hongqiang.shop.common.utils.CookieUtils;
 import com.hongqiang.shop.common.utils.Message;
+import com.hongqiang.shop.common.utils.Principal;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.account.service.CartService;
 import com.hongqiang.shop.modules.entity.Cart;
 import com.hongqiang.shop.modules.entity.Member;
-import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.hongqiang.shop.modules.user.service.MemberService;
 import com.hongqiang.shop.modules.util.service.CaptchaService;
 import com.hongqiang.shop.modules.util.service.RSAService;

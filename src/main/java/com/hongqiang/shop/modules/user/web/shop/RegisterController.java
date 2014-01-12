@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hongqiang.shop.common.utils.CookieUtils;
 import com.hongqiang.shop.common.utils.Message;
+import com.hongqiang.shop.common.utils.Principal;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.common.utils.model.CommonAttributes;
@@ -38,7 +39,6 @@ import com.hongqiang.shop.modules.entity.BaseEntity;
 import com.hongqiang.shop.modules.entity.Cart;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.MemberAttribute;
-import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.hongqiang.shop.modules.user.service.AreaService;
 import com.hongqiang.shop.modules.user.service.MemberAttributeService;
 import com.hongqiang.shop.modules.user.service.MemberRankService;

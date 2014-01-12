@@ -29,10 +29,7 @@ import com.hongqiang.shop.common.utils.DateUtils;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
-
-
 import com.hongqiang.shop.common.utils.SpringContextHolder;
-import com.hongqiang.shop.modules.sys.entity.JLog;
 
 
 /**
@@ -170,14 +167,14 @@ public abstract class BaseController {
 	    return SpringContextHolder.getMessage(paramString, paramArrayOfObject);
 	  }
 	
-	  protected void addMessage(String paramString)
-	  {
-	    if (paramString != null)
-	    {
-	      RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
-	      localRequestAttributes.setAttribute(JLog.LOG_CONTENT_ATTRIBUTE_NAME, paramString, 0);
-	    }
-	  }
+//	  protected void addMessage(String paramString)
+//	  {
+//	    if (paramString != null)
+//	    {
+//	      RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
+//	      localRequestAttributes.setAttribute(JLog.LOG_CONTENT_ATTRIBUTE_NAME, paramString, 0);
+//	    }
+//	  }
 	  
 	/**
 	 * 初始化数据绑定

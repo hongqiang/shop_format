@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.common.utils.Principal;
 import com.hongqiang.shop.modules.entity.Admin;
 import com.hongqiang.shop.modules.entity.Role;
-import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.hongqiang.shop.modules.user.dao.AdminDao;
 
 @Service

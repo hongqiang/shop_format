@@ -16,13 +16,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.CookieUtils;
+import com.hongqiang.shop.common.utils.Principal;
 import com.hongqiang.shop.modules.account.dao.CartDao;
 import com.hongqiang.shop.modules.account.dao.CartItemDao;
 import com.hongqiang.shop.modules.entity.Cart;
 import com.hongqiang.shop.modules.entity.CartItem;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Product;
-import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.hongqiang.shop.modules.user.dao.MemberDao;
 
 @Service

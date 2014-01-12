@@ -7,9 +7,7 @@ import java.util.List;
 import javax.persistence.LockModeType;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +19,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.hongqiang.shop.common.base.persistence.Page;
 import com.hongqiang.shop.common.service.BaseService;
 import com.hongqiang.shop.common.utils.Pageable;
+import com.hongqiang.shop.common.utils.Principal;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
 import com.hongqiang.shop.modules.entity.Admin;
 import com.hongqiang.shop.modules.entity.Deposit;
 import com.hongqiang.shop.modules.entity.Member;
-import com.hongqiang.shop.modules.sys.security.SystemAuthorizingRealm.Principal;
 import com.hongqiang.shop.modules.user.dao.DepositDao;
 import com.hongqiang.shop.modules.user.dao.MemberDao;
 
