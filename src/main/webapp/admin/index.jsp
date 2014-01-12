@@ -1,3 +1,4 @@
+<%@page import="com.hongqiang.shop.common.config.Global"%>
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8"%>
 <%@page import="org.springframework.context.ApplicationContext"%>
 <%@page import="com.hongqiang.shop.common.utils.SpringContextHolder"%>
@@ -5,7 +6,7 @@
 String base = request.getContextPath();
 ApplicationContext applicationContext = SpringContextHolder.getApplicationContext();
 if (applicationContext != null) {
-	response.sendRedirect(base + "/admin/common/main.jhtml");
+	response.sendRedirect(base + Global.getAdminPath()+"/common/main.jhtml");
 } else {
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

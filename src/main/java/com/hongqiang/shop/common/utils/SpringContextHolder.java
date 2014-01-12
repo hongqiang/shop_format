@@ -55,6 +55,11 @@ public class SpringContextHolder implements ApplicationContextAware,
 		return applicationContext.getBean(requiredType);
 	}
 
+	public static <T> T getBean(String name, Class<T> type){
+		assertContextInjected();
+	    return applicationContext.getBean(name, type);
+	 }
+	
 	//和stringUtils类中的getMessage方法相同， 获得i18n字符串
 	public static String getMessage(String code, Object[] args) {
 		LocaleResolver localLocaleResolver = (LocaleResolver) applicationContext

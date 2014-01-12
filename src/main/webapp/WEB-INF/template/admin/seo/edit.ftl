@@ -55,7 +55,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.seo.edit")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.seo.edit")}
 	</div>
 	<form id="inputForm" action="update.jhtml" method="post">
 		<input type="hidden" name="id" value="${seo.id}" />

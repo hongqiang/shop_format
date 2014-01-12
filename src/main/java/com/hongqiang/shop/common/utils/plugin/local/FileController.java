@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.plugin.service.PluginConfigService;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.website.entity.PluginConfig;
@@ -39,6 +40,6 @@ public class FileController extends BaseController
     localPluginConfig.setOrder(order);
     this.pluginConfigService.update(localPluginConfig);
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:/admin/storage_plugin/list.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
   }
 }

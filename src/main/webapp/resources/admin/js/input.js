@@ -1,7 +1,7 @@
 /*
- * Copyright 2005-2013 shopxx.net. All rights reserved.
- * Support: http://www.shopxx.net
- * License: http://www.shopxx.net/license
+ * Copyright 2005-2013 shophq.net. All rights reserved.
+ * Support: http://www.shophq.net
+ * License: http://www.shophq.net/license
  * 
  * JavaScript - Input
  * Version: 3.0
@@ -98,14 +98,14 @@ if(typeof(KindEditor) != "undefined") {
 				"flash", "media", "insertfile", "table", "hr", "emoticons", "baidumap", "pagebreak",
 				"anchor", "link", "unlink"
 			],
-			langType: shopxx.locale,
+			langType: shophq.locale,
 			syncType: "form",
 			filterMode: false,
 			pagebreakHtml: '<hr class="pageBreak" \/>',
 			allowFileManager: true,
 			filePostName: "file",
-			fileManagerJson: shopxx.base + "/admin/file/browser.jhtml",
-			uploadJson: shopxx.base + "/admin/file/upload.jhtml",
+			fileManagerJson: shophq.base + "${adminPath}/file/browser.jhtml",
+			uploadJson: shophq.base + "${adminPath}/file/upload.jhtml",
 			uploadImageExtension: setting.uploadImageExtension,
 			uploadFlashExtension: setting.uploadFlashExtension,
 			uploadMediaExtension: setting.uploadMediaExtension,

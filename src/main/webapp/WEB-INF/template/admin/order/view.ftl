@@ -858,7 +858,7 @@ $().ready(function() {
 		<input type="hidden" name="id" value="${order.id}" />
 	</form>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.order.view")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.order.view")}
 	</div>
 	<ul id="tab" class="tab">
 		<li>

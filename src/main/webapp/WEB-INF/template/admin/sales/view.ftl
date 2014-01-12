@@ -68,7 +68,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.sales.view")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.sales.view")}
 	</div>
 	<form id="inputForm" action="view.jhtml" method="get">
 		<table class="input">

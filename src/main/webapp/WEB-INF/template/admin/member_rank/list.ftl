@@ -19,7 +19,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.memberRank.list")} <span>(${message("admin.page.total", page.total)})</span>
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.memberRank.list")} <span>(${message("admin.page.total", page.total)})</span>
 	</div>
 	<form id="listForm" action="list.jhtml" method="get">
 		<div class="bar">

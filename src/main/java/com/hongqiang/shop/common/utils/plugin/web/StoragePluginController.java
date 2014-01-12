@@ -6,6 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.plugin.service.PluginService;
 import com.hongqiang.shop.common.web.BaseController;
 
@@ -21,6 +22,6 @@ public class StoragePluginController extends BaseController
   public String list(ModelMap model)
   {
     model.addAttribute("storagePlugins", this.pluginService.getStoragePlugins());
-    return "/admin/storage_plugin/list";
+    return "admin/storage_plugin/list";
   }
 }

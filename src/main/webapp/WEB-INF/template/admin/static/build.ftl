@@ -136,7 +136,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.static.build")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.static.build")}
 	</div>
 	<form id="inputForm" action="build.jhtml" method="post">
 		<table class="input">

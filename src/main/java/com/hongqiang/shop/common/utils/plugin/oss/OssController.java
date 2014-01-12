@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.plugin.service.PluginConfigService;
 import com.hongqiang.shop.common.web.BaseController;
@@ -38,7 +39,7 @@ public class OssController extends BaseController
       if (((BigDecimal)localObject).compareTo(new BigDecimal("1.6")) < 0)
       {
         addMessage(redirectAttributes, Message.error("admin.plugin.oss.unsupportedJavaVersion", new Object[0]));
-        return "redirect:/admin/storage_plugin/list.jhtml";
+        return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
       }
     }
     if (!this.ossPlugin.getIsInstalled())
@@ -49,7 +50,7 @@ public class OssController extends BaseController
       this.pluginConfigService.save(localObject);
     }
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:/admin/storage_plugin/list.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
   }
 
   @RequestMapping(value={"/uninstall"}, method=RequestMethod.GET)
@@ -61,7 +62,7 @@ public class OssController extends BaseController
       this.pluginConfigService.delete(localPluginConfig);
     }
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:/admin/storage_plugin/list.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
   }
 
   @RequestMapping(value={"/setting"}, method=RequestMethod.GET)
@@ -84,6 +85,6 @@ public class OssController extends BaseController
     localPluginConfig.setOrder(order);
     this.pluginConfigService.update(localPluginConfig);
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:/admin/storage_plugin/list.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
   }
 }

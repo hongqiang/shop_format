@@ -104,6 +104,6 @@ public enum Type
     model.addAttribute("endDate", endDate);
     model.addAttribute("salesAmountMap", localLinkedHashMap1);
     model.addAttribute("salesVolumeMap", localLinkedHashMap2);
-    return (String)(String)"/admin/sales/view";
+    return "/admin/sales/view";
   }
 }

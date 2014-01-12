@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.plugin.PaymentPlugin;
 import com.hongqiang.shop.common.utils.plugin.service.PluginService;
 import com.hongqiang.shop.common.web.BaseController;
@@ -26,6 +27,6 @@ public class PaymentPluginController extends BaseController
     model.addAttribute("paymentPlugins", this.pluginService.getPaymentPlugins());
    List<PaymentPlugin> paymentPlugins =  this.pluginService.getPaymentPlugins();
    System.out.println(paymentPlugins.size());
-    return "/admin/payment_plugin/list";
+    return "admin/payment_plugin/list";
   }
 }

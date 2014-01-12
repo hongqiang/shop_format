@@ -20,7 +20,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.returns.view")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.returns.view")}
 	</div>
 	<ul id="tab" class="tab">
 		<li>

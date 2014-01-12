@@ -31,7 +31,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.message.view")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.message.view")}
 	</div>
 	<form id="inputForm" action="reply.jhtml" method="post">
 		<input type="hidden" name="id" value="${adminMessage.id}" />
@@ -60,7 +60,7 @@ $().ready(function() {
 			<tr>
 				<th>
 					[#if adminMessage.sender??]
-						<a href="${base}${adminPath}/admin/member/view.jhtml?id=${adminMessage.sender.id}">
+						<a href="${base}${adminPath}/member/view.jhtml?id=${adminMessage.sender.id}">
 							<span class="red">[${adminMessage.sender.username}]</span>
 						</a>
 					[#else]
@@ -78,7 +78,7 @@ $().ready(function() {
 				<tr>
 					<th>
 						[#if replyMessage.sender??]
-							<a href="${base}${adminPath}/admin/member/view.jhtml?id=${replyMessage.sender.id}">
+							<a href="${base}${adminPath}/member/view.jhtml?id=${replyMessage.sender.id}">
 								<span class="red">[${replyMessage.sender.username}]</span>
 							</a>
 						[#else]

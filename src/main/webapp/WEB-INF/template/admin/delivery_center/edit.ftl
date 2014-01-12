@@ -21,7 +21,7 @@ $().ready(function() {
 	
 	// 地区选择
 	$areaId.lSelect({
-		url: "${base}${adminPath}/admin/common/area.jhtml"
+		url: "${base}${adminPath}/common/area.jhtml"
 	});
 	
 	// 表单验证
@@ -39,7 +39,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.deliveryCenter.edit")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.deliveryCenter.edit")}
 	</div>
 	<form id="inputForm" action="update.jhtml" method="post">
 		<input type="hidden" name="id" value="${deliveryCenter.id}" />

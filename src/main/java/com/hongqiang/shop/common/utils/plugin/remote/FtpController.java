@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.plugin.service.PluginConfigService;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.website.entity.PluginConfig;
@@ -36,7 +37,7 @@ public class FtpController extends BaseController
       this.pluginConfigService.save(localPluginConfig);
     }
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:/admin/storage_plugin/list.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
   }
 
   @RequestMapping(value={"/uninstall"}, method=RequestMethod.GET)
@@ -48,7 +49,7 @@ public class FtpController extends BaseController
       this.pluginConfigService.delete(localPluginConfig);
     }
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:/admin/storage_plugin/list.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
   }
 
   @RequestMapping(value={"/setting"}, method=RequestMethod.GET)
@@ -72,6 +73,6 @@ public class FtpController extends BaseController
     localPluginConfig.setOrder(order);
     this.pluginConfigService.update(localPluginConfig);
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:/admin/storage_plugin/list.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/storage_plugin/list.jhtml";
   }
 }

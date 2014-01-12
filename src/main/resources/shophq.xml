@@ -78,10 +78,10 @@
 	<setting name="isCnzzEnabled" value="false"/>  
 	<setting name="cnzzSiteId" value=""/>  
 	<setting name="cnzzPassword" value=""/>  
-	<logConfig operation="系统设置" urlPattern="/admin/setting/update.jhtml"/>  
-	<logConfig operation="添加管理员" urlPattern="/admin/admin/save.jhtml"/>  
-	<logConfig operation="编辑管理员" urlPattern="/admin/admin/update.jhtml"/>  
-	<logConfig operation="删除管理员" urlPattern="/admin/admin/delete.jhtml"/>  
+	<logConfig operation="系统设置" urlPattern="${adminPath}/setting/update.jhtml"/>  
+	<logConfig operation="添加管理员" urlPattern="${adminPath}/admin/save.jhtml"/>  
+	<logConfig operation="编辑管理员" urlPattern="${adminPath}/admin/update.jhtml"/>  
+	<logConfig operation="删除管理员" urlPattern="${adminPath}/admin/delete.jhtml"/>  
 	<template id="shopCommonJs" type="page" name="shop_common_js" templatePath="/shop/js/common.ftl" staticPath="/resources/shop/js/common.js"/>  
 	<template id="adminCommonJs" type="page" name="admin_common_js" templatePath="/admin/js/common.ftl" staticPath="/resources/admin/js/common.js"/>  
 	<template id="sitemapIndex" type="page" name="sitemap索引" templatePath="/shop/xml/sitemap_index.ftl" staticPath="/sitemap/index.xml"/>  

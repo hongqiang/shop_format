@@ -109,7 +109,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.productNotify.list")} <span>(${message("admin.page.total", page.total)})</span>
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.productNotify.list")} <span>(${message("admin.page.total", page.total)})</span>
 	</div>
 	<form id="listForm" action="list.jhtml" method="get">
 		<input type="hidden" id="isMarketable" name="isMarketable" value="[#if isMarketable??]${isMarketable?string("true", "false")}[/#if]" />
@@ -227,7 +227,7 @@ $().ready(function() {
 					</td>
 					<td>
 						[#if productNotify.member??]
-							<a href="${base}${adminPath}/admin/member/view.jhtml?id=${productNotify.member.id}">${productNotify.member.username}</a>
+							<a href="${base}${adminPath}/member/view.jhtml?id=${productNotify.member.id}">${productNotify.member.username}</a>
 						[#else]
 							-
 						[/#if]

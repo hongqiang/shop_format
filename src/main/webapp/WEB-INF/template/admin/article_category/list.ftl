@@ -46,7 +46,7 @@ $().ready(function() {
 </head>
 <body>
 	<div class="path">
-		<a href="${base}${adminPath}/admin/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.articleCategory.list")}
+		<a href="${base}${adminPath}/common/index.jhtml">${message("admin.path.index")}</a> &raquo; ${message("admin.articleCategory.list")}
 	</div>
 	<div class="bar">
 		<a href="add.jhtml" class="iconButton">

@@ -1,13 +1,13 @@
 /*
- * Copyright 2005-2013 shopxx.net. All rights reserved.
- * Support: http://www.shopxx.net
- * License: http://www.shopxx.net/license
+ * Copyright 2005-2013 shophq.net. All rights reserved.
+ * Support: http://www.shophq.net
+ * License: http://www.shophq.net/license
  * 
  * JavaScript - Common
  * Version: 3.0
  */
 
-var shopxx = {
+var shophq = {
 	base: "/shop",
 	locale: "zh_CN"
 };
@@ -327,8 +327,8 @@ function message(code) {
 				type: "image",
 				title: message("admin.browser.title"),
 				isUpload: true,
-				browserUrl: shopxx.base + "/admin/file/browser.jhtml",
-				uploadUrl: shopxx.base + "/admin/file/upload.jhtml",
+				browserUrl: shophq.base + "${adminPath}/file/browser.jhtml",
+				uploadUrl: shophq.base + "${adminPath}/file/upload.jhtml",
 				callback: null
 			};
 			$.extend(settings, options);
@@ -403,13 +403,13 @@ function message(code) {
 							var iconUrl;
 							var title;
 							if (fileInfo.isDirectory) {
-								iconUrl = shopxx.base + "/resources/admin/images/folder_icon.gif";
+								iconUrl = shophq.base + "/resources/admin/images/folder_icon.gif";
 								title = fileInfo.name;
 							} else if (new RegExp("^\\S.*\\.(jpg|jpeg|bmp|gif|png)$", "i").test(fileInfo.name)) {
 								iconUrl = fileInfo.url;
 								title = fileInfo.name + " (" + Math.ceil(fileInfo.size / 1024) + "KB, " + new Date(fileInfo.lastModified).toLocaleString() + ")";
 							} else {
-								iconUrl = shopxx.base + "/resources/admin/images/file_icon.gif";
+								iconUrl = shophq.base + "/resources/admin/images/file_icon.gif";
 								title = fileInfo.name + " (" + Math.ceil(fileInfo.size / 1024) + "KB, " + new Date(fileInfo.lastModified).toLocaleString() + ")";
 							}
 							browserListHtml += '<div class="browserItem"><img src="' + iconUrl + '" title="' + title + '" url="' + fileInfo.url + '" isDirectory="' + fileInfo.isDirectory + '" \/><div>' + fileInfo.name + '<\/div><\/div>';
