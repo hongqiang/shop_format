@@ -21,13 +21,13 @@ public class MessageDaoImpl extends BaseDaoImpl<Message,Long>
 	List<Object> params = new ArrayList<Object>();
     if (member != null){
 		sqlString +=" and ((message.sender = ? and message.senderDelete = false) or "+
-							"(message.receiver = ? and message.receiverDelete = false))";
+							"(message.receiver = ? and message.receiverDelete = false)) ";
 		params.add(member);
 		params.add(member);
 	}
     else{
 		sqlString +=" and ((message.sender is null and message.senderDelete = false) "+
-							"or (message.receiver is null and message.receiverDelete = false))";
+							"or (message.receiver is null and message.receiverDelete = false)) ";
 	}
 	return super.findPage(sqlString,  params, pageable);
   }
@@ -37,11 +37,11 @@ public class MessageDaoImpl extends BaseDaoImpl<Message,Long>
 	String sqlString = "select message from Message message where message.forMessage is null and message.isDraft = true ";
 	List<Object> params = new ArrayList<Object>();
     if (sender != null){
-		sqlString +=" and message.sender = ?";
+		sqlString +=" and message.sender = ? ";
 		params.add(sender);
 	}
     else{
-		sqlString +=" and message.sender is null";
+		sqlString +=" and message.sender is null ";
 	}
 	return super.findPage(sqlString,  params, pageable);
   }
@@ -53,8 +53,8 @@ public class MessageDaoImpl extends BaseDaoImpl<Message,Long>
     if (member != null)
     {
       if (read != null){
-		sqlString +=" and ((message.sender = ? and message.senderDelete = false and message.senderRead = ? )"+
-							"or (message.receiver = ? and message.receiverDelete = false and message.receiverRead = ?))";
+		sqlString +=" and ((message.sender = ? and message.senderDelete = false and message.senderRead = ? ) "+
+							"or (message.receiver = ? and message.receiverDelete = false and message.receiverRead = ?)) ";
 		params.add(member);
 		params.add(read);
 		params.add(member);
@@ -62,20 +62,20 @@ public class MessageDaoImpl extends BaseDaoImpl<Message,Long>
 	  }
       else{
 		sqlString +=" and ((message.sender = ? and message.senderDelete = false) or (message.receiver = ? and "+
-							"message.receiverDelete = false))";
+							"message.receiverDelete = false)) ";
 		params.add(member);
 		params.add(member);
 	  }
     }
     else if (read != null){
 		sqlString +=" and ((message.sender is null and message.senderDelete = false and message.senderRead = ? ) "+
-							"or (message.receiver is null and message.receiverDelete = false and message.receiverRead = ?))";
+							"or (message.receiver is null and message.receiverDelete = false and message.receiverRead = ?)) ";
 		params.add(read);
 		params.add(read);
 	}
     else{
 		sqlString +=" and ((message.sender is null and message.senderDelete = false) or (message.receiver is null and "+
-							"message.receiverDelete = false))";
+							"message.receiverDelete = false)) ";
 	}
 	StringBuilder stringBuilder = new StringBuilder(sqlString);
     return super.count(stringBuilder, null, params);

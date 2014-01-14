@@ -16,16 +16,16 @@ public class ParameterDaoImpl extends BaseDaoImpl<Parameter,Long>
 {
   public List<Parameter> findList(ParameterGroup parameterGroup, Set<Parameter> excludes)
   {
-	  String sqlString = "select DISTINCT parameter from Parameter parameter where 1=1 ";
+	  String sqlString = "select parameter from Parameter parameter where 1=1 ";
 	  List<Object> params = new ArrayList<Object>();
 	  if (parameterGroup != null){
 		  sqlString += " and parameter.parameterGroup = ? ";
 		  params.add(parameterGroup);
 	  }
 	  if ((excludes != null) && (!excludes.isEmpty())){
-			for (Parameter op : excludes) {
-				params.add(op.getId().intValue());
-			}
+//			for (Parameter op : excludes) {
+//				params.add(op.getId().intValue());
+//			}
 			sqlString += " and parameter not in (";
 			for (Parameter parameter : excludes) {
 					sqlString += " ?, ";
@@ -36,8 +36,6 @@ public class ParameterDaoImpl extends BaseDaoImpl<Parameter,Long>
 //		  sqlString += " and parameter.id not in (?)";
 ////		  params.add(excludes);
 	  }
-//	  System.out.print("sql="+sqlString+"\n");
-//	  return super.find(sqlString,params.toArray());
 	  return super.findList(sqlString, params, null, null, null, null);
   }
 }

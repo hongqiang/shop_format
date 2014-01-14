@@ -204,7 +204,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 			Pageable pageable) {
 		String qlString = "select product, sum(orderItems.quantity), "+
 						"sum(orderItems.quantity * orderItems.price) "+
-				"from Product product, OrderItem orderItems, Order order where 1=1 ";
+				"from Product product, OrderItem orderItems, Order o where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		if (beginDate != null) {
 			qlString += " and orderItems.createDate >= ? ";
@@ -215,9 +215,9 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 			qlString += " and orderItems.createDate <= ? ";
 			params.add(endDate);
 		}
-		qlString += " and order.orderStatus = ? ";
+		qlString += " and o.orderStatus = ? ";
 		params.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.completed);
-		qlString += " and order.paymentStatus = ? ";
+		qlString += " and o.paymentStatus = ? ";
 		params.add(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
 
 		qlString += " group by product.id ";

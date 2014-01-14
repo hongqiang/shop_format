@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ import com.hongqiang.shop.modules.product.service.GoodsService;
 import com.hongqiang.shop.modules.product.service.ProductCategoryService;
 import com.hongqiang.shop.modules.product.service.ProductImageService;
 import com.hongqiang.shop.modules.product.service.ProductService;
+import com.hongqiang.shop.modules.product.service.SnService;
 import com.hongqiang.shop.modules.product.service.SpecificationService;
 import com.hongqiang.shop.modules.product.service.SpecificationValueService;
 import com.hongqiang.shop.modules.product.service.TagService;
@@ -87,6 +89,9 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private FileService fileService;
+	
+	 @Autowired
+	  private SnService snService;
 
 	@RequestMapping(value = { "/check_sn" }, method =RequestMethod.GET )
 	@ResponseBody
@@ -130,15 +135,15 @@ public class ProductController extends BaseController {
 			RedirectAttributes redirectAttributes) {
 		Iterator<ProductImage> productImageIterator = product.getProductImages().iterator();
 		while (productImageIterator.hasNext()) {
-			ProductImage localObject3 = (ProductImage) productImageIterator.next();
-			if ((localObject3 == null)
-					|| (((ProductImage) localObject3).isEmpty())) {
+			ProductImage productImage = (ProductImage) productImageIterator.next();
+			if ((productImage == null)
+					|| (productImage.isEmpty())) {
 				productImageIterator.remove();
 			} else {
-				if ((((ProductImage) localObject3).getFile() == null)
-						|| (((ProductImage) localObject3).getFile().isEmpty())
+				if ((productImage.getFile() == null)
+						|| ( productImage.getFile().isEmpty())
 						|| (this.fileService.isValid(FileInfo.FileType.image,
-								((ProductImage) localObject3).getFile())))
+								productImage.getFile())))
 					continue;
 				addMessage(redirectAttributes,
 						Message.error("admin.upload.invalid", new Object[0]));

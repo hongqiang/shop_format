@@ -98,23 +98,23 @@ public abstract class BaseController {
 	    return false;
 	}
 	
-	  protected boolean beanValidator(Object paramObject, Class<?>[] paramArrayOfClass)
+	  protected boolean beanValidator(Object object, Class<?>[] groups)
 	  {
-	    Set<?> localSet = this.validator.validate(paramObject, paramArrayOfClass);
+	    Set<?> localSet = this.validator.validate(object, groups);
 	    if (localSet.isEmpty())
 	      return true;
-	    RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
-	    localRequestAttributes.setAttribute(CONSTRAINT_VIOLATIONS, localSet, 0);
+	    RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+	    requestAttributes.setAttribute(CONSTRAINT_VIOLATIONS, localSet, 0);
 	    return false;
 	  }
 	
-	  protected boolean beanValidator(Class<?> paramClass, String paramString, Object paramObject, Class<?>[] paramArrayOfClass)
+	  protected boolean beanValidator(Class<?> paramClass, String paramString, Object paramObject, Class<?>[] groups)
 	  {
-	    Set<?> localSet = this.validator.validateValue(paramClass, paramString, paramObject, paramArrayOfClass);
+	    Set<?> localSet = this.validator.validateValue(paramClass, paramString, paramObject, groups);
 	    if (localSet.isEmpty())
 	      return true;
-	    RequestAttributes localRequestAttributes = RequestContextHolder.currentRequestAttributes();
-	    localRequestAttributes.setAttribute(CONSTRAINT_VIOLATIONS, localSet, 0);
+	    RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+	    requestAttributes.setAttribute(CONSTRAINT_VIOLATIONS, localSet, 0);
 	    return false;
 	  }
 	

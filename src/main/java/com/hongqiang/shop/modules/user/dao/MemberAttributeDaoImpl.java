@@ -34,7 +34,7 @@ public class MemberAttributeDaoImpl extends BaseDaoImpl<MemberAttribute,Long>
 
 	@Override
 	public Page<MemberAttribute> findPage(Pageable pageable) {
-		String qlString = "select memberAttribute from MemberAttribute memberAttribute";
+		String qlString = "select memberAttribute from MemberAttribute memberAttribute where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		return super.findPage(qlString,  parameter, pageable);
 	}

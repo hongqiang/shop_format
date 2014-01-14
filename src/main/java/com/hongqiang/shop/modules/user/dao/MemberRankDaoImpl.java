@@ -72,7 +72,7 @@ public class MemberRankDaoImpl extends BaseDaoImpl<MemberRank,Long> implements
 
 	@Override
 	public Page<MemberRank> findPage(Pageable pageable) {
-		String sqlString = "select memberRank from MemberRank memberRank";
+		String sqlString = "select memberRank from MemberRank memberRank where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		return super.findPage(sqlString,  parameter, pageable);
 	}

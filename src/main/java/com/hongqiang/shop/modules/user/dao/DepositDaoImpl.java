@@ -22,7 +22,7 @@ public class DepositDaoImpl extends BaseDaoImpl<Deposit,Long>
     	List<Deposit> deposits = new ArrayList<Deposit>();
 		return new Page<Deposit>(deposits,0L,pageable);
 	}
-	String sqlString = "select deposit from Deposit deposit where deposit.member = ?";
+	String sqlString = "select deposit from Deposit deposit where deposit.member = ? ";
 	List<Object> params = new ArrayList<Object>();
 	params.add(member);
 	return super.findPage(sqlString,  params, pageable);
@@ -30,7 +30,7 @@ public class DepositDaoImpl extends BaseDaoImpl<Deposit,Long>
   
   @Override
   public Page<Deposit> findPage(Pageable pageable){
-		String sqlString = "select deposit from Deposit deposit";
+		String sqlString = "select deposit from Deposit deposit where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		return super.findPage(sqlString,  params, pageable);
   }

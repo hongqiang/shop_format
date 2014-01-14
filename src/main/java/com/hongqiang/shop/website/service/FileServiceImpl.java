@@ -134,7 +134,7 @@ public class FileServiceImpl implements FileService, ServletContextAware {
 			arrayOfString = localSetting.getUploadFileExtensions();
 		else
 			arrayOfString = localSetting.getUploadImageExtensions();
-		if (ArrayUtils.isEmpty(arrayOfString))
+		if (!ArrayUtils.isEmpty(arrayOfString))
 			return FilenameUtils.isExtension(
 					multipartFile.getOriginalFilename(), arrayOfString);
 		return false;

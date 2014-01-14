@@ -130,7 +130,7 @@ public class AuthenticationRealm extends AuthorizingRealm
   }
 	
 	/**
-	 * 获取系统业务对象
+	 * 获取管理服务类
 	 */
 	public AdminService getAdminService() {
 		if (adminService == null){
@@ -139,6 +139,9 @@ public class AuthenticationRealm extends AuthorizingRealm
 		return adminService;
 	}
 	
+	/**
+	 * 获取验证码服务类
+	 */
 	public CaptchaService getCaptchaService() {
 		if (captchaService == null){
 			captchaService = SpringContextHolder.getBean(CaptchaService.class);

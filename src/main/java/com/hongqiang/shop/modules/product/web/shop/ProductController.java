@@ -112,8 +112,6 @@ public class ProductController extends BaseController {
 		model.addAttribute("orderType", orderType);
 		model.addAttribute("pageNumber", pageable.getPageNumber());
 		model.addAttribute("pageSize", pageable.getPageSize());
-//		model.addAttribute("pageNumber", pageNumber);
-//		model.addAttribute("pageSize", pageSize);
 		model.addAttribute("page", this.productService.findPage(
 				localProductCategory, localBrand, localPromotion, tags,
 				localHashMap, startPrice, endPrice, Boolean.valueOf(true),

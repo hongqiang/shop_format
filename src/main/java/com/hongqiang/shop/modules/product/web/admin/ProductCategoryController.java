@@ -44,7 +44,7 @@ public class ProductCategoryController extends BaseController
   {
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
     model.addAttribute("brands", this.brandService.findAll());
-    return "modules/product/admin/add";
+    return "/admin/product_category/add";
   }
 
   @RequestMapping(value={"/save"}, method=RequestMethod.POST)
@@ -74,7 +74,7 @@ public class ProductCategoryController extends BaseController
     model.addAttribute("brands", this.brandService.findAll());
     model.addAttribute("productCategory", localProductCategory);
     model.addAttribute("children", this.productCategoryService.findChildren(localProductCategory));
-    return "modules/product/admin/edit";
+    return "/admin/product_category/edit";
   }
 
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)
@@ -105,7 +105,7 @@ public class ProductCategoryController extends BaseController
   public String list(ModelMap model)
   {
     model.addAttribute("productCategoryTree", this.productCategoryService.findTree());
-    return "modules/product/list";
+    return "/admin/product_category/list";
   }
 
   @RequestMapping(value={"/delete"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})

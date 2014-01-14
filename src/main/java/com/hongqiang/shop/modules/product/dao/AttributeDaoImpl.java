@@ -16,7 +16,7 @@ public class AttributeDaoImpl extends BaseDaoImpl<Attribute, Long> implements
 
 	@Override
 	public Page<Attribute> findPage(Pageable pageable) {
-		String qlString = "select attribute from Attribute attribute";
+		String qlString = "select attribute from Attribute attribute where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		return super.findPage(qlString,  parameter, pageable) ;
 	}

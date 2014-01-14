@@ -115,7 +115,7 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 				}
 			}
 		 long count = count(stringBuilder, null, parameter);
-		 int i=(int)Math.ceil(count/pageable.getPageSize());
+		 int i=(int)Math.ceil((double)count/pageable.getPageSize());
 		 if (i<pageable.getPageNumber()) {
 			pageable.setPageNumber(i);
 		}

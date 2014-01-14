@@ -29,6 +29,7 @@ import com.hongqiang.shop.modules.entity.Tag;
   {
 	String sqlString="select tag from Tag tag where tag.type =?  order by tag.order ASC";
 	List<Object> parameter = new ArrayList<Object>();
+	parameter.add(type);
 	return super.findList(sqlString, parameter, null, null, null, null);
   }
 	

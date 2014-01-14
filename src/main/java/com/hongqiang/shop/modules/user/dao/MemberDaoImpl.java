@@ -49,18 +49,18 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements
 	}
 
 	public Long count(Date beginDate, Date endDate) {
-		String sqlString = "select DISTINCT member "
-				+ "from Member member, Order order where 1=1 ";
+		String sqlString = "select DISTINCT o.member "
+				+ "from Order o where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		if (beginDate != null) {
-			sqlString += " and order.createDate >= ?";
+			sqlString += " and o.createDate >= ?";
 			params.add(beginDate);
 		}
 		if (endDate != null) {
-			sqlString += " and order.createDate <= ?";
+			sqlString += " and o.createDate <= ?";
 			params.add(endDate);
 		}
-		sqlString += " and order.orderStatus = ?";
+		sqlString += " and o.orderStatus = ?";
 		params.add(Order.OrderStatus.completed);
 		StringBuilder stringBuilder = new StringBuilder(sqlString);
 		return super.count(stringBuilder, null, params);
@@ -70,26 +70,25 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements
 	@Override
 	public Page<Object> findPurchasePage(Date beginDate, Date endDate,
 			Pageable pageable) {
-
-		String sqlString = "select DISTINCT member, sum(order.amountPaid) "
-				+ "from Member member, Order order where 1=1 ";
+		String sqlString = "select o.member, sum(o.amountPaid) "
+				+ "from Order o where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		if (beginDate != null) {
-			sqlString += " and order.createDate >= ?";
+			sqlString += " and o.createDate >= ?";
 			params.add(beginDate);
 		}
 		if (endDate != null) {
-			sqlString += " and order.createDate <= ?";
+			sqlString += " and o.createDate <= ?";
 			params.add(endDate);
 		}
-		sqlString += " and order.orderStatus = ?";
+		sqlString += " and o.orderStatus = ?";
 		params.add(Order.OrderStatus.completed);
 
-		sqlString += " and order.paymentStatus = ?";
+		sqlString += " and o.paymentStatus = ?";
 		params.add(Order.PaymentStatus.paid);
 
-		sqlString += " group by member.id";
-		sqlString += " order by sum(order.amountPaid) DESC";
+		sqlString += " group by o.member.id";
+		sqlString += " order by sum(o.amountPaid) DESC";
 		Long count = count(beginDate, endDate);
 		int i = (int) Math.ceil(count.longValue() / pageable.getPageSize());
 		if (i < pageable.getPageNumber())
@@ -108,7 +107,7 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements
 
 	@Override
 	public Page<Member> findPage(Pageable pageable) {
-		String sqlString = "select members from Member members";
+		String sqlString = "select members from Member members where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		return super.findPage(sqlString, parameter, pageable);
 

@@ -24,7 +24,7 @@ public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup,Long>
 	private ParameterDao parameterDao;
 
 	public Page<ParameterGroup> findPage(Pageable pageable) {
-		String qlString = "select parameterGroup from ParameterGroup parameterGroup";
+		String qlString = "select parameterGroup from ParameterGroup parameterGroup where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		return super.findPage(qlString, parameter, pageable);
 	}
@@ -42,9 +42,12 @@ public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup,Long>
 				localHashSet);
 		for (int i = 0; i < localList1.size(); i++) {
 			Parameter localParameter = (Parameter) localList1.get(i);
+//			String str = "select product from Product product join "
+//					+ "product.parameterValue parameterValue"
+//					+ "where index(parameterValue) = :parameter";
 			String str = "select product from Product product join "
 					+ "product.parameterValue parameterValue"
-					+ "where index(parameterValue) = :parameter";
+					+ "where parameterValue = :parameter";
 			List<Product> localList2 = this.getEntityManager()
 					.createQuery(str, Product.class)
 					.setFlushMode(FlushModeType.COMMIT)

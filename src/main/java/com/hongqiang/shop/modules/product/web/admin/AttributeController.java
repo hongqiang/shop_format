@@ -59,6 +59,8 @@ public class AttributeController extends BaseController
     }
     else
     {
+//    	Integer index = attribute.getProductCategory().getAttributes().
+    	//得到index值
       attribute.setPropertyIndex(null);
       this.attributeService.save(attribute);
       addMessage(redirectAttributes, ADMIN_SUCCESS);

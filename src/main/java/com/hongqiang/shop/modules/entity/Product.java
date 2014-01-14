@@ -162,7 +162,7 @@ public class Product extends BaseEntity {
 
 	@JsonProperty
 	@Field(store = Store.YES, index = Index.YES)
-	@Pattern(regexp = "^[0-9a-zA-Z_-]+$")
+//	@Pattern(regexp = "^[0-9a-zA-Z_-]+$")
 	@Length(max = 200)
 	@Column(nullable = false, unique = true)
 	public String getSn() {

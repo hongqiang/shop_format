@@ -46,8 +46,10 @@ public class TagServiceImpl extends BaseService implements TagService {
 			return tags;
 		}
 		for (Long idLong : ids) {
-			Tag tag = find(idLong);
-			tags.add(tag);
+			if (idLong != null) {
+				Tag tag = find(idLong);
+				tags.add(tag);
+			}
 		}
 		return tags;
 	}
