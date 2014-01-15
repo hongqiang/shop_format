@@ -68,6 +68,9 @@
 				<entry key="memberPath" value="#{T(com.hongqiang.shop.common.config.Global).getMemberPath()}"/>
 				<entry key="adminPath" value="#{T(com.hongqiang.shop.common.config.Global).getAdminPath()}"/>
 <!-- 				<entry key="base" value="/shop" /> -->
+<!-- 				<entry key="frontPath" value="/f" /> -->
+<!-- 				<entry key="memberPath" value="/member" /> -->
+<!-- 				<entry key="adminPath" value="/admin" /> -->
 				<entry key="locale" value="${locale}" />
 				<entry key="setting"
 					value="#{T(com.hongqiang.shop.common.utils.SettingUtils).get()}" />
