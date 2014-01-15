@@ -97,7 +97,7 @@ public class Member extends BaseEntity {
 	}
 
 	@NotEmpty(groups = { BaseEntity.Save.class })
-	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]+$")
+	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]*$")
 	@Column(nullable = false, updatable = false, unique = true)
 	public String getUsername() {
 		return this.username;
@@ -108,7 +108,7 @@ public class Member extends BaseEntity {
 	}
 
 	@NotEmpty(groups = { BaseEntity.Save.class })
-	@Pattern(regexp = "^[^\\s&\"<>]+$")
+	@Pattern(regexp = "^[^\\s&\"<>]*$")
 	@Column(nullable = false)
 	public String getPassword() {
 		return this.password;

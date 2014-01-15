@@ -327,12 +327,13 @@ function message(code) {
 				type: "image",
 				title: message("admin.browser.title"),
 				isUpload: true,
-				browserUrl: shophq.base + "/admin/file/browser.jhtml",
-				uploadUrl: shophq.base + "/admin/file/upload.jhtml",
+				browserUrl:  shophq.base + "/admin/file/browser.jhtml",
+				uploadUrl:  shophq.base + "/admin/file/upload.jhtml",
 				callback: null
 			};
 			$.extend(settings, options);
-			
+//			alert(shophq.base + "/admin/file/browser.jhtml");
+			var abc = shophq.base + "/admin/file/browser.jhtml";
 			var token = getCookie("token");
 			var cache = new Array();
 			return this.each(function() {
