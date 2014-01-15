@@ -3,7 +3,6 @@ package com.hongqiang.shop.modules.product.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,20 +27,17 @@ public class SpecificationValueServiceImpl extends BaseService implements
 	}
 	
 	@Transactional
-	@CacheEvict(value={"specificationValue"}, allEntries=true)
 	public void save(SpecificationValue specificationValue) {
 		this.specificationValueDao.persist(specificationValue);
 	}
 
 	@Transactional
-	@CacheEvict(value={"specificationValue"}, allEntries=true)
 	public SpecificationValue update(SpecificationValue specificationValue) {
 		return (SpecificationValue) this.specificationValueDao
 				.merge(specificationValue);
 	}
 
 	 @Transactional
-	 @CacheEvict(value={"specificationValue"}, allEntries=true)
 	 public SpecificationValue update(SpecificationValue specificationValue,
 	 String[] ignoreProperties)
 	 {

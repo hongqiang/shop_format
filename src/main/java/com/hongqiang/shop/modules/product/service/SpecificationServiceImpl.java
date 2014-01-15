@@ -3,7 +3,6 @@ package com.hongqiang.shop.modules.product.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,6 @@ public class SpecificationServiceImpl extends BaseService implements
 	}
 
 	@Transactional(readOnly = true)
-	@CacheEvict(value = { "specification" })
 	public List<Specification> findList(Integer count, List<Filter> filters,
 			List<Order> orders, String cacheRegion) {
 		return this.specificationDao.findList(null, count, filters, orders);
@@ -44,19 +42,16 @@ public class SpecificationServiceImpl extends BaseService implements
 	}
 
 	@Transactional
-	@CacheEvict(value = { "specification" }, allEntries = true)
 	public void save(Specification specification) {
 		this.specificationDao.persist(specification);
 	}
 
 	@Transactional
-	@CacheEvict(value = { "specification" }, allEntries = true)
 	public Specification update(Specification specification) {
 		return (Specification) this.specificationDao.merge(specification);
 	}
 
 	@Transactional
-	@CacheEvict(value = { "specification" }, allEntries = true)
 	public Specification update(Specification specification,
 			String[] ignoreProperties) {
 		return (Specification) this.specificationDao.update(specification,

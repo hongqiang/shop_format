@@ -8,8 +8,12 @@
  */
 
 var shop = {
-	base: "${base}${adminPath}",
+	base: "${base}",
 	locale: "${locale}"
+};
+
+var admin ={
+	path:"${adminPath}"
 };
 
 var setting = {
@@ -327,8 +331,8 @@ function message(code) {
 				type: "image",
 				title: message("admin.browser.title"),
 				isUpload: true,
-				browserUrl: shop.base + "${adminPath}/file/browser.jhtml",
-				uploadUrl: shop.base + "${adminPath}/file/upload.jhtml",
+				browserUrl: shop.base + admin.path+ "/file/browser.jhtml",
+				uploadUrl: shop.base + admin.path+ "/file/upload.jhtml",
 				callback: null
 			};
 			$.extend(settings, options);

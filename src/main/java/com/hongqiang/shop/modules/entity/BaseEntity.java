@@ -3,6 +3,7 @@ package com.hongqiang.shop.modules.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.groups.Default;
 
 import org.hibernate.search.annotations.Analyze;
@@ -34,27 +33,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Jack
  * 
  */
- @JsonAutoDetect(fieldVisibility=JsonAutoDetect.Visibility.NONE,
- getterVisibility=JsonAutoDetect.Visibility.NONE,
- setterVisibility=JsonAutoDetect.Visibility.NONE,
- isGetterVisibility=JsonAutoDetect.Visibility.NONE,
- creatorVisibility=JsonAutoDetect.Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @MappedSuperclass
 @EntityListeners(EntityListeners.class)
 public abstract class BaseEntity implements Serializable {
-	
-	public abstract interface Save extends Default{
+
+	public abstract interface Save extends Default {
 	}
-	
-	public abstract interface Update extends Default{
+
+	public abstract interface Update extends Default {
 	}
-	
+
 	private static final long serialVersionUID = 6L;
 	public static final String ID_PROPERTY_NAME = "id";
 	public static final String CREATE_DATE_PROPERTY_NAME = "createDate";
 	public static final String MODIFY_DATE_PROPERTY_NAME = "updateDate";
 	public static final String fileSuffix = ".jhtml";
-//	public static final String fileSuffix = ".html";
+	// public static final String fileSuffix = ".html";
 	// 显示/隐藏
 	public static final String SHOW = "1";
 	public static final String HIDE = "0";
@@ -80,21 +75,21 @@ public abstract class BaseEntity implements Serializable {
 	public BaseEntity() {
 		this.delFlag = DEL_FLAG_NORMAL;
 	}
-	
+
 	@PrePersist
-	public void prePersist(){
-//		this.updateBy = UserUtils.getUser();
+	public void prePersist() {
+		// this.updateBy = UserUtils.getUser();
 		this.updateDate = new Date();
-//		this.createBy = this.updateBy;
+		// this.createBy = this.updateBy;
 		this.createDate = this.updateDate;
 	}
-	
+
 	@PreUpdate
-	public void preUpdate(){
-//		this.updateBy = UserUtils.getUser();
+	public void preUpdate() {
+		// this.updateBy = UserUtils.getUser();
 		this.updateDate = new Date();
 	}
-	
+
 	@JsonProperty
 	@DocumentId
 	@Id
@@ -107,7 +102,7 @@ public abstract class BaseEntity implements Serializable {
 		this.id = id;
 	}
 
-	@Length(min=0, max=255)
+	@Length(min = 0, max = 255)
 	public String getRemarks() {
 		return remarks;
 	}
@@ -115,20 +110,24 @@ public abstract class BaseEntity implements Serializable {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
-//	@JsonIgnore
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@NotFound(action = NotFoundAction.IGNORE)
-//	public User getCreateBy() {
-//		return createBy;
-//	}
-//
-//	public void setCreateBy(User createBy) {
-//		this.createBy = createBy;
-//	}
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+
+	// @JsonIgnore
+	// @ManyToOne(fetch=FetchType.LAZY)
+	// @NotFound(action = NotFoundAction.IGNORE)
+	// public User getCreateBy() {
+	// return createBy;
+	// }
+	//
+	// public void setCreateBy(User createBy) {
+	// this.createBy = createBy;
+	// }
+
+	// @Temporal(TemporalType.TIMESTAMP)
+	// @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonProperty
+	@Field(store = Store.YES, index = Index.YES)
+	@DateBridge(resolution = Resolution.SECOND)
+	@Column(nullable = false, updatable = false)
 	public Date getCreateDate() {
 		return this.createDate;
 	}
@@ -137,20 +136,24 @@ public abstract class BaseEntity implements Serializable {
 		this.createDate = createDate;
 	}
 
-//	@JsonIgnore
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@NotFound(action = NotFoundAction.IGNORE)
-//	public User getUpdateBy() {
-//		return updateBy;
-//	}
-//
-//	public void setUpdateBy(User updateBy) {
-//		this.updateBy = updateBy;
-//	}
-	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
-	@DateBridge(resolution = Resolution.DAY)
+	// @JsonIgnore
+	// @ManyToOne(fetch=FetchType.LAZY)
+	// @NotFound(action = NotFoundAction.IGNORE)
+	// public User getUpdateBy() {
+	// return updateBy;
+	// }
+	//
+	// public void setUpdateBy(User updateBy) {
+	// this.updateBy = updateBy;
+	// }
+
+	// @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	// @Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES)
+	// @DateBridge(resolution = Resolution.DAY)
+	@JsonProperty
+	@Field(store = Store.YES, index = Index.YES)
+	@DateBridge(resolution = Resolution.SECOND)
+	@Column(nullable = false)
 	public Date getUpdateDate() {
 		return this.updateDate;
 	}
@@ -158,9 +161,9 @@ public abstract class BaseEntity implements Serializable {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
-	
-	@Length(min=1, max=1)
-	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
+
+	@Length(min = 1, max = 1)
+	@Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES)
 	public String getDelFlag() {
 		return delFlag;
 	}

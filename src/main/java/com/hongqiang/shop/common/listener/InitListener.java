@@ -2,7 +2,6 @@ package com.hongqiang.shop.common.listener;
 
 import java.io.File;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;

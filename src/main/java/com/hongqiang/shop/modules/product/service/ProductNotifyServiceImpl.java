@@ -11,6 +11,7 @@ import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.ProductNotify;
 import com.hongqiang.shop.modules.product.dao.ProductNotifyDao;
+import com.hongqiang.shop.website.service.MailService;
 
 @Service
 public class ProductNotifyServiceImpl extends BaseService
@@ -20,8 +21,8 @@ public class ProductNotifyServiceImpl extends BaseService
   @Autowired
   ProductNotifyDao productNotifyDao;
 
-//  @Autowired
-//  MailService mailService;
+  @Autowired
+  MailService mailService;
 
   @Transactional
   public ProductNotify find(Long id){
@@ -86,7 +87,7 @@ public class ProductNotifyServiceImpl extends BaseService
         if (localProductNotify == null)
           continue;
 		sendCount++;
-//		this.mailService.sendProductNotifyMail(localProductNotify);
+		this.mailService.sendProductNotifyMail(localProductNotify);
 		localProductNotify.setHasSent(Boolean.valueOf(true));
 		this.productNotifyDao.merge(localProductNotify);
       }

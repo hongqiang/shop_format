@@ -160,26 +160,16 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	 * context.
 	 */
 	public T merge(T entity) {
-		if (entity != null){
-			T en = this.entityManager.merge(entity);
-			this.entityManager.flush();
-			return en;
-		}
+		if (entity != null)
+			return this.entityManager.merge(entity);
 		return null;
 	}
-	
-//	public T merge(T entity) {
-//		if (entity != null)
-//			return this.entityManager.merge(entity);
-//		return null;
-//	}
 
 	/**
 	 * 更新实体类
 	 * 
 	 * @param entity
-	 * @param ignoreProperties
-	 *            忽略的实体类属性
+	 * @param ignoreProperties 忽略的实体类属性
 	 * @return
 	 */
 	public T update(T entity, String[] ignoreProperties) {
