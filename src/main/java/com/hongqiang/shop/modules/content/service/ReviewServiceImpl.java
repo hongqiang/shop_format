@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,11 +30,10 @@ import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.entity.Product;
 import com.hongqiang.shop.modules.entity.Review;
 import com.hongqiang.shop.modules.product.dao.ProductDao;
-import com.hongqiang.shop.modules.util.service.StaticService;
 import com.hongqiang.shop.modules.util.service.TemplateService;
 
 @Service
-public class ReviewServiceImpl extends BaseService implements ReviewService {
+public class ReviewServiceImpl extends BaseService implements ReviewService,DisposableBean {
 
 	@Autowired
 	private ReviewDao reviewDao;
@@ -197,6 +197,10 @@ public class ReviewServiceImpl extends BaseService implements ReviewService {
 				 build(localProduct);
 			}
 		}
+	}
+	
+	public void destroy() {
+	
 	}
 	
 	@Transactional(readOnly = true)
