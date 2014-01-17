@@ -122,18 +122,19 @@ public class CouponController extends BaseController
   }
 
   @RequestMapping(value={"/download"}, method=RequestMethod.POST)
-  public ModelAndView download(Long id, Integer count, ModelMap model)
+  public ExcelView download(Long id, Integer count, ModelMap model)
   {
     if ((count == null) || (count.intValue() <= 0))
       count = Integer.valueOf(50);
-    Coupon localCoupon = (Coupon)this.couponService.find(id);
-    List<CouponCode> localList = this.couponCodeService.build(localCoupon, null, count);
+    Coupon coupon = (Coupon)this.couponService.find(id);
+    List<CouponCode> couponCodes = this.couponCodeService.build(coupon, null, count);
     String str = "coupon_code_" + new SimpleDateFormat("yyyyMM").format(new Date()) + ".xls";
-    String[] arrayOfString = new String[4];
-    arrayOfString[0] = (addMessage("admin.coupon.type", new Object[0]) + ": " + localCoupon.getName());
-    arrayOfString[1] = (addMessage("admin.coupon.count", new Object[0]) + ": " + count);
-    arrayOfString[2] = (addMessage("admin.coupon.operator", new Object[0]) + ": " + this.adminService.getCurrentUsername());
-    arrayOfString[3] = (addMessage("admin.coupon.date", new Object[0]) + ": " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-    return new ModelAndView(new ExcelView(str, null, new String[] { "code" }, new String[] { addMessage("admin.coupon.title", new Object[0]) }, null, null, localList, arrayOfString), model);
+    String[] infos = new String[4];
+    infos[0] = (addMessage("admin.coupon.type", new Object[0]) + ": " + coupon.getName());
+    infos[1] = (addMessage("admin.coupon.count", new Object[0]) + ": " + count);
+    infos[2] = (addMessage("admin.coupon.operator", new Object[0]) + ": " + this.adminService.getCurrentUsername());
+    infos[3] = (addMessage("admin.coupon.date", new Object[0]) + ": " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+    return new ExcelView(str, null, new String[] { "code" }, new String[] { addMessage("admin.coupon.title", new Object[0]) }, null, null, couponCodes, infos);
+//    return new ModelAndView(new ExcelView(str, null, new String[] { "code" }, new String[] { addMessage("admin.coupon.title", new Object[0]) }, null, null, couponCodes, infos), model);
   }
 }

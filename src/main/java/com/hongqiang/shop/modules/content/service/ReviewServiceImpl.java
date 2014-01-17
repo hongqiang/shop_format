@@ -11,13 +11,13 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.hongqiang.shop.common.base.persistence.Page;
@@ -33,7 +33,7 @@ import com.hongqiang.shop.modules.product.dao.ProductDao;
 import com.hongqiang.shop.modules.util.service.TemplateService;
 
 @Service
-public class ReviewServiceImpl extends BaseService implements ReviewService,DisposableBean {
+public class ReviewServiceImpl extends BaseService implements ReviewService, ServletContextAware {
 
 	@Autowired
 	private ReviewDao reviewDao;
@@ -52,14 +52,15 @@ public class ReviewServiceImpl extends BaseService implements ReviewService,Disp
 //	 @Autowired
 //	 private StaticService staticService;
 
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+	
 	@Transactional(readOnly = true)
 	public List<Review> findList(Member member, Long productId,
 			Review.Type type, Boolean isShow, Integer count,
 			List<Filter> filters, List<Order> orders) {
 		Product product = this.productDao.find(productId);
-//		if (product == null) {
-//			return null;
-//		}
 		return this.reviewDao.findList(member, product, type, isShow, count,
 				filters, orders);
 	}
@@ -70,9 +71,6 @@ public class ReviewServiceImpl extends BaseService implements ReviewService,Disp
 			Review.Type type, Boolean isShow, Integer count,
 			List<Filter> filters, List<Order> orders, String cacheRegion) {
 		Product product = this.productDao.find(productId);
-//		if (product == null) {
-//			return null;
-//		}
 		return this.reviewDao.findList(member, product, type, isShow, count,
 				filters, orders);
 	}
@@ -197,10 +195,6 @@ public class ReviewServiceImpl extends BaseService implements ReviewService,Disp
 				 build(localProduct);
 			}
 		}
-	}
-	
-	public void destroy() {
-	
 	}
 	
 	@Transactional(readOnly = true)

@@ -232,7 +232,7 @@ public class MemberController extends BaseController {
 		if (!beanValidator(redirectAttributes, member, new Class[0]))
 			return ERROR_PAGE;
 		Setting localSetting = SettingUtils.get();
-		if ((member.getPassword() != null)
+		if ((member.getPassword() != null) && (StringUtils.isNotEmpty(member.getPassword()))
 				&& ((member.getPassword().length() < localSetting
 						.getPasswordMinLength().intValue()) || (member
 						.getPassword().length() > localSetting

@@ -12,37 +12,34 @@ import com.hongqiang.shop.common.utils.SettingUtils;
 import freemarker.template.TemplateModelException;
 
 @Service
-public class CacheServiceImpl
-  implements CacheService
-{
-  @Autowired
-  private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
+public class CacheServiceImpl implements CacheService {
+	@Autowired
+	private ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource;
 
-  @Autowired
-  private FreeMarkerConfigurer freeMarkerConfigurer;
+	@Autowired
+	private FreeMarkerConfigurer freeMarkerConfigurer;
 
-  public String getDiskStorePath()
-  {
-    return CacheUtils.getDiskStorePath();
-  }
+	public String getDiskStorePath() {
+		return CacheUtils.getDiskStorePath();
+	}
 
-  public int getCacheSize()
-  {
-    return CacheUtils.getCacheSize();
-  }
+	public int getCacheSize() {
+		return CacheUtils.getCacheSize();
+	}
 
-  @CacheEvict(value={"setting", "authorization", "logConfig", "template", "shipping", "area", "seo", "adPosition", "memberAttribute", "navigation", "tag", "friendLink", "brand", "article", "articleCategory", "product", "productCategory", "review", "consultation", "promotion"}, allEntries=true)
-  public void clear()
-  {
-    this.reloadableResourceBundleMessageSource.clearCache();
-    try
-    {
-      this.freeMarkerConfigurer.getConfiguration().setSharedVariable("setting", SettingUtils.get());
-    }
-    catch (TemplateModelException localTemplateModelException)
-    {
-      localTemplateModelException.printStackTrace();
-    }
-    this.freeMarkerConfigurer.getConfiguration().clearTemplateCache();
-  }
+	@CacheEvict(value = { "setting", "authorization", "logConfig", "template",
+			"shipping", "area", "seo", "adPosition", "memberAttribute",
+			"navigation", "tag", "friendLink", "brand", "article",
+			"articleCategory", "product", "productCategory", "review",
+			"consultation", "promotion" }, allEntries = true)
+	public void clear() {
+		this.reloadableResourceBundleMessageSource.clearCache();
+		try {
+			this.freeMarkerConfigurer.getConfiguration().setSharedVariable(
+					"setting", SettingUtils.get());
+		} catch (TemplateModelException localTemplateModelException) {
+			localTemplateModelException.printStackTrace();
+		}
+		this.freeMarkerConfigurer.getConfiguration().clearTemplateCache();
+	}
 }

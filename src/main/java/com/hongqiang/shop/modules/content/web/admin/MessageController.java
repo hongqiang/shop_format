@@ -37,12 +37,10 @@ public class MessageController extends BaseController {
 
 	@RequestMapping(value = { "/send" }, method = RequestMethod.GET)
 	public String send(Long draftMessageId, Model model) {
-		com.hongqiang.shop.modules.entity.Message localMessage = (com.hongqiang.shop.modules.entity.Message) this.messageService
+		com.hongqiang.shop.modules.entity.Message msg = (com.hongqiang.shop.modules.entity.Message) this.messageService
 				.find(draftMessageId);
-		if ((localMessage != null)
-				&& (localMessage.getIsDraft().booleanValue())
-				&& (localMessage.getSender() == null))
-			model.addAttribute("draftMessage", localMessage);
+		if ((msg != null)&& (msg.getIsDraft().booleanValue())&& (msg.getSender() == null))
+			model.addAttribute("draftMessage", msg);
 		return "admin/message/send";
 	}
 
@@ -54,32 +52,30 @@ public class MessageController extends BaseController {
 		if (!beanValidator(com.hongqiang.shop.modules.entity.Message.class,
 				"content", content, new Class[0]))
 			return ERROR_PAGE;
-		com.hongqiang.shop.modules.entity.Message localMessage1 = (com.hongqiang.shop.modules.entity.Message) this.messageService
+		com.hongqiang.shop.modules.entity.Message draftMsg = (com.hongqiang.shop.modules.entity.Message) this.messageService
 				.find(draftMessageId);
-		if ((localMessage1 != null)
-				&& (localMessage1.getIsDraft().booleanValue())
-				&& (localMessage1.getSender() == null))
-			this.messageService.delete(localMessage1);
+		if ((draftMsg != null)&& (draftMsg.getIsDraft().booleanValue())&& (draftMsg.getSender() == null))
+			this.messageService.delete(draftMsg);
 		Member localMember = null;
 		if (StringUtils.isNotEmpty(username)) {
 			localMember = this.memberService.findByUsername(username);
 			if (localMember == null)
 				return ERROR_PAGE;
 		}
-		com.hongqiang.shop.modules.entity.Message localMessage2 = new com.hongqiang.shop.modules.entity.Message();
-		localMessage2.setTitle(title);
-		localMessage2.setContent(content);
-		localMessage2.setIp(request.getRemoteAddr());
-		localMessage2.setIsDraft(isDraft);
-		localMessage2.setSenderRead(Boolean.valueOf(true));
-		localMessage2.setReceiverRead(Boolean.valueOf(false));
-		localMessage2.setSenderDelete(Boolean.valueOf(false));
-		localMessage2.setReceiverDelete(Boolean.valueOf(false));
-		localMessage2.setSender(null);
-		localMessage2.setReceiver(localMember);
-		localMessage2.setForMessage(null);
-		localMessage2.setReplyMessages(null);
-		this.messageService.save(localMessage2);
+		com.hongqiang.shop.modules.entity.Message msg = new com.hongqiang.shop.modules.entity.Message();
+		msg.setTitle(title);
+		msg.setContent(content);
+		msg.setIp(request.getRemoteAddr());
+		msg.setIsDraft(isDraft);
+		msg.setSenderRead(Boolean.valueOf(true));
+		msg.setReceiverRead(Boolean.valueOf(false));
+		msg.setSenderDelete(Boolean.valueOf(false));
+		msg.setReceiverDelete(Boolean.valueOf(false));
+		msg.setSender(null);
+		msg.setReceiver(localMember);
+		msg.setForMessage(null);
+		msg.setReplyMessages(null);
+		this.messageService.save(msg);
 		if (isDraft.booleanValue()) {
 			addMessage(redirectAttributes, Message.success(
 					"admin.message.saveDraftSuccess", new Object[0]));
@@ -92,25 +88,20 @@ public class MessageController extends BaseController {
 
 	@RequestMapping(value = { "/view" }, method = RequestMethod.GET)
 	public String view(Long id, Model model) {
-		com.hongqiang.shop.modules.entity.Message localMessage = 
-				(com.hongqiang.shop.modules.entity.Message) this.messageService
-				.find(id);
-		if ((localMessage == null)
-				|| (localMessage.getIsDraft().booleanValue())
-				|| (localMessage.getForMessage() != null))
+		com.hongqiang.shop.modules.entity.Message msg = 
+				(com.hongqiang.shop.modules.entity.Message) this.messageService.find(id);
+		if ((msg == null)|| (msg.getIsDraft().booleanValue())|| (msg.getForMessage() != null))
 			return ERROR_PAGE;
-		if (((localMessage.getSender() != null) && (localMessage.getReceiver() != null))
-				|| ((localMessage.getReceiver() == null) && (localMessage
-						.getReceiverDelete().booleanValue()))
-				|| ((localMessage.getSender() == null) && (localMessage
-						.getSenderDelete().booleanValue())))
+		if (((msg.getSender() != null) && (msg.getReceiver() != null))
+				|| ((msg.getReceiver() == null) && (msg.getReceiverDelete().booleanValue()))
+				|| ((msg.getSender() == null) && (msg.getSenderDelete().booleanValue())))
 			return ERROR_PAGE;
-		if (localMessage.getReceiver() == null)
-			localMessage.setReceiverRead(Boolean.valueOf(true));
+		if (msg.getReceiver() == null)
+			msg.setReceiverRead(Boolean.valueOf(true));
 		else
-			localMessage.setSenderRead(Boolean.valueOf(true));
-		this.messageService.update(localMessage);
-		model.addAttribute("adminMessage", localMessage);
+			msg.setSenderRead(Boolean.valueOf(true));
+		this.messageService.update(msg);
+		model.addAttribute("adminMessage", msg);
 		return "/admin/message/view";
 	}
 
@@ -120,56 +111,44 @@ public class MessageController extends BaseController {
 		if (!beanValidator(com.hongqiang.shop.modules.entity.Message.class,
 				"content", content, new Class[0]))
 			return ERROR_PAGE;
-		com.hongqiang.shop.modules.entity.Message localMessage1 = (com.hongqiang.shop.modules.entity.Message) this.messageService
+		com.hongqiang.shop.modules.entity.Message msg = (com.hongqiang.shop.modules.entity.Message) this.messageService
 				.find(id);
-		if ((localMessage1 == null)
-				|| (localMessage1.getIsDraft().booleanValue())
-				|| (localMessage1.getForMessage() != null))
+		if ((msg == null)|| (msg.getIsDraft().booleanValue())|| (msg.getForMessage() != null))
 			return ERROR_PAGE;
-		if (((localMessage1.getSender() != null) && (localMessage1
-				.getReceiver() != null))
-				|| ((localMessage1.getReceiver() == null) && (localMessage1
-						.getReceiverDelete().booleanValue()))
-				|| ((localMessage1.getSender() == null) && (localMessage1
-						.getSenderDelete().booleanValue())))
+		if (((msg.getSender() != null) && (msg.getReceiver() != null))
+				|| ((msg.getReceiver() == null) && (msg.getReceiverDelete().booleanValue()))
+				|| ((msg.getSender() == null) && (msg.getSenderDelete().booleanValue())))
 			return ERROR_PAGE;
-		com.hongqiang.shop.modules.entity.Message localMessage2 = new com.hongqiang.shop.modules.entity.Message();
-		localMessage2.setTitle("reply: " + localMessage1.getTitle());
-		localMessage2.setContent(content);
-		localMessage2.setIp(request.getRemoteAddr());
-		localMessage2.setIsDraft(Boolean.valueOf(false));
-		localMessage2.setSenderRead(Boolean.valueOf(true));
-		localMessage2.setReceiverRead(Boolean.valueOf(false));
-		localMessage2.setSenderDelete(Boolean.valueOf(false));
-		localMessage2.setReceiverDelete(Boolean.valueOf(false));
-		localMessage2.setSender(null);
-		localMessage2
-				.setReceiver(localMessage1.getReceiver() == null ? localMessage1
-						.getSender() : localMessage1.getReceiver());
-		if (((localMessage1.getReceiver() == null) && (!localMessage1
-				.getSenderDelete().booleanValue()))
-				|| ((localMessage1.getSender() == null) && (!localMessage1
-						.getReceiverDelete().booleanValue())))
-			localMessage2.setForMessage(localMessage1);
-		localMessage2.setReplyMessages(null);
-		this.messageService.save(localMessage2);
-		if (localMessage1.getSender() == null) {
-			localMessage1.setSenderRead(Boolean.valueOf(true));
-			localMessage1.setReceiverRead(Boolean.valueOf(false));
+		com.hongqiang.shop.modules.entity.Message replyMsg = new com.hongqiang.shop.modules.entity.Message();
+		replyMsg.setTitle("reply: " + msg.getTitle());
+		replyMsg.setContent(content);
+		replyMsg.setIp(request.getRemoteAddr());
+		replyMsg.setIsDraft(Boolean.valueOf(false));
+		replyMsg.setSenderRead(Boolean.valueOf(true));
+		replyMsg.setReceiverRead(Boolean.valueOf(false));
+		replyMsg.setSenderDelete(Boolean.valueOf(false));
+		replyMsg.setReceiverDelete(Boolean.valueOf(false));
+		replyMsg.setSender(null);
+		replyMsg.setReceiver(msg.getReceiver() == null ? msg.getSender() : msg.getReceiver());
+		if (((msg.getReceiver() == null) && (!msg.getSenderDelete().booleanValue()))
+				|| ((msg.getSender() == null) && (!msg.getReceiverDelete().booleanValue())))
+			replyMsg.setForMessage(msg);
+		replyMsg.setReplyMessages(null);
+		this.messageService.save(replyMsg);
+		if (msg.getSender() == null) {
+			msg.setSenderRead(Boolean.valueOf(true));
+			msg.setReceiverRead(Boolean.valueOf(false));
 		} else {
-			localMessage1.setSenderRead(Boolean.valueOf(false));
-			localMessage1.setReceiverRead(Boolean.valueOf(true));
+			msg.setSenderRead(Boolean.valueOf(false));
+			msg.setReceiverRead(Boolean.valueOf(true));
 		}
-		this.messageService.update(localMessage1);
-		if (((localMessage1.getReceiver() == null) && (!localMessage1
-				.getSenderDelete().booleanValue()))
-				|| ((localMessage1.getSender() == null) && (!localMessage1
-						.getReceiverDelete().booleanValue()))) {
+		this.messageService.update(msg);
+		if (((msg.getReceiver() == null) && (!msg.getSenderDelete().booleanValue()))
+				|| ((msg.getSender() == null) && (!msg.getReceiverDelete().booleanValue()))) {
 			addMessage(redirectAttributes, ADMIN_SUCCESS);
-			return "redirect:view.jhtml?id=" + localMessage1.getId();
+			return "redirect:view.jhtml?id=" + msg.getId();
 		}
-		addMessage(redirectAttributes,
-				Message.success("admin.message.replySuccess", new Object[0]));
+		addMessage(redirectAttributes,Message.success("admin.message.replySuccess", new Object[0]));
 		return "redirect:list.jhtml";
 	}
 

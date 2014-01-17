@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import com.hongqiang.shop.common.base.persistence.Page;
@@ -36,7 +37,7 @@ import com.hongqiang.shop.modules.util.service.TemplateService;
 
 @Service
 public class ArticleServiceImpl extends BaseService implements ArticleService,
-		DisposableBean {
+		DisposableBean, ServletContextAware {
 	private long systemTime = System.currentTimeMillis();
 	public static final String HITS_CACHE_NAME = "articleHits";
 	public static final int HITS_CACHE_INTERVAL = 600000;
@@ -51,6 +52,10 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 	@Autowired
 	private ArticleDao articleDao;
 
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+	
 	@Transactional(readOnly = true)
 	public List<Article> findList(ArticleCategory articleCategory,
 			List<Tag> tags, Integer count, List<Filter> filters,

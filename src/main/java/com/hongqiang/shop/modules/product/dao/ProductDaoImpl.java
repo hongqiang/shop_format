@@ -118,7 +118,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 	@Override
 	public List<Product> findList(ProductCategory productCategory,
 			Date beginDate, Date endDate, Integer first, Integer count) {
-		String sqlString = "select DISTINCT product from Product product where product.isMarketable= '1' ";
+		String sqlString = "select product from Product product where product.isMarketable is true ";
 		List<Object> params = new ArrayList<Object>();
 		if (productCategory != null) {
 			sqlString += " and (product.productCategory = ? ";
@@ -210,7 +210,6 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 			qlString += " and orderItems.createDate >= ? ";
 			params.add(beginDate);
 		}
-
 		if (endDate != null) {
 			qlString += " and orderItems.createDate <= ? ";
 			params.add(endDate);
@@ -219,9 +218,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		params.add(com.hongqiang.shop.modules.entity.Order.OrderStatus.completed);
 		qlString += " and o.paymentStatus = ? ";
 		params.add(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
-
 		qlString += " group by product.id ";
-
 		StringBuilder stringBuilder = new StringBuilder(qlString);
 		Long count = super.count(stringBuilder, null, params);
 		int i = (int) Math.ceil(count.longValue() / pageable.getPageSize());
@@ -237,14 +234,16 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
        }
        List<Object> listTemp = new ArrayList<Object>();
 		return new Page<Object>(listTemp,count,pageable);
-
 	}
 
 	public Long count(Member favoriteMember, Boolean isMarketable,
 			Boolean isList, Boolean isTop, Boolean isGift,
 			Boolean isOutOfStock, Boolean isStockAlert) {
-		String qlString = "select product from Product product "+
-				"join product.favoriteMembers favoriteMembers where 1=1 ";
+		String qlString = "select product from Product product ";
+		if (favoriteMember != null){
+			qlString += "join product.favoriteMembers favoriteMembers ";
+		}
+		qlString += "where 1=1 ";
 		List<Object> params = new ArrayList<Object>();
 		if (favoriteMember != null) {
 			qlString += " and favoriteMembers= ?";
@@ -275,7 +274,6 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		}
 		if (isStockAlert != null) {
 			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
-			// int stockAlertCount = 1;
 			if (isStockAlert.booleanValue()) {
 				qlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
 				params.add(stockAlertCount);
@@ -291,16 +289,15 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 	public boolean isPurchased(Member member, Product product) {
 		if ((member == null) || (product == null))
 			return false;
-		String str = "select count(*) from OrderItem orderItem where orderItem.product = :product and orderItem.order.member = :member and orderItem.order.orderStatus = :orderStatus";
+		String str = "select count(*) from OrderItem orderItem where orderItem.product = :product and "+
+			"orderItem.order.member = :member and orderItem.order.orderStatus = :orderStatus";
 		Long localLong = (Long) this
 				.getEntityManager()
 				.createQuery(str, Long.class)
 				.setFlushMode(FlushModeType.COMMIT)
 				.setParameter("product", product)
 				.setParameter("member", member)
-				.setParameter(
-						"orderStatus",
-						com.hongqiang.shop.modules.entity.Order.OrderStatus.completed)
+				.setParameter("orderStatus",com.hongqiang.shop.modules.entity.Order.OrderStatus.completed)
 				.getSingleResult();
 		return localLong.longValue() > 0L;
 	}
@@ -339,7 +336,6 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 				localGoods.getProducts().remove(product);
 				if (localGoods.getProducts().isEmpty())
 					this.goodsDao.remove(localGoods);
-
 			}
 		}
 		super.remove(product);
@@ -482,7 +478,6 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		}
 		if (isStockAlert != null) {
 			Integer stockAlertCount = SettingUtils.get().getStockAlertCount();
-			// Long stockAlertCount = 1L;
 			if (isStockAlert.booleanValue()) {
 				sqlString += " and (product.stock is not null and product.stock<= (product.allocatedStock+?)) ";
 				params.add(stockAlertCount);

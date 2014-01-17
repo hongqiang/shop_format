@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.entity.Admin;
 import com.hongqiang.shop.modules.user.service.AdminService;
@@ -39,7 +40,7 @@ public class ProfileController extends BaseController
     return "/admin/profile/edit";
   }
 
-  @RequestMapping(value={"/update"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+  @RequestMapping(value={"/update"}, method=RequestMethod.POST)
   public String update(String currentPassword, String password, String email, RedirectAttributes redirectAttributes)
   {
     if (!beanValidator(Admin.class, "email", email, new Class[0]))
@@ -56,6 +57,6 @@ public class ProfileController extends BaseController
     localAdmin.setEmail(email);
     this.adminService.update(localAdmin);
     addMessage(redirectAttributes, ADMIN_SUCCESS);
-    return "redirect:edit.jhtml";
+    return "redirect:"+Global.getAdminPath()+"/common/main.jhtml";
   }
 }

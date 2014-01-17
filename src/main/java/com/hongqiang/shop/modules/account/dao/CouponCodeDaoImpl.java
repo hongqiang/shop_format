@@ -51,11 +51,11 @@ public class CouponCodeDaoImpl extends BaseDaoImpl<CouponCode,Long> implements
 		for (int i = 0; i < count.intValue(); i++) {
 			CouponCode localCouponCode = build(coupon, member);
 			localArrayList.add(localCouponCode);
-			if (i % 20 != 0)
-				continue;
-			super.flush();
-			super.clear();
+//			if (i % 20 != 0)
+//				continue;
 		}
+		super.flush();
+		super.clear();
 		return localArrayList;
 	}
 

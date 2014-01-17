@@ -27,117 +27,107 @@ import com.hongqiang.shop.modules.product.service.ProductService;
 import com.hongqiang.shop.modules.util.service.StaticService;
 
 @Controller("adminStaticController")
-@RequestMapping({"${adminPath}/static"})
-public class StaticController extends BaseController
-{
+@RequestMapping({ "${adminPath}/static" })
+public class StaticController extends BaseController {
 
-public enum BuildType
-{
-  index, article, product, other;
-}
+	public enum BuildType {
+		index, article, product, other;
+	}
 
+	@Autowired
+	private ArticleService articleService;
 
-  @Autowired
-  private ArticleService articleService;
+	@Autowired
+	private ArticleCategoryService articleCategoryService;
 
-  @Autowired
-  private ArticleCategoryService articleCategoryService;
+	@Autowired
+	private ProductService productService;
 
-  @Autowired
-  private ProductService productService;
+	@Autowired
+	private ProductCategoryService productCategoryService;
 
-  @Autowired
-  private ProductCategoryService productCategoryService;
+	@Autowired
+	private StaticService staticService;
 
-  @Autowired
-  private StaticService staticService;
+	@RequestMapping(value = { "/build" }, method = RequestMethod.GET)
+	public String build(ModelMap model) {
+		model.addAttribute("buildTypes", BuildType.values());
+		model.addAttribute("defaultBeginDate",
+				DateUtils.addDays(new Date(), -7));
+		model.addAttribute("defaultEndDate", new Date());
+		model.addAttribute("articleCategoryTree",
+				this.articleCategoryService.findChildren(null, null));
+		model.addAttribute("productCategoryTree",
+				this.productCategoryService.findChildren(null, null));
+		return "/admin/static/build";
+	}
 
-  @RequestMapping(value={"/build"}, method=RequestMethod.GET)
-  public String build(ModelMap model)
-  {
-    model.addAttribute("buildTypes", BuildType.values());
-    model.addAttribute("defaultBeginDate", DateUtils.addDays(new Date(), -7));
-    model.addAttribute("defaultEndDate", new Date());
-    model.addAttribute("articleCategoryTree", this.articleCategoryService.findChildren(null, null));
-    model.addAttribute("productCategoryTree", this.productCategoryService.findChildren(null, null));
-    return "/admin/static/build";
-  }
-
-  @RequestMapping(value={"/build"}, method=RequestMethod.POST)
-  @ResponseBody
-  public Map<String, Object> build(BuildType buildType, Long articleCategoryId, Long productCategoryId, Date beginDate, Date endDate, Integer first, Integer count)
-  {
-    long l1 = System.currentTimeMillis();
-    Calendar localCalendar=Calendar.getInstance();
-    if (beginDate != null)
-    {
-//      localCalendar = DateUtils.toCalendar(beginDate);
-      localCalendar.setTime(beginDate);
-      localCalendar.set(11, localCalendar.getActualMinimum(11));
-      localCalendar.set(12, localCalendar.getActualMinimum(12));
-      localCalendar.set(13, localCalendar.getActualMinimum(13));
-      beginDate = localCalendar.getTime();
-    }
-    if (endDate != null)
-    {
-//      localCalendar = DateUtils.toCalendar(endDate);
-      localCalendar.setTime(endDate);
-      localCalendar.set(11, localCalendar.getActualMaximum(11));
-      localCalendar.set(12, localCalendar.getActualMaximum(12));
-      localCalendar.set(13, localCalendar.getActualMaximum(13));
-      endDate = localCalendar.getTime();
-    }
-    if ((first == null) || (first.intValue() < 0))
-      first = Integer.valueOf(0);
-    if ((count == null) || (count.intValue() <= 0))
-      count = Integer.valueOf(50);
-    int i = 0;
-    boolean bool = true;
-    if (buildType == BuildType.index)
-    {
-      i = this.staticService.buildIndex();
-    }
-    else
-    {
-      if (buildType == BuildType.article)
-      {
-        ArticleCategory localObject1 = (ArticleCategory)this.articleCategoryService.find(articleCategoryId);
-        List<Article> localList = this.articleService.findList((ArticleCategory)localObject1, beginDate, endDate, first, count);
-        Iterator<Article> localIterator = localList.iterator();
-        while (localIterator.hasNext())
-        {
-          Article localObject2 = (Article)localIterator.next();
-          i += this.staticService.build((Article)localObject2);
-        }
-        first = Integer.valueOf(first.intValue() + localList.size());
-        if (localList.size() == count.intValue())
-          bool = false;
-      }
-      else if (buildType == BuildType.product)
-      {
-        ProductCategory localObject1 = (ProductCategory)this.productCategoryService.find(productCategoryId);
-        List<Product> localList = this.productService.findList((ProductCategory)localObject1, beginDate, endDate, first, count);
-        Iterator<Product> localIterator = localList.iterator();
-        while (localIterator.hasNext())
-        {
-          Product localObject2 = (Product)localIterator.next();
-          i += this.staticService.build((Product)localObject2);
-        }
-        first = Integer.valueOf(first.intValue() + localList.size());
-        if (localList.size() == count.intValue())
-          bool = false;
-      }
-      else if (buildType == BuildType.other)
-      {
-        i = this.staticService.buildOther();
-      }
-    }
-    long l2 = System.currentTimeMillis();
-    Map<String, Object> localObject2 = new HashMap<String, Object>();
-    localObject2.put("first", first);
-    localObject2.put("buildCount", Integer.valueOf(i));
-    localObject2.put("buildTime", Long.valueOf(l2 - l1));
-    localObject2.put("isCompleted", Boolean.valueOf(bool));
-    return localObject2;
-  }
+	@RequestMapping(value = { "/build" }, method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> build(BuildType buildType,
+			Long articleCategoryId, Long productCategoryId, Date beginDate,
+			Date endDate, Integer first, Integer count) {
+		long beginTime = System.currentTimeMillis();
+		Calendar localCalendar = Calendar.getInstance();
+		if (beginDate != null) {
+			localCalendar.setTime(beginDate);
+			localCalendar.set(11, localCalendar.getActualMinimum(11));
+			localCalendar.set(12, localCalendar.getActualMinimum(12));
+			localCalendar.set(13, localCalendar.getActualMinimum(13));
+			beginDate = localCalendar.getTime();
+		}
+		if (endDate != null) {
+			localCalendar.setTime(endDate);
+			localCalendar.set(11, localCalendar.getActualMaximum(11));
+			localCalendar.set(12, localCalendar.getActualMaximum(12));
+			localCalendar.set(13, localCalendar.getActualMaximum(13));
+			endDate = localCalendar.getTime();
+		}
+		if ((first == null) || (first.intValue() < 0))
+			first = Integer.valueOf(0);
+		if ((count == null) || (count.intValue() <= 0))
+			count = Integer.valueOf(50);
+		int i = 0;
+		boolean bool = true;
+		if (buildType == BuildType.index) {
+			i = this.staticService.buildIndex();
+		} else {
+			if (buildType == BuildType.article) {
+				ArticleCategory articleCategory = (ArticleCategory) this.articleCategoryService
+						.find(articleCategoryId);
+				List<Article> localList = this.articleService.findList(
+						articleCategory, beginDate, endDate, first, count);
+				Iterator<Article> localIterator = localList.iterator();
+				while (localIterator.hasNext()) {
+					Article article = (Article) localIterator.next();
+					i += this.staticService.build(article);
+				}
+				first = Integer.valueOf(first.intValue() + localList.size());
+				if (localList.size() == count.intValue())
+					bool = false;
+			} else if (buildType == BuildType.product) {
+				ProductCategory productCategory = (ProductCategory) this.productCategoryService
+						.find(productCategoryId);
+				List<Product> localList = this.productService.findList(
+						productCategory, beginDate, endDate, first, count);
+				Iterator<Product> localIterator = localList.iterator();
+				while (localIterator.hasNext()) {
+					Product product = (Product) localIterator.next();
+					i += this.staticService.build(product);
+				}
+				first = Integer.valueOf(first.intValue() + localList.size());
+				if (localList.size() == count.intValue())
+					bool = false;
+			} else if (buildType == BuildType.other) {
+				i = this.staticService.buildOther();
+			}
+		}
+		long endTime = System.currentTimeMillis();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("first", first);
+		map.put("buildCount", Integer.valueOf(i));
+		map.put("buildTime", Long.valueOf(endTime - beginTime));
+		map.put("isCompleted", Boolean.valueOf(bool));
+		return map;
+	}
 }

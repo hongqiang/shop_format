@@ -39,12 +39,12 @@ $().ready(function() {
 	
 	[@flash_message /]
 	
-	var salesAmountChart = new FusionCharts("${base}${adminPath}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesAmountChart", "800", "300");
+	var salesAmountChart = new FusionCharts("${base}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesAmountChart", "800", "300");
 	salesAmountChart.addParam("wmode", "Opaque");
 	salesAmountChart.setDataXML(salesAmountData);
 	salesAmountChart.render("salesAmountChart");
 	
-	var salesVolumeChart = new FusionCharts("${base}${adminPath}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesVolumeChart", "800", "300");
+	var salesVolumeChart = new FusionCharts("${base}/resources/admin/fusionCharts/Charts/FCF_Line.swf", "salesVolumeChart", "800", "300");
 	salesVolumeChart.addParam("wmode", "Opaque");
 	salesVolumeChart.setDataXML(salesVolumeData);
 	salesVolumeChart.render("salesVolumeChart");

@@ -49,17 +49,11 @@ public class CouponCodeServiceImpl extends BaseService implements
 	}
 
 	public CouponCode build(Coupon coupon, Member member) {
-		if (coupon != null) {
-			return this.couponCodeDao.build(coupon, member);
-		}
-		return null;
+		return this.couponCodeDao.build(coupon, member);
 	}
 
 	public List<CouponCode> build(Coupon coupon, Member member, Integer count) {
-		if (coupon != null && member != null) {
-			return this.couponCodeDao.build(coupon, member, count);
-		}
-		return null;
+		return this.couponCodeDao.build(coupon, member, count);
 	}
 
 	public CouponCode exchange(Coupon coupon, Member member) {

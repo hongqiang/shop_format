@@ -38,63 +38,66 @@ public enum Type
       beginDate = DateUtils.addMonths(new Date(), -11);
     if (endDate == null)
       endDate = new Date();
-    LinkedHashMap<Date, BigDecimal> localLinkedHashMap1 = new LinkedHashMap<Date, BigDecimal>();
-    LinkedHashMap<Date, Integer> localLinkedHashMap2 = new LinkedHashMap<Date, Integer>();
-    Calendar localCalendar1 = Calendar.getInstance();
-    localCalendar1.setTime(beginDate);
-    Calendar localCalendar2 = Calendar.getInstance();
-    localCalendar1.setTime(endDate);
-    int i = localCalendar1.get(1);
-    int j = localCalendar2.get(1);
-    int k = localCalendar1.get(2);
-    int m = localCalendar2.get(2);
-    for (int n = i; n <= j; n++)
+    LinkedHashMap<Date, BigDecimal> salesAmountMap = new LinkedHashMap<Date, BigDecimal>();
+    LinkedHashMap<Date, Integer> salesVolumeMap = new LinkedHashMap<Date, Integer>();
+    Calendar start = Calendar.getInstance();
+    start.setTime(beginDate);
+    int startYear = start.get(Calendar.YEAR);
+    int startMonth = start.get(Calendar.MONTH);
+    
+    Calendar end = Calendar.getInstance();
+    end.setTime(endDate);
+    int endYear = end.get(Calendar.YEAR);
+    int endMonth = end.get(Calendar.MONTH);
+    
+    for (int loopYear = startYear; loopYear <= endYear; loopYear++)
     {
-      if (localLinkedHashMap1.size() >= LINK_LENGTH)
+      if (salesAmountMap.size() >= LINK_LENGTH)
         break;
-      Calendar localCalendar3 = Calendar.getInstance();
-      localCalendar3.set(1, n);
-      Date localDate2;
+      Calendar calendar = Calendar.getInstance();
+      calendar.set(Calendar.YEAR, loopYear);
       if (type == Type.year)
       {
-        localCalendar3.set(2, localCalendar3.getActualMinimum(2));
-        localCalendar3.set(5, localCalendar3.getActualMinimum(5));
-        localCalendar3.set(11, localCalendar3.getActualMinimum(11));
-        localCalendar3.set(12, localCalendar3.getActualMinimum(12));
-        localCalendar3.set(13, localCalendar3.getActualMinimum(13));
-        Date localDate1 = localCalendar3.getTime();
-        localCalendar3.set(2, localCalendar3.getActualMaximum(2));
-        localCalendar3.set(5, localCalendar3.getActualMaximum(5));
-        localCalendar3.set(11, localCalendar3.getActualMaximum(11));
-        localCalendar3.set(12, localCalendar3.getActualMaximum(12));
-        localCalendar3.set(13, localCalendar3.getActualMaximum(13));
-        localDate2 = localCalendar3.getTime();
-        BigDecimal salesAmount = this.orderService.getSalesAmount(localDate1, localDate2);
-        Integer salesVolume = this.orderService.getSalesVolume(localDate1, localDate2);
-        localLinkedHashMap1.put(localDate1, salesAmount != null ? salesAmount : BigDecimal.ZERO);
-        localLinkedHashMap2.put(localDate1, Integer.valueOf(salesVolume != null ? salesVolume.intValue() : 0));
+        calendar.set(Calendar.MONTH, calendar.getActualMinimum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMinimum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMinimum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMinimum(Calendar.SECOND));
+        Date beginSalesDate = calendar.getTime();
+        calendar.set(Calendar.MONTH, calendar.getActualMaximum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+        Date endSalesDate = calendar.getTime();
+        BigDecimal salesAmount = this.orderService.getSalesAmount(beginSalesDate, endSalesDate);
+        Integer salesVolume = this.orderService.getSalesVolume(beginSalesDate, endSalesDate);
+        salesAmountMap.put(beginSalesDate, salesAmount != null ? salesAmount : BigDecimal.ZERO);
+        salesVolumeMap.put(beginSalesDate, Integer.valueOf(salesVolume != null ? salesVolume.intValue() : 0));
       }
       else
       {
-        for (int i1 = n == i ? k : localCalendar3.getActualMinimum(2); i1 <= (n == j ? m : localCalendar3.getActualMaximum(2)); i1++)
+    	  int  loopStartMonth = (loopYear == startYear) ? startMonth : calendar.getActualMinimum(Calendar.MONTH);
+    	  int  loopEndMonth = (loopYear == endYear) ? endMonth : calendar.getActualMaximum(Calendar.MONTH);
+        for (int loopMonth = loopStartMonth; loopMonth <= loopEndMonth; loopMonth++)
         {
-          if (localLinkedHashMap1.size() >= LINK_LENGTH)
+          if (salesAmountMap.size() >= LINK_LENGTH)
             break;
-          localCalendar3.set(2, i1);
-          localCalendar3.set(5, localCalendar3.getActualMinimum(5));
-          localCalendar3.set(11, localCalendar3.getActualMinimum(11));
-          localCalendar3.set(12, localCalendar3.getActualMinimum(12));
-          localCalendar3.set(13, localCalendar3.getActualMinimum(13));
-          localDate2 = localCalendar3.getTime();
-          localCalendar3.set(5, localCalendar3.getActualMaximum(5));
-          localCalendar3.set(11, localCalendar3.getActualMaximum(11));
-          localCalendar3.set(12, localCalendar3.getActualMaximum(12));
-          localCalendar3.set(13, localCalendar3.getActualMaximum(13));
-          Date localDate = localCalendar3.getTime();
-          BigDecimal salesAmount = this.orderService.getSalesAmount(localDate2, localDate);
-          Integer salesVolume = this.orderService.getSalesVolume(localDate2, localDate);
-          localLinkedHashMap1.put(localDate2, salesAmount != null ? salesAmount : BigDecimal.ZERO);
-          localLinkedHashMap2.put(localDate2, Integer.valueOf(salesVolume != null ? salesVolume.intValue() : 0));
+          calendar.set(Calendar.MONTH, loopMonth);
+          calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+          calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMinimum(Calendar.HOUR_OF_DAY));
+          calendar.set(Calendar.MINUTE, calendar.getActualMinimum(Calendar.MINUTE));
+          calendar.set(Calendar.SECOND, calendar.getActualMinimum(Calendar.SECOND));
+          Date beginSalesDate = calendar.getTime();
+          calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+          calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+          calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+          calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+          Date endSalesDate = calendar.getTime();
+          BigDecimal salesAmount = this.orderService.getSalesAmount(beginSalesDate, endSalesDate);
+          Integer salesVolume = this.orderService.getSalesVolume(beginSalesDate, endSalesDate);
+          salesAmountMap.put(beginSalesDate, salesAmount != null ? salesAmount : BigDecimal.ZERO);
+          salesVolumeMap.put(beginSalesDate, Integer.valueOf(salesVolume != null ? salesVolume.intValue() : 0));
         }
       }
     }
@@ -102,8 +105,8 @@ public enum Type
     model.addAttribute("type", type);
     model.addAttribute("beginDate", beginDate);
     model.addAttribute("endDate", endDate);
-    model.addAttribute("salesAmountMap", localLinkedHashMap1);
-    model.addAttribute("salesVolumeMap", localLinkedHashMap2);
+    model.addAttribute("salesAmountMap", salesAmountMap);
+    model.addAttribute("salesVolumeMap", salesVolumeMap);
     return "/admin/sales/view";
   }
 }

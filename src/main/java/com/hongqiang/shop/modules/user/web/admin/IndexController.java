@@ -45,7 +45,7 @@ public class IndexController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> build(BuildType buildType, Boolean isPurge,
 			Integer first, Integer count) {
-		long l1 = System.currentTimeMillis();
+		long beginTime = System.currentTimeMillis();
 		if ((first == null) || (first.intValue() < 0))
 			first = Integer.valueOf(0);
 		if ((count == null) || (count.intValue() <= 0))
@@ -83,12 +83,12 @@ public class IndexController extends BaseController {
 			if (localList.size() == count.intValue())
 				bool = false;
 		}
-		long l2 = System.currentTimeMillis();
-		Map<String, Object> localMap = new HashMap<String, Object>();
-		localMap.put("first", first);
-		localMap.put("buildCount", Integer.valueOf(i));
-		localMap.put("buildTime", Long.valueOf(l2 - l1));
-		localMap.put("isCompleted", Boolean.valueOf(bool));
-		return localMap;
+		long endTime = System.currentTimeMillis();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("first", first);
+		map.put("buildCount", Integer.valueOf(i));
+		map.put("buildTime", Long.valueOf(endTime - beginTime));
+		map.put("isCompleted", Boolean.valueOf(bool));
+		return map;
 	}
 }
