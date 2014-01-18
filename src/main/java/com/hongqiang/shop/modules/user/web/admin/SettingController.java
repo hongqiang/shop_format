@@ -166,7 +166,7 @@ public class SettingController extends BaseController {
 		Object localObject1 = null;
 		label416: try {
 			ClassPathResource localClassPathResource = new ClassPathResource(
-					"/shopxx.properties");
+					"/shophq.properties");
 			Properties localProperties = PropertiesLoaderUtils
 					.loadProperties(localClassPathResource);
 			String str1 = localProperties.getProperty("template.update_delay");

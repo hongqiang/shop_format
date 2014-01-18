@@ -29,8 +29,7 @@ public class GoodsServiceImpl extends BaseService implements GoodsService {
 	private StaticService staticService;
 
 	@Transactional
-	@CacheEvict(value = { "product", "productCategory", "review",
-			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review","consultation" }, allEntries = true)
 	public void save(Goods goods) {
 		if (goods == null) {
 			return;
@@ -48,8 +47,7 @@ public class GoodsServiceImpl extends BaseService implements GoodsService {
 	}
 
 	@Transactional
-	@CacheEvict(value = { "product", "productCategory", "review",
-			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review","consultation" }, allEntries = true)
 	public Goods update(Goods goods) {
 		if (goods == null) {
 			return null;
@@ -81,22 +79,19 @@ public class GoodsServiceImpl extends BaseService implements GoodsService {
 	}
 
 	@Transactional
-	@CacheEvict(value = { "product", "productCategory", "review",
-			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review","consultation" }, allEntries = true)
 	public Goods update(Goods goods, String[] ignoreProperties) {
 		return (Goods) this.goodsDao.update(goods, ignoreProperties);
 	}
 
 	@Transactional
-	@CacheEvict(value = { "product", "productCategory", "review",
-			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review","consultation" }, allEntries = true)
 	public void delete(Long id) {
 		this.goodsDao.delete(id);
 	}
 
 	@Transactional
-	@CacheEvict(value = { "product", "productCategory", "review",
-			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review","consultation" }, allEntries = true)
 	public void delete(Long[] ids) {
 		if (ids != null)
 			for (Long localSerializable : ids)
@@ -104,8 +99,7 @@ public class GoodsServiceImpl extends BaseService implements GoodsService {
 	}
 
 	@Transactional
-	@CacheEvict(value = { "product", "productCategory", "review",
-			"consultation" }, allEntries = true)
+	@CacheEvict(value = { "product", "productCategory", "review","consultation" }, allEntries = true)
 	public void delete(Goods goods) {
 		if ((goods != null) && (goods.getProducts() != null)) {
 			Iterator<Product> localIterator = goods.getProducts().iterator();

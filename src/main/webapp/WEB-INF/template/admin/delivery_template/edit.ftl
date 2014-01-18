@@ -96,7 +96,7 @@ $().ready(function() {
 	var zIndex = 1;
 	
 	[@flash_message /]
-	
+	$container.html($container.text());
 	bind($container.find("div.item"));
 	
 	// 添加标签

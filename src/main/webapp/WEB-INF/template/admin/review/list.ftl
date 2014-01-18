@@ -124,7 +124,7 @@ $().ready(function() {
 					<a href="javascript:;" class="sort" name="content">${message("Review.content")}</a>
 				</th>
 				<th>
-					<a href="javascript:;" class="sort" name="member">${message("Review.member")}</a>
+					<a href="javascript:;" class="sort" name="review.member">${message("Review.member")}</a>
 				</th>
 				<th>
 					<a href="javascript:;" class="sort" name="isShow">${message("Review.isShow")}</a>

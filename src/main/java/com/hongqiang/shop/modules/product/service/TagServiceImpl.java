@@ -23,8 +23,7 @@ public class TagServiceImpl extends BaseService implements TagService {
 	@Autowired
 	private TagDao tagDao;
 
-	@Transactional
-	@CacheEvict(value = { "Tag" }, allEntries = true)
+	@Transactional(readOnly = true)
 	public Tag find(Long id) {
 		return this.tagDao.findById(id);
 	}

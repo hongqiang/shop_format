@@ -111,6 +111,7 @@ public class ReviewDaoImpl extends BaseDaoImpl<Review,Long> implements
 			qlString += " and review.isShow = ?";
 			parameter.add(isShow);
 		}
+//		qlString += " order by review.member asc";
 		return qlString;
 	}
 }

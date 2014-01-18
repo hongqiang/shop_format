@@ -80,7 +80,7 @@ $().ready(function() {
 					<a href="javascript:;" class="sort" name="content">${message("Consultation.content")}</a>
 				</th>
 				<th>
-					<a href="javascript:;" class="sort" name="member">${message("Consultation.member")}</a>
+					<a href="javascript:;" class="sort" name="consultation.member">${message("Consultation.member")}</a>
 				</th>
 				<th>
 					<a href="javascript:;" class="sort" name="isShow">${message("Consultation.isShow")}</a>

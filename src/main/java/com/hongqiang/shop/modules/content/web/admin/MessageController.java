@@ -160,8 +160,7 @@ public class MessageController extends BaseController {
 
 	@RequestMapping(value = { "/draft" }, method = RequestMethod.GET)
 	public String draft(Pageable pageable, Model model) {
-		model.addAttribute("page",
-				this.messageService.findDraftPage(null, pageable));
+		model.addAttribute("page",this.messageService.findDraftPage(null, pageable));
 		return "/admin/message/draft";
 	}
 

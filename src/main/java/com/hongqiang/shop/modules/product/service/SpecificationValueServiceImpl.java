@@ -16,16 +16,16 @@ public class SpecificationValueServiceImpl extends BaseService implements
 	@Autowired
 	private SpecificationValueDao specificationValueDao;
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public SpecificationValue find(Long id) {
 		return this.specificationValueDao.findById(id);
 	}
 
-	@Transactional
-	public List<SpecificationValue> findAll(){
+	@Transactional(readOnly = true)
+	public List<SpecificationValue> findAll() {
 		return this.specificationValueDao.findAll();
 	}
-	
+
 	@Transactional
 	public void save(SpecificationValue specificationValue) {
 		this.specificationValueDao.persist(specificationValue);
@@ -37,12 +37,12 @@ public class SpecificationValueServiceImpl extends BaseService implements
 				.merge(specificationValue);
 	}
 
-	 @Transactional
-	 public SpecificationValue update(SpecificationValue specificationValue,
-	 String[] ignoreProperties)
-	 {
-		 return (SpecificationValue)this.specificationValueDao.update(specificationValue,ignoreProperties);
-	 }
+	@Transactional
+	public SpecificationValue update(SpecificationValue specificationValue,
+			String[] ignoreProperties) {
+		return (SpecificationValue) this.specificationValueDao.update(
+				specificationValue, ignoreProperties);
+	}
 
 	@Transactional
 	public void delete(Long id) {

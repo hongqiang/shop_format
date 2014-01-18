@@ -20,7 +20,7 @@ public class SpecificationServiceImpl extends BaseService implements
 	@Autowired
 	private SpecificationDao specificationDao;
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public Specification find(Long id) {
 		return this.specificationDao.findById(id);
 	}

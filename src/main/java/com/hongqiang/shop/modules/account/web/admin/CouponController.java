@@ -122,7 +122,7 @@ public class CouponController extends BaseController
   }
 
   @RequestMapping(value={"/download"}, method=RequestMethod.POST)
-  public ExcelView download(Long id, Integer count, ModelMap model)
+  public ModelAndView download(Long id, Integer count, ModelMap model)
   {
     if ((count == null) || (count.intValue() <= 0))
       count = Integer.valueOf(50);
@@ -134,7 +134,6 @@ public class CouponController extends BaseController
     infos[1] = (addMessage("admin.coupon.count", new Object[0]) + ": " + count);
     infos[2] = (addMessage("admin.coupon.operator", new Object[0]) + ": " + this.adminService.getCurrentUsername());
     infos[3] = (addMessage("admin.coupon.date", new Object[0]) + ": " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-    return new ExcelView(str, null, new String[] { "code" }, new String[] { addMessage("admin.coupon.title", new Object[0]) }, null, null, couponCodes, infos);
-//    return new ModelAndView(new ExcelView(str, null, new String[] { "code" }, new String[] { addMessage("admin.coupon.title", new Object[0]) }, null, null, couponCodes, infos), model);
+    return new ModelAndView(new ExcelView(str, null, new String[] { "code" }, new String[] { addMessage("admin.coupon.title", new Object[0]) }, null, null, couponCodes, infos), model);
   }
 }

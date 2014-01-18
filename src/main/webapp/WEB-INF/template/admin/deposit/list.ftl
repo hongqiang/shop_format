@@ -88,7 +88,7 @@ $().ready(function() {
 					<a href="javascript:;" class="sort" name="operator">${message("Deposit.operator")}</a>
 				</th>
 				<th>
-					<a href="javascript:;" class="sort" name="member">${message("Deposit.member")}</a>
+					<a href="javascript:;" class="sort" name="deposit.member">${message("Deposit.member")}</a>
 				</th>
 				<th>
 					<a href="javascript:;" class="sort" name="order">${message("Deposit.order")}</a>

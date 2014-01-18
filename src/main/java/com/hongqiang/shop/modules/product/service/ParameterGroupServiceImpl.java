@@ -17,7 +17,7 @@ public class ParameterGroupServiceImpl extends BaseService implements
 	@Autowired
 	private ParameterGroupDao parameterGroupDao;
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public ParameterGroup find(Long id) {
 		return this.parameterGroupDao.findById(id);
 	}

@@ -104,8 +104,6 @@ public class ProductImageServiceImpl implements ProductImageService,
 							jpegImage);// localFile4的路径
 				} finally {
 					FileUtils.deleteQuietly(this.sourceFile);// 原始图像
-//					FileUtils.deleteQuietly(localFile2);
-//					FileUtils.deleteQuietly(localFile3);
 					FileUtils.deleteQuietly(localFile2AddWater);
 					FileUtils.deleteQuietly(localFile3AddWater);
 					FileUtils.deleteQuietly(localFile4);

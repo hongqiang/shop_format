@@ -11,7 +11,7 @@
 	<!-- 加载配置属性文件 -->
 	<context:property-placeholder
 		ignore-unresolvable="true" location="classpath*:/application.properties" />
-	<context:property-placeholder location="classpath*:/hqshop.properties"
+	<context:property-placeholder location="classpath*:/shophq.properties"
 		ignore-resource-not-found="true" ignore-unresolvable="true" />
 
 	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->

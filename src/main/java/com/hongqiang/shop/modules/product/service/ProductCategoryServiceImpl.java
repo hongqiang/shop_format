@@ -15,7 +15,6 @@ import com.hongqiang.shop.common.utils.Order;
 import com.hongqiang.shop.modules.entity.ProductCategory;
 import com.hongqiang.shop.modules.product.dao.ProductCategoryDao;
 
-
 @Service("productCategoryServiceImpl")
 public class ProductCategoryServiceImpl extends BaseService implements
 		ProductCategoryService {
@@ -34,7 +33,7 @@ public class ProductCategoryServiceImpl extends BaseService implements
 	}
 
 	@Transactional(readOnly = true)
-	 @Cacheable({"productCategory"})
+	@Cacheable({ "productCategory" })
 	public List<ProductCategory> findRoots(Integer count, String cacheRegion) {
 		return this.productCategoryDao.findRoots(count);
 	}
@@ -51,7 +50,7 @@ public class ProductCategoryServiceImpl extends BaseService implements
 	}
 
 	@Transactional(readOnly = true)
-	 @Cacheable({"productCategory"})
+	@Cacheable({ "productCategory" })
 	public List<ProductCategory> findParents(ProductCategory productCategory,
 			Integer count, String cacheRegion) {
 		return this.productCategoryDao.findParents(productCategory, count);
@@ -74,73 +73,71 @@ public class ProductCategoryServiceImpl extends BaseService implements
 	}
 
 	@Transactional(readOnly = true)
-	 @Cacheable({"productCategory"})
+	@Cacheable({ "productCategory" })
 	public List<ProductCategory> findChildren(ProductCategory productCategory,
 			Integer count, String cacheRegion) {
 		return this.productCategoryDao.findChildren(productCategory, count);
 	}
 
 	@Transactional(readOnly = true)
-	 @Cacheable({"productCategory"})
-	public List<ProductCategory> findList(Integer count, List<Filter> filters,List<Order> orders, String cacheRegion){
+	@Cacheable({ "productCategory" })
+	public List<ProductCategory> findList(Integer count, List<Filter> filters,
+			List<Order> orders, String cacheRegion) {
 		return this.productCategoryDao.findList(null, count, filters, orders);
 	}
-	  
+
 	@Transactional(readOnly = true)
-	 @Cacheable({"productCategory"})
-	  public List<ProductCategory> findList(Long[] ids){
-		 List<ProductCategory> localArrayList = new ArrayList<ProductCategory>();
-		    if (ids != null){
-		      for (Long id : ids)
-		      {
-		    	  ProductCategory localObject = find(id);
-		        if (localObject == null)
-		          continue;
-		        localArrayList.add(localObject);
-		      }
-		    }
-		    return localArrayList;
+	public List<ProductCategory> findList(Long[] ids) {
+		List<ProductCategory> localArrayList = new ArrayList<ProductCategory>();
+		if (ids != null) {
+			for (Long id : ids) {
+				ProductCategory localObject = find(id);
+				if (localObject == null)
+					continue;
+				localArrayList.add(localObject);
+			}
 		}
-	  
+		return localArrayList;
+	}
+
 	@Transactional(readOnly = true)
-	 @Cacheable({"productCategory"})
-	  public List<ProductCategory> findAll(){
-			return this.productCategoryDao.findAll();
-		}
-	
+	public List<ProductCategory> findAll() {
+		return this.productCategoryDao.findAll();
+	}
+
 	@Transactional
-	 @CacheEvict(value={"product", "productCategory", "review",
-	 "consultation"}, allEntries=true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void save(ProductCategory productCategory) {
 		this.productCategoryDao.persist(productCategory);
 	}
 
 	@Transactional
-	 @CacheEvict(value={"product", "productCategory", "review",
-	 "consultation"}, allEntries=true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public ProductCategory update(ProductCategory productCategory) {
-		return (ProductCategory) this.productCategoryDao
-				.merge(productCategory);
+		return (ProductCategory) this.productCategoryDao.merge(productCategory);
 	}
 
 	@Transactional
-	 @CacheEvict(value={"product", "productCategory", "review",
-	 "consultation"}, allEntries=true)
-	 public ProductCategory update(ProductCategory productCategory,String[] paramArrayOfString){
-		 return (ProductCategory)this.productCategoryDao.update(productCategory, paramArrayOfString);
-	 }
-	 
-	
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
+	public ProductCategory update(ProductCategory productCategory,
+			String[] paramArrayOfString) {
+		return (ProductCategory) this.productCategoryDao.update(
+				productCategory, paramArrayOfString);
+	}
+
 	@Transactional
-	 @CacheEvict(value={"product", "productCategory", "review",
-	 "consultation"}, allEntries=true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void delete(Long id) {
 		this.productCategoryDao.delete(id);// Remove the entity instance by id.
 	}
 
 	@Transactional
-	 @CacheEvict(value={"product", "productCategory", "review",
-	 "consultation"}, allEntries=true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void delete(Long[] ids) {
 		if (ids != null)
 			for (Long localSerializable : ids)
@@ -148,8 +145,8 @@ public class ProductCategoryServiceImpl extends BaseService implements
 	}
 
 	@Transactional
-	 @CacheEvict(value={"product", "productCategory", "review",
-	 "consultation"}, allEntries=true)
+	@CacheEvict(value = { "product", "productCategory", "review",
+			"consultation" }, allEntries = true)
 	public void delete(ProductCategory productCategory) {
 		this.productCategoryDao.delete(productCategory);
 	}

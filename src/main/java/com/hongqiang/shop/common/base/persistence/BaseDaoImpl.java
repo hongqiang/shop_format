@@ -23,9 +23,9 @@ import com.hongqiang.shop.modules.entity.OrderEntity;
 
 public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	// 忽略的属性集合。更新实体类时，不需要更新的属性集合
-		private static final String[] ignoreBaseProperties = { "id", "createDate",
-				"updateDate" };
-	
+	private static final String[] ignoreBaseProperties = { "id", "createDate",
+			"updateDate" };
+
 	/**
 	 * 获取实体工厂管理对象
 	 */
@@ -66,25 +66,24 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> findList(String qlString, List<Object> parameter,Integer first, Integer count, List<Filter> filters,
-			List<Order> orders){
+	public List<T> findList(String qlString, List<Object> parameter,
+			Integer first, Integer count, List<Filter> filters,
+			List<Order> orders) {
 		StringBuilder stringBuilder = new StringBuilder(qlString);
 		addFilter(stringBuilder, filters, parameter);
-		if (qlString.indexOf("order by")==-1) {
-			addOrders(stringBuilder, orders, parameter);
-		}
+		addOrders(stringBuilder, orders, parameter);
 		qlString = stringBuilder.toString();
-		if (qlString.indexOf("order by")==-1) {
-			if (OrderEntity.class.isAssignableFrom(this.entityClass)){
+		if (qlString.indexOf("order by") == -1) {
+			if (OrderEntity.class.isAssignableFrom(this.entityClass)) {
 				qlString += "order by order ASC";
-			}else {
+			} else {
 				qlString += "order by createDate DESC";
 			}
 		}
-		System.out.println("productQuery = "+qlString);
+		System.out.println("productQuery = " + qlString);
 		System.out.println(parameter.size());
 		for (Object object : parameter) {
-			System.out.println("object="+object);
+			System.out.println("object=" + object);
 		}
 		Query query = createQuery(qlString, parameter.toArray());
 		if (first != null) {
@@ -96,55 +95,55 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		return query.list();
 	}
 
-
 	@SuppressWarnings("unchecked")
-	public Page<T> findPage(String qlString, List<Object> parameter,Pageable pageable){
+	public Page<T> findPage(String qlString, List<Object> parameter,
+			Pageable pageable) {
 		if (pageable == null)
-			 pageable = new Pageable();
-		 StringBuilder stringBuilder = new StringBuilder(qlString);
-		 addFilter(stringBuilder, pageable, parameter);
-		 if (qlString.indexOf("order by")==-1) {
-			 addOrders(stringBuilder, pageable, parameter);
-		 }
-		 qlString = stringBuilder.toString();
-		 if (qlString.indexOf("order by")==-1) {
-				if (OrderEntity.class.isAssignableFrom(this.entityClass)){
-					qlString += "order by order ASC";
-				}else {
-					qlString += "order by createDate DESC";
-				}
+			pageable = new Pageable();
+		StringBuilder stringBuilder = new StringBuilder(qlString);
+		addFilter(stringBuilder, pageable, parameter);
+		addOrders(stringBuilder, pageable, parameter);
+		qlString = stringBuilder.toString();
+		if (qlString.indexOf("order by") == -1) {
+			if (OrderEntity.class.isAssignableFrom(this.entityClass)) {
+				qlString += "order by order ASC";
+			} else {
+				qlString += "order by createDate DESC";
 			}
-		 long count = count(stringBuilder, null, parameter);
-		 int i=(int)Math.ceil((double)count/pageable.getPageSize());
-		 if (i<pageable.getPageNumber()) {
+		}
+		long count = count(stringBuilder, null, parameter);
+		int i = (int) Math.ceil((double) count / pageable.getPageSize());
+		if (i < pageable.getPageNumber()) {
 			pageable.setPageNumber(i);
 		}
-		 System.out.println("query="+qlString);
-		 for (Object object : parameter) {
-			 System.out.println("object="+object);
+		System.out.println("query=" + qlString);
+		for (Object object : parameter) {
+			System.out.println("object=" + object);
 		}
-		 Query query = createQuery(qlString,parameter.toArray());
-		 query.setFirstResult((pageable.getPageNumber() - 1) * pageable.getPageSize());
+		Query query = createQuery(qlString, parameter.toArray());
+		query.setFirstResult((pageable.getPageNumber() - 1)
+				* pageable.getPageSize());
 		query.setMaxResults(pageable.getPageSize());
 		List<Object> list = query.list();
-        if (list.size() > 0){
-        	return new Page<T>(query.list(),count,pageable);
-        }
-        List<T> listTemp = new ArrayList<T>();
-		return new Page<T>(listTemp,count,pageable);
+		if (list.size() > 0) {
+			return new Page<T>(query.list(), count, pageable);
+		}
+		List<T> listTemp = new ArrayList<T>();
+		return new Page<T>(listTemp, count, pageable);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Long count(StringBuilder qlString, List<Filter> filters, List<Object> params) {
+	public Long count(StringBuilder qlString, List<Filter> filters,
+			List<Object> params) {
 		addFilter(qlString, filters, params);
 		Query query = createQuery(qlString.toString(), params.toArray());
-		System.out.println("basedao.count.query = "+query);
-		System.out.println("basedao.count.size = "+params.size());
+		System.out.println("basedao.count.query = " + query);
+		System.out.println("basedao.count.size = " + params.size());
 		for (Object object : params) {
-			System.out.println("basedao.count.object = "+object);
+			System.out.println("basedao.count.object = " + object);
 		}
 		List<Object> list = query.list();
-		return new Long((long)list.size());
+		return new Long((long) list.size());
 	}
 
 	/**
@@ -169,7 +168,8 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	 * 更新实体类
 	 * 
 	 * @param entity
-	 * @param ignoreProperties 忽略的实体类属性
+	 * @param ignoreProperties
+	 *            忽略的实体类属性
 	 * @return
 	 */
 	public T update(T entity, String[] ignoreProperties) {
@@ -185,7 +185,7 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		}
 		return merge(entity);
 	}
-	
+
 	/**
 	 * 从数据库删除实体类 Remove the entity instance.
 	 */
@@ -262,105 +262,118 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	public void clear() {
 		getSession().clear();
 	}
-	
-	protected void addFilter(StringBuilder qlString, List<Filter> filters,List<Object> params ) {
-		if (filters!=null && filters.size() >0) {
+
+	protected void addFilter(StringBuilder qlString, List<Filter> filters,
+			List<Object> params) {
+		if (filters != null && filters.size() > 0) {
 			Iterator<Filter> localIterator = filters.iterator();
-		 while (localIterator.hasNext()){
-	    	  Filter localFilter = (Filter)localIterator.next();
-	          if ((localFilter == null) || (StringUtils.isEmpty(localFilter.getProperty())))
-	            continue;
-	          if ((localFilter.getOperator() == Filter.Operator.eq) && (localFilter.getValue() != null)){
-	        	  if ((localFilter.getIgnoreCase() != null) && (localFilter.getIgnoreCase().booleanValue()) 
-	        			  && ((localFilter.getValue() instanceof String))){
-	        		  qlString.append(" and "+localFilter.getProperty()+" = ? ");
-	        		  params.add(((String)localFilter.getValue()).toLowerCase());
-	        	  }
-	                else{
-	                	qlString.append(" and "+localFilter.getProperty()+" = ? ");
-		        		  params.add(localFilter.getValue());
-	                }
-	          }
-	          else if ((localFilter.getOperator() == Filter.Operator.ne) && (localFilter.getValue() != null)){
-	            if ((localFilter.getIgnoreCase() != null) 
-	            		&& (localFilter.getIgnoreCase().booleanValue())
-	            		&& ((localFilter.getValue() instanceof String))){
-	            	qlString.append(" and "+localFilter.getProperty()+" <> ? ");
-	        		  params.add(((String)localFilter.getValue()).toLowerCase());
-	            }
-	            else{
-	            	  qlString.append(" and "+localFilter.getProperty()+" <> ? ");
-	        		  params.add(localFilter.getValue());
-	            }
-	          }
-	          else if ((localFilter.getOperator() == Filter.Operator.gt) && (localFilter.getValue() != null)){
-	        	  qlString.append(" and "+localFilter.getProperty()+" > ? ");
-       		  params.add((Number)localFilter.getValue());
-	          }
-	          else if ((localFilter.getOperator() == Filter.Operator.lt) && (localFilter.getValue() != null)) {
-	        	  qlString.append(" and "+localFilter.getProperty()+" < ? ");
-       		  params.add((Number)localFilter.getValue());
-	          }
-	          else if ((localFilter.getOperator() == Filter.Operator.ge) && (localFilter.getValue() != null)){
-	        	  qlString.append(" and "+localFilter.getProperty()+" >= ? ");
-       		  params.add((Number)localFilter.getValue());
-	          }
-	          else if ((localFilter.getOperator() == Filter.Operator.le) && (localFilter.getValue() != null)){
-	        	  qlString.append(" and "+localFilter.getProperty()+" <= ? ");
-       		  params.add((Number)localFilter.getValue());
-	          }
-	          else if ((localFilter.getOperator() == Filter.Operator.like) && (localFilter.getValue() != null)
-	        		  && ((localFilter.getValue() instanceof String))){
-	        	  qlString.append(" and "+localFilter.getProperty()+" like ? ");
-       		  params.add((String)localFilter.getValue());
-	          }
-	          else if ((localFilter.getOperator() == Filter.Operator.in) && (localFilter.getValue() != null)) {
-	        	  qlString.append(" and "+localFilter.getProperty()+" in (?) ");
-       		  params.add(new Object[] { localFilter.getValue() });
-	          }
-	          else if (localFilter.getOperator() == Filter.Operator.isNull) {
-	        	  qlString.append(" and "+localFilter.getProperty()+" is null ");
-	          }
-	          else {
-	            if (localFilter.getOperator() != Filter.Operator.isNotNull)
-	              continue;
-	            qlString.append(" and "+localFilter.getProperty()+" is not null ");
-	          }
-	      }
+			while (localIterator.hasNext()) {
+				Filter localFilter = (Filter) localIterator.next();
+				if ((localFilter == null)
+						|| (StringUtils.isEmpty(localFilter.getProperty())))
+					continue;
+				if ((localFilter.getOperator() == Filter.Operator.eq)
+						&& (localFilter.getValue() != null)) {
+					if ((localFilter.getIgnoreCase() != null)
+							&& (localFilter.getIgnoreCase().booleanValue())
+							&& ((localFilter.getValue() instanceof String))) {
+						qlString.append(" and " + localFilter.getProperty()
+								+ " = ? ");
+						params.add(((String) localFilter.getValue())
+								.toLowerCase());
+					} else {
+						qlString.append(" and " + localFilter.getProperty()
+								+ " = ? ");
+						params.add(localFilter.getValue());
+					}
+				} else if ((localFilter.getOperator() == Filter.Operator.ne)
+						&& (localFilter.getValue() != null)) {
+					if ((localFilter.getIgnoreCase() != null)
+							&& (localFilter.getIgnoreCase().booleanValue())
+							&& ((localFilter.getValue() instanceof String))) {
+						qlString.append(" and " + localFilter.getProperty()
+								+ " <> ? ");
+						params.add(((String) localFilter.getValue())
+								.toLowerCase());
+					} else {
+						qlString.append(" and " + localFilter.getProperty()
+								+ " <> ? ");
+						params.add(localFilter.getValue());
+					}
+				} else if ((localFilter.getOperator() == Filter.Operator.gt)
+						&& (localFilter.getValue() != null)) {
+					qlString.append(" and " + localFilter.getProperty()
+							+ " > ? ");
+					params.add((Number) localFilter.getValue());
+				} else if ((localFilter.getOperator() == Filter.Operator.lt)
+						&& (localFilter.getValue() != null)) {
+					qlString.append(" and " + localFilter.getProperty()
+							+ " < ? ");
+					params.add((Number) localFilter.getValue());
+				} else if ((localFilter.getOperator() == Filter.Operator.ge)
+						&& (localFilter.getValue() != null)) {
+					qlString.append(" and " + localFilter.getProperty()
+							+ " >= ? ");
+					params.add((Number) localFilter.getValue());
+				} else if ((localFilter.getOperator() == Filter.Operator.le)
+						&& (localFilter.getValue() != null)) {
+					qlString.append(" and " + localFilter.getProperty()
+							+ " <= ? ");
+					params.add((Number) localFilter.getValue());
+				} else if ((localFilter.getOperator() == Filter.Operator.like)
+						&& (localFilter.getValue() != null)
+						&& ((localFilter.getValue() instanceof String))) {
+					qlString.append(" and " + localFilter.getProperty()
+							+ " like ? ");
+					params.add((String) localFilter.getValue());
+				} else if ((localFilter.getOperator() == Filter.Operator.in)
+						&& (localFilter.getValue() != null)) {
+					qlString.append(" and " + localFilter.getProperty()
+							+ " in (?) ");
+					params.add(new Object[] { localFilter.getValue() });
+				} else if (localFilter.getOperator() == Filter.Operator.isNull) {
+					qlString.append(" and " + localFilter.getProperty()
+							+ " is null ");
+				} else {
+					if (localFilter.getOperator() != Filter.Operator.isNotNull)
+						continue;
+					qlString.append(" and " + localFilter.getProperty()
+							+ " is not null ");
+				}
+			}
 		}
 	}
 
-	protected void addFilter(StringBuilder qlString, 
-			Pageable pageable, List<Object> params) {
-		if ((StringUtils.isNotEmpty(pageable.getSearchProperty())) 
-				&& (StringUtils.isNotEmpty(pageable.getSearchValue()))){
-			qlString.append(" and "+pageable.getSearchProperty()+" like ?");
+	protected void addFilter(StringBuilder qlString, Pageable pageable,
+			List<Object> params) {
+		if ((StringUtils.isNotEmpty(pageable.getSearchProperty()))
+				&& (StringUtils.isNotEmpty(pageable.getSearchValue()))) {
+			qlString.append(" and " + pageable.getSearchProperty() + " like ?");
 			params.add("%" + pageable.getSearchValue() + "%");
 		}
-		if (pageable.getFilters() != null)
-	    {
-	     addFilter(qlString, pageable.getFilters(), params);
-	    }
+		if (pageable.getFilters() != null) {
+			addFilter(qlString, pageable.getFilters(), params);
+		}
 	}
-		      
+
 	protected void addOrders(StringBuilder qlString,
 			List<com.hongqiang.shop.common.utils.Order> orderList,
 			List<Object> params) {
-		if (orderList!=null && orderList.size() > 0) {
-			qlString.append("order by ");
-			Iterator<com.hongqiang.shop.common.utils.Order> localIterator = orderList
-					.iterator();
+		if (orderList != null && orderList.size() > 0) {
+			if (qlString.indexOf("order by") == -1) {
+				qlString.append("order by ");
+			}else {
+				qlString.append(" , ");
+			}
+			Iterator<com.hongqiang.shop.common.utils.Order> localIterator = orderList.iterator();
 			while (localIterator.hasNext()) {
-				com.hongqiang.shop.common.utils.Order localOrder = (com.hongqiang.shop.common.utils.Order) localIterator
-						.next();
+				com.hongqiang.shop.common.utils.Order localOrder = (com.hongqiang.shop.common.utils.Order) localIterator.next();
 				if (localOrder.getDirection() == com.hongqiang.shop.common.utils.Order.Direction.asc) {
-					qlString.append(" ? ASC,");
-					params.add(localOrder.getProperty());
+					qlString.append(localOrder.getProperty() + " ASC,");
 				} else {
 					if (localOrder.getDirection() != com.hongqiang.shop.common.utils.Order.Direction.desc)
 						continue;
-					qlString.append(" ? DESC,");
-					params.add(localOrder.getProperty());
+					qlString.append(localOrder.getProperty() + " DESC,");
 				}
 			}
 			if (qlString.charAt(qlString.length() - 1) == ',') {
@@ -368,22 +381,22 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 			}
 		}
 	}
-	
-	protected void addOrders(StringBuilder qlString, 
-			Pageable pageable, List<Object> params) {
+
+	protected void addOrders(StringBuilder qlString, Pageable pageable,
+			List<Object> params) {
 		int tag = 0;
-		if ((StringUtils.isNotEmpty(pageable.getOrderProperty()))
-				&& (pageable.getOrderDirection() != null)) {
+		if ((StringUtils.isNotEmpty(pageable.getOrderProperty()))&& (pageable.getOrderDirection() != null)) {
 			tag = 1;
-			qlString.append("order by ");
-			if (pageable.getOrderDirection() ==
-					com.hongqiang.shop.common.utils.Order.Direction.asc) {
-				qlString.append(" ? ASC");
-				params.add(pageable.getOrderProperty());
-			} else if (pageable.getOrderDirection() == 
-					com.hongqiang.shop.common.utils.Order.Direction.asc)
-				qlString.append(" ? DESC");
-			params.add(pageable.getOrderProperty());
+			if (qlString.indexOf("order by") == -1) {
+				qlString.append("order by ");
+			}else {
+				qlString.append(" , ");
+			}
+			if (pageable.getOrderDirection() == com.hongqiang.shop.common.utils.Order.Direction.asc) {
+				qlString.append(" "+pageable.getOrderProperty() + " ASC ");
+			} else if (pageable.getOrderDirection() == com.hongqiang.shop.common.utils.Order.Direction.desc) {
+				qlString.append(" "+pageable.getOrderProperty() + " DESC ");
+			}
 		}
 		if (pageable.getOrders() != null && pageable.getOrders().size() > 0) {
 			if (tag == 0) {
@@ -391,21 +404,15 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 			} else {
 				qlString.append(" , ");
 			}
-			Iterator<com.hongqiang.shop.common.utils.Order> localIterator = pageable
-					.getOrders().iterator();
+			Iterator<com.hongqiang.shop.common.utils.Order> localIterator = pageable.getOrders().iterator();
 			while (localIterator.hasNext()) {
-				com.hongqiang.shop.common.utils.Order localOrder =
-						(com.hongqiang.shop.common.utils.Order) localIterator.next();
-				if (localOrder.getDirection() == 
-						com.hongqiang.shop.common.utils.Order.Direction.asc) {
-					qlString.append(" ? ASC,");
-					params.add(localOrder.getProperty());
+				com.hongqiang.shop.common.utils.Order localOrder = (com.hongqiang.shop.common.utils.Order) localIterator.next();
+				if (localOrder.getDirection() == com.hongqiang.shop.common.utils.Order.Direction.asc) {
+					qlString.append(" "+localOrder.getProperty() + " ASC,");
 				} else {
-					if (localOrder.getDirection() != 
-							com.hongqiang.shop.common.utils.Order.Direction.desc)
+					if (localOrder.getDirection() != com.hongqiang.shop.common.utils.Order.Direction.desc)
 						continue;
-					qlString.append(" ? DESC,");
-					params.add(localOrder.getProperty());
+					qlString.append(" "+localOrder.getProperty() + " DESC,");
 				}
 			}
 			if (qlString.charAt(qlString.length() - 1) == ',') {
@@ -413,7 +420,7 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 			}
 		}
 	}
-	
+
 	/**
 	 * 创建 QL 查询对象
 	 * 
@@ -426,7 +433,7 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		setParameter(query, parameter);
 		return query;
 	}
-	
+
 	/**
 	 * 设置查询参数
 	 * 

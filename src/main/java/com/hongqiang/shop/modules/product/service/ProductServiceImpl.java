@@ -91,6 +91,7 @@ public class ProductServiceImpl extends BaseService implements ProductService,
 		return this.productDao.search(keyword, isGift, count);
 	}
 
+	@Transactional(readOnly = true)
 	public List<Product> findList(Long[] ids) {
 		List<Product> localArrayList = new ArrayList<Product>();
 		if (ids != null)

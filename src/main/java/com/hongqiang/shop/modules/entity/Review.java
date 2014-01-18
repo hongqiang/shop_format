@@ -26,7 +26,6 @@ public class Review extends BaseEntity {
 	}
 
 	private static final long serialVersionUID = 8795901519290584100L;
-//	private static final String filePath = "/review/content/";
 	private static final String filePath = Global.getFrontPath()+"/review/content/";
 	private Integer score;// 评论分数
 	private String content;// 评论内容
