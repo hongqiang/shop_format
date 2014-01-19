@@ -63,14 +63,14 @@
 				<entry key="systemVersion" value="${system.version}" />
 				<entry key="systemDescription" value="${system.description}" />
 				<entry key="systemShowPowered" value="${system.show_powered}" />
-				<entry key="base" value="#{servletContext.contextPath}" />
-				<entry key="frontPath" value="#{T(com.hongqiang.shop.common.config.Global).getFrontPath()}"/>
-				<entry key="memberPath" value="#{T(com.hongqiang.shop.common.config.Global).getMemberPath()}"/>
-				<entry key="adminPath" value="#{T(com.hongqiang.shop.common.config.Global).getAdminPath()}"/>
-<!-- 				<entry key="base" value="/shop" /> -->
-<!-- 				<entry key="frontPath" value="/f" /> -->
-<!-- 				<entry key="memberPath" value="/member" /> -->
-<!-- 				<entry key="adminPath" value="/admin" /> -->
+<!-- 				<entry key="base" value="#{servletContext.contextPath}" /> -->
+<!-- 				<entry key="frontPath" value="#{T(com.hongqiang.shop.common.config.Global).getFrontPath()}"/> -->
+<!-- 				<entry key="memberPath" value="#{T(com.hongqiang.shop.common.config.Global).getMemberPath()}"/> -->
+<!-- 				<entry key="adminPath" value="#{T(com.hongqiang.shop.common.config.Global).getAdminPath()}"/> -->
+				<entry key="base" value="/shop" />
+				<entry key="frontPath" value="/f" />
+				<entry key="memberPath" value="/member" />
+				<entry key="adminPath" value="/admin" />
 				<entry key="locale" value="${locale}" />
 				<entry key="setting"
 					value="#{T(com.hongqiang.shop.common.utils.SettingUtils).get()}" />
@@ -210,7 +210,7 @@
 	<!-- 配置 JSR303 Bean Validator 定义 -->
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" >
-<!-- 		<property name="validationMessageSource" ref="messageSource" /> -->
+		<property name="validationMessageSource" ref="messageSource" />
 	</bean>
 
 	<!-- Multi-Action 用来标识method的变量名定义 -->

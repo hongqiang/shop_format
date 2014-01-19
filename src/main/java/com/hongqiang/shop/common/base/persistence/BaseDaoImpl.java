@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -136,14 +138,19 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 	public Long count(StringBuilder qlString, List<Filter> filters,
 			List<Object> params) {
 		addFilter(qlString, filters, params);
-		Query query = createQuery(qlString.toString(), params.toArray());
+		String countQlString = "select count(*) " + removeSelect(removeOrders(qlString.toString()));  
+		Query query = createQuery(countQlString, params.toArray());
 		System.out.println("basedao.count.query = " + query);
 		System.out.println("basedao.count.size = " + params.size());
 		for (Object object : params) {
 			System.out.println("basedao.count.object = " + object);
 		}
 		List<Object> list = query.list();
-		return new Long((long) list.size());
+		Long countNumber = 0L;
+		if (list.size() > 0){
+			countNumber = Long.valueOf(list.get(0).toString());
+		}
+		return countNumber;
 	}
 
 	/**
@@ -434,6 +441,32 @@ public class BaseDaoImpl<T, ID extends Serializable> implements BaseDao<T, ID> {
 		return query;
 	}
 
+    /** 
+     * 去除qlString的select子句。 
+     * @param hql 
+     * @return 
+     */  
+    private String removeSelect(String qlString){  
+        int beginPos = qlString.toLowerCase().indexOf("from");  
+        return qlString.substring(beginPos);  
+    } 
+    
+    /** 
+     * 去除hql的orderBy子句。 
+     * @param hql 
+     * @return 
+     */  
+    private String removeOrders(String qlString) {  
+        Pattern p = Pattern.compile("order\\s*by[\\w|\\W|\\s|\\S]*", Pattern.CASE_INSENSITIVE);  
+        Matcher m = p.matcher(qlString);  
+        StringBuffer sb = new StringBuffer();  
+        while (m.find()) {  
+            m.appendReplacement(sb, "");  
+        }
+        m.appendTail(sb);
+        return sb.toString();  
+    } 
+	
 	/**
 	 * 设置查询参数
 	 * 

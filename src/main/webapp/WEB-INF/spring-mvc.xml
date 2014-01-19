@@ -33,8 +33,8 @@
 	</mvc:annotation-driven>
 
 	<!-- 默认的注解映射的支持，org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping -->
-	<mvc:annotation-driven />
-<!-- 	<mvc:annotation-driven validator="validator" /> -->
+<!-- 	<mvc:annotation-driven /> -->
+	<mvc:annotation-driven validator="validator" />
 
 	<!-- 对静态资源文件的访问， 将无法mapping到Controller的path交给default servlet handler处理 -->
 	<mvc:default-servlet-handler />

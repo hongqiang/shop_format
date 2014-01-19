@@ -183,10 +183,10 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		this.articleDao.delete(article);
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional(readOnly=true)
 	public int build(Article article) {
 		Assert.notNull(article);
-		delete(article);
+		deleteStaticArticle(article);
 		com.hongqiang.shop.modules.utils.Template localTemplate = this.templateService
 				.get("articleContent");
 		int i = 0;
@@ -203,7 +203,7 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		return i;
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional(readOnly=true)
 	private int build(String templatePath, String staticPath,
 			Map<String, Object> model) {
 		Assert.hasText(templatePath);
@@ -236,7 +236,7 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		return 0;
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional(readOnly=true)
 	public int deleteStaticArticle(Article article) {
 		Assert.notNull(article);
 		int i = 0;
@@ -251,7 +251,7 @@ public class ArticleServiceImpl extends BaseService implements ArticleService,
 		return i;
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional(readOnly=true)
 	private int delete(String staticPath) {
 		Assert.hasText(staticPath);
 		File localFile = new File(this.servletContext.getRealPath(staticPath));

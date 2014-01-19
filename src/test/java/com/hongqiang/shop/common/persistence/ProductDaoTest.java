@@ -1,21 +1,10 @@
 package com.hongqiang.shop.common.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hongqiang.shop.common.test.SpringTransactionalContextTests;
-import com.hongqiang.shop.common.utils.Filter;
-import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.account.dao.PromotionDao;
-import com.hongqiang.shop.modules.entity.Brand;
-import com.hongqiang.shop.modules.entity.Member;
-import com.hongqiang.shop.modules.entity.Product;
-import com.hongqiang.shop.modules.entity.ProductCategory;
-import com.hongqiang.shop.modules.entity.Promotion;
-import com.hongqiang.shop.modules.entity.Tag;
 import com.hongqiang.shop.modules.product.dao.BrandDao;
 import com.hongqiang.shop.modules.product.dao.ProductCategoryDao;
 import com.hongqiang.shop.modules.product.dao.ProductDao;

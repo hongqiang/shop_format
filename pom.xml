@@ -17,7 +17,7 @@
 		<spring.version>3.2.2.RELEASE</spring.version>
 		<spring-data-jpa.version>1.3.0.RELEASE</spring-data-jpa.version>
 		<hibernate.version>4.1.12.Final</hibernate.version>
-		<hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
+		<hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
 		<hibernate-search.version>4.2.0.Final</hibernate-search.version>
 		<druid.version>0.2.19</druid.version>
 		<shiro.version>1.2.2</shiro.version>
@@ -259,6 +259,12 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- PERSISTENCE end -->
+		<!-- validation -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+		</dependency>
 
 		<!-- WEB begin -->
 		<dependency>
@@ -481,11 +487,11 @@
 		</dependency>
 
 		<!-- CaptchaService 依赖包 -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.jhlabs</groupId> -->
-<!-- 			<artifactId>imaging</artifactId> -->
-<!-- 			<version>01012005</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.jhlabs</groupId> -->
+		<!-- <artifactId>imaging</artifactId> -->
+		<!-- <version>01012005</version> -->
+		<!-- </dependency> -->
 		<!-- 生成图片的颜色依赖库 -->
 		<dependency>
 			<groupId>org.im4java</groupId>
