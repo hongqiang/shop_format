@@ -1,12 +1,12 @@
 
 var shop = {
-	base: "/shop",
+	base: "/shop/f",
 	locale: "zh_CN"
 };
 
 var front ={
-		path:"/f"
-	};
+	path:"/f"
+};
 
 var setting = {
 	priceScale: "2",
@@ -147,7 +147,7 @@ function message(code) {
 
 	// 跳转登录
 	$.redirectLogin = function (redirectUrl, message) {
-		var href = shop.base + front.path+ "/login.jhtml";
+		var href = shop.base +front.path+  "/login.jhtml";
 		if (redirectUrl != null) {
 			href += "?redirectUrl=" + encodeURIComponent(redirectUrl);
 		}

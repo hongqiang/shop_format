@@ -111,7 +111,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		List<Object> params = new ArrayList<Object>();
 		String sqlString =  composeSql( productCategory,  brand,promotion,  tags,
 				 attributeValue,  startPrice,endPrice,  isMarketable,  isList,
-				 isTop,  isGift,  isOutOfStock,isStockAlert,  orderType,params);
+				 isTop,  isGift,  isOutOfStock,isStockAlert,  orderType,params, null);
 		return super.findList(sqlString, params, null, count, filters, orders);
 	}
 
@@ -169,7 +169,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		List<Object> params = new ArrayList<Object>();
 		String sqlString =  composeSql( productCategory,  brand,promotion,  tags,
 				 attributeValue,  startPrice,endPrice,  isMarketable,  isList,
-				 isTop,  isGift,  isOutOfStock,isStockAlert,  orderType, params);
+				 isTop,  isGift,  isOutOfStock,isStockAlert,  orderType, params, pageable);
 		return super.findPage(sqlString, params, pageable);
 	}
 
@@ -195,7 +195,6 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		qlString += " order by product.createDate DESC";
 		List<Object> params = new ArrayList<Object>();
 		params.add(member);
-		System.out.println("sql= "+qlString);
 		return super.findPage(qlString, params, pageable);
 	}
 
@@ -382,7 +381,7 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 			Map<Attribute, String> attributeValue, BigDecimal startPrice,
 			BigDecimal endPrice, Boolean isMarketable, Boolean isList,
 			Boolean isTop, Boolean isGift, Boolean isOutOfStock,
-			Boolean isStockAlert, Product.OrderType orderType, List<Object> params) {
+			Boolean isStockAlert, Product.OrderType orderType, List<Object> params, Pageable pageable) {
 		String sqlString = "select DISTINCT product from ";
 		if (promotion != null) {
 			sqlString += " Product product left join product.promotions pPromotion ";
@@ -486,7 +485,18 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 				params.add(stockAlertCount);
 			}
 		}
-
+		StringBuilder stringBuilder = new StringBuilder(sqlString);
+		if (pageable != null) {
+			super.addFilter(stringBuilder, pageable, params);
+			super.addOrders(stringBuilder, pageable, params);
+			pageable.setSearchProperty(null);
+			pageable.setSearchValue(null);
+			pageable.setFilters(null);
+			pageable.setOrderProperty(null);
+			pageable.setOrderDirection(null);
+			pageable.setOrders(null);
+		}
+		sqlString = stringBuilder.toString();
 		if (orderType == Product.OrderType.priceAsc) {
 			sqlString += " order by product.price ASC, product.createDate DESC ";
 		} else if (orderType == Product.OrderType.priceDesc) {

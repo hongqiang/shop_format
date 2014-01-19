@@ -140,8 +140,8 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 		ArrayList<String> localArrayList = new ArrayList<String>();
 		int j = 0;
 		int k = 0;
-		int m = 0;
-		int n = STATIC_SIZE.intValue();
+		int first = 0;
+		int count = STATIC_SIZE.intValue();
 		while (true){
 			try {
 				localHashMap.put("index", Integer.valueOf(k));
@@ -150,15 +150,15 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				if (j != 0){
 					continue;
 				}
-				List localList = this.articleDao.findList(Integer.valueOf(m),
-						Integer.valueOf(n), null, null);
+				List localList = this.articleDao.findList(Integer.valueOf(first),
+						Integer.valueOf(count), null, null);
 				localHashMap.put("articles", localList);
-				if (localList.size() >= n)
+				if (localList.size() >= count)
 					continue;
 				j++;
-				m = 0;
-				n -= localList.size();
-				if (m >= n)//
+				first = 0;
+				count -= localList.size();
+				if (first >= count)//
 					continue;
 				i += build(str1, str2, localHashMap);
 				this.articleDao.clear();
@@ -166,21 +166,21 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				localArrayList.add(str2);
 				localHashMap.clear();
 				k++;
-				m += localList.size();
-				n = STATIC_SIZE.intValue();
-				if (m >= n)//
+				first += localList.size();
+				count = STATIC_SIZE.intValue();
+				if (first >= count)//
 					continue;
 				if (j != 1)
 					continue;
-				localList = this.productDao.findList(Integer.valueOf(m),
-						Integer.valueOf(n), null, null);
+				localList = this.productDao.findList(Integer.valueOf(first),
+						Integer.valueOf(count), null, null);
 				localHashMap.put("products", localList);
-				if (localList.size() >= n)
+				if (localList.size() >= count)
 					continue;
 				j++;
-				m = 0;
-				n -= localList.size();
-				if (m >= n)//
+				first = 0;
+				count -= localList.size();
+				if (first >= count)//
 					continue;
 				i += build(str1, str2, localHashMap);
 				this.productDao.clear();
@@ -188,21 +188,21 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				localArrayList.add(str2);
 				localHashMap.clear();
 				k++;
-				m += localList.size();
-				n = STATIC_SIZE.intValue();
-				if (m >= n)//
+				first += localList.size();
+				count = STATIC_SIZE.intValue();
+				if (first >= count)//
 					continue;
 				if (j != 2)
 					continue;
-				localList = this.brandDao.findList(Integer.valueOf(m),
-						Integer.valueOf(n), null, null);
+				localList = this.brandDao.findList(Integer.valueOf(first),
+						Integer.valueOf(count), null, null);
 				localHashMap.put("brands", localList);
-				if (localList.size() >= n)
+				if (localList.size() >= count)
 					continue;
 				j++;
-				m = 0;
-				n -= localList.size();
-				if (m >= n)//
+				first = 0;
+				count -= localList.size();
+				if (first >= count)//
 					continue;
 				i += build(str1, str2, localHashMap);
 				this.brandDao.clear();
@@ -210,31 +210,31 @@ public class StaticServiceImpl implements StaticService, ServletContextAware {
 				localArrayList.add(str2);
 				localHashMap.clear();
 				k++;
-				m += localList.size();
-				n = STATIC_SIZE.intValue();
-				if (m >= n)//
+				first += localList.size();
+				count = STATIC_SIZE.intValue();
+				if (first >= count)//
 					continue;
 				if (j != 3)
 					continue;
-				localList = this.promotionDao.findList(Integer.valueOf(m),
-						Integer.valueOf(n), null, null);
+				localList = this.promotionDao.findList(Integer.valueOf(first),
+						Integer.valueOf(count), null, null);
 				localHashMap.put("promotions", localList);
 				i += build(str1, str2, localHashMap);
 				this.promotionDao.clear();
 				this.promotionDao.flush();
 				localArrayList.add(str2);
-				if (localList.size() >= n)
+				if (localList.size() >= count)
 					continue;
 				localHashMap.put("staticPaths", localArrayList);
 				i += build(localTemplate1.getTemplatePath(),
 						localTemplate1.getStaticPath(), localHashMap);
-				if (m < n)//
+				if (first < count)//
 					break;
 				localHashMap.clear();
 				k++;
-				m += localList.size();
-				n = STATIC_SIZE.intValue();
-				if (m >= n)//
+				first += localList.size();
+				count = STATIC_SIZE.intValue();
+				if (first >= count)//
 					continue;
 			} catch (Exception localException) {
 				localException.printStackTrace();
