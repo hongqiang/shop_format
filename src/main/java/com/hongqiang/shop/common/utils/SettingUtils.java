@@ -39,7 +39,7 @@ public final class SettingUtils {
 		if (localSetting == null) {
 			localSetting = new Setting();
 			try {
-				File localFile = new ClassPathResource("/shophq.xml").getFile();
+				File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
 				Document localDocument = new SAXReader().read(localFile);
 				@SuppressWarnings("unchecked")
 				List<org.dom4j.Element> localList = localDocument
@@ -70,7 +70,7 @@ public final class SettingUtils {
 
 	public static void set(Setting setting) {
 		try {
-			File localFile = new ClassPathResource("/shophq.xml").getFile();
+			File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
 			Document localDocument = new SAXReader().read(localFile);
 			@SuppressWarnings("unchecked")
 			List<org.dom4j.Element> localList = localDocument

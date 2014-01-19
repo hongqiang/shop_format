@@ -21,10 +21,7 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Resolution;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.constraints.Length;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
-//import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -122,8 +119,6 @@ public abstract class BaseEntity implements Serializable {
 	// this.createBy = createBy;
 	// }
 
-	// @Temporal(TemporalType.TIMESTAMP)
-	// @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonProperty
 	@Field(store = Store.YES, index = Index.YES)
 	@DateBridge(resolution = Resolution.SECOND)
@@ -147,9 +142,6 @@ public abstract class BaseEntity implements Serializable {
 	// this.updateBy = updateBy;
 	// }
 
-	// @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	// @Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES)
-	// @DateBridge(resolution = Resolution.DAY)
 	@JsonProperty
 	@Field(store = Store.YES, index = Index.YES)
 	@DateBridge(resolution = Resolution.SECOND)

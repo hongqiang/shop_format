@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>${message("admin.index.title")} - Powered By SHOP++</title>
-<meta name="author" content="SHOP++ Team" />
-<meta name="copyright" content="SHOP++" />
+<title>${message("admin.index.title")} - Powered By HONGQIANG_SHOP</title>
+<meta name="author" content="HONGQIANG_SHOP Team" />
+<meta name="copyright" content="HONGQIANG_SHOP" />
 <link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .input .powered {

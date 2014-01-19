@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>${product.name} ${message("shop.consultation.title")}[#if systemShowPowered] - Powered By SHOP++[/#if]</title>
-<meta name="author" content="SHOP++ Team" />
-<meta name="copyright" content="SHOP++" />
+<title>${product.name} ${message("shop.consultation.title")}[#if systemShowPowered] - Powered By HONGQIANG_SHOP[/#if]</title>
+<meta name="author" content="HONGQIANG_SHOP Team" />
+<meta name="copyright" content="HONGQIANG_SHOP" />
 <link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
 <link href="${base}/resources/shop/css/product.css" rel="stylesheet" type="text/css" />
 <link href="${base}/resources/shop/css/consultation.css" rel="stylesheet" type="text/css" />

@@ -18,7 +18,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 public class DateUtils extends org.apache.commons.lang.time.DateUtils {
 	
 	private static String[] parsePatterns = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", 
-		"yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm" };
+		"yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy", "yyyy-MM" };
 
 	/**
 	 * 得到当前日期字符串 格式（yyyy-MM-dd）

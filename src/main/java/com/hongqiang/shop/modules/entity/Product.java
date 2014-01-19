@@ -54,7 +54,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.core.io.ClassPathResource;
 import org.wltea.analyzer.lucene.IKAnalyzer;
-
+import com.hongqiang.shop.common.utils.model.CommonAttributes;
 import com.hongqiang.shop.common.utils.BigDecimalNumericFieldBridge;
 import com.hongqiang.shop.common.utils.FreeMarkers;
 
@@ -150,7 +150,7 @@ public class Product extends BaseEntity {
 
 	static {
 		try {
-			File localFile = new ClassPathResource("shophq.xml").getFile();
+			File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
 			Document localDocument = new SAXReader().read(localFile);
 			Element localElement = (Element) localDocument
 					.selectSingleNode("/shophq/template[@id='productContent']");

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <shophq> 
-	<setting name="siteName" value="SHOP++商城"/>  
+	<setting name="siteName" value="HONGQIANG_SHOP商城"/>  
 	<setting name="siteUrl" value="http://localhost:8080/shop"/>  
 	<setting name="logo" value="/shop/upload/image/logo.gif"/>  
 	<setting name="hotSearch" value="T恤,衬衫,西服,西裤,森马,七匹狼,梵希蔓,春夏新款,牛仔裤"/>  

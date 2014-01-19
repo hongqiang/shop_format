@@ -41,6 +41,7 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.hongqiang.shop.common.utils.FreeMarkers;
 import com.hongqiang.shop.common.utils.StringUtils;
+import com.hongqiang.shop.common.utils.model.CommonAttributes;
 
 //文章
 @Indexed
@@ -67,7 +68,7 @@ public class Article extends BaseEntity {
 
 	static {
 		try {
-			File localFile = new ClassPathResource("shophq.xml").getFile();
+			File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
 			Document localDocument = new SAXReader().read(localFile);
 			Element localElement = (org.dom4j.Element) localDocument
 					.selectSingleNode("/shophq/template[@id='articleContent']");

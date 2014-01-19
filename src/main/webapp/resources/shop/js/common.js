@@ -1,16 +1,12 @@
-/*
- * Copyright 2005-2013 shop.net. All rights reserved.
- * Support: http://www.shop.net
- * License: http://www.shop.net/license
- * 
- * JavaScript - Common
- * Version: 3.0
- */
 
 var shop = {
-	base: "/shop/f",
+	base: "/shop",
 	locale: "zh_CN"
 };
+
+var front ={
+		path:"/f"
+	};
 
 var setting = {
 	priceScale: "2",
@@ -137,7 +133,7 @@ function message(code) {
 	$.checkLogin = function() {
 		var result = false;
 		$.ajax({
-			url: shop.base + "/login/check.jhtml",
+			url: shop.base + front.path+ "/login/check.jhtml",
 			type: "GET",
 			dataType: "json",
 			cache: false,
@@ -151,7 +147,7 @@ function message(code) {
 
 	// 跳转登录
 	$.redirectLogin = function (redirectUrl, message) {
-		var href = shop.base + "/login.jhtml";
+		var href = shop.base + front.path+ "/login.jhtml";
 		if (redirectUrl != null) {
 			href += "?redirectUrl=" + encodeURIComponent(redirectUrl);
 		}

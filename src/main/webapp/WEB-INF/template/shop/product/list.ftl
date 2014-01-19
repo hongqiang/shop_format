@@ -4,9 +4,9 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 [#if productCategory??]
 	[@seo type = "productList"]
-		<title>[#if productCategory.seoTitle??]${productCategory.seoTitle}[#elseif seo.title??][@seo.title?interpret /][/#if][#if systemShowPowered] - Powered By SHOP++[/#if]</title>
-		<meta name="author" content="SHOP++ Team" />
-		<meta name="copyright" content="SHOP++" />
+		<title>[#if productCategory.seoTitle??]${productCategory.seoTitle}[#elseif seo.title??][@seo.title?interpret /][/#if][#if systemShowPowered] - Powered By HONGQIANG_SHOP[/#if]</title>
+		<meta name="author" content="HONGQIANG_SHOP Team" />
+		<meta name="copyright" content="HONGQIANG_SHOP" />
 		[#if productCategory.seoKeywords??]
 			<meta name="keywords" content="${productCategory.seoKeywords}" />
 		[#elseif seo.keywords??]
@@ -19,9 +19,9 @@
 		[/#if]
 	[/@seo]
 [#else]
-	<title>${message("shop.product.title")}[#if systemShowPowered] - Powered By SHOP++[/#if]</title>
-	<meta name="author" content="SHOP++ Team" />
-	<meta name="copyright" content="SHOP++" />
+	<title>${message("shop.product.title")}[#if systemShowPowered] - Powered By HONGQIANG_SHOP[/#if]</title>
+	<meta name="author" content="HONGQIANG_SHOP Team" />
+	<meta name="copyright" content="HONGQIANG_SHOP" />
 [/#if]
 
 <link href="${base}/resources/shop/css/common.css" rel="stylesheet" type="text/css" />

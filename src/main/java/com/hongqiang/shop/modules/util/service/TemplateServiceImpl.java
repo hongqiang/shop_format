@@ -18,6 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletContextAware;
 
+import com.hongqiang.shop.common.utils.model.CommonAttributes;
 import com.hongqiang.shop.modules.utils.Template;
 
 @Service
@@ -39,7 +40,7 @@ public class TemplateServiceImpl
   {
     try
     {
-      File localFile = new ClassPathResource("/shophq.xml").getFile();
+      File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
       Document localDocument = new SAXReader().read(localFile);
       ArrayList<Template> localArrayList = new ArrayList<Template>();
       @SuppressWarnings("unchecked")
@@ -66,7 +67,7 @@ public class TemplateServiceImpl
     if (type != null)
       try
       {
-        File localFile = new ClassPathResource("/shophq.xml").getFile();
+        File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
         Document localDocument = new SAXReader().read(localFile);
         ArrayList<Template> localArrayList = new ArrayList<Template>();
         @SuppressWarnings("unchecked")
@@ -93,7 +94,7 @@ public class TemplateServiceImpl
   {
     try
     {
-      File localFile = new ClassPathResource("/shophq.xml").getFile();
+      File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
       Document localDocument = new SAXReader().read(localFile);
       Element localElement = (Element)localDocument.selectSingleNode("/shophq/template[@id='" + id + "']");
       Template localTemplate = compTemplate(localElement);

@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>${message("admin.adPosition.add")} - Powered By SHOP++</title>
-<meta name="Author" content="SHOP++ Team" />
-<meta name="Copyright" content="SHOP++" />
+<title>${message("admin.adPosition.add")} - Powered By HONGQIANG_SHOP</title>
+<meta name="Author" content="HONGQIANG_SHOP Team" />
+<meta name="Copyright" content="HONGQIANG_SHOP" />
 <link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="${base}/resources/admin/js/jquery.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/js/jquery.tools.js"></script>

@@ -1,11 +1,3 @@
-/*
- * Copyright 2005-2013 shop.net. All rights reserved.
- * Support: http://www.shop.net
- * License: http://www.shop.net/license
- * 
- * JavaScript - Common
- * Version: 3.0
- */
 
 var shop = {
 	base: "${base}",

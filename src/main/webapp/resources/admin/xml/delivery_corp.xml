@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<shopxx>
+<shophq>
 	<deliveryCorp name="AAE全球专递" url="http://cn.aaeweb.com" code="aae" />
 	<deliveryCorp name="安信达" url="http://www.anxinda.com" code="anxindakuaixi" />
 	<deliveryCorp name="澳大利亚邮政" url="http://auspost.com.au" code="auspost" />
@@ -104,4 +104,4 @@
 	<deliveryCorp name="忠信达快递" url="http://www.zhongxind.cn" code="zhongxinda" />
 	<deliveryCorp name="中邮物流" url="http://www.cnpl.com.cn" code="zhongyouwuliu" />
 	<deliveryCorp name="中铁物流" url="http://www.ztky.com" code="ztky" />
-</shopxx>
+</shophq>

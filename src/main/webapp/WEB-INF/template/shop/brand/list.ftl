@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 [@seo type = "brandList"]
-	<title>[#if seo.title??][@seo.title?interpret /][#else]${message("shop.brand.title")}[/#if][#if systemShowPowered] - Powered By SHOP++[/#if]</title>
-	<meta name="author" content="SHOP++ Team" />
-	<meta name="copyright" content="SHOP++" />
+	<title>[#if seo.title??][@seo.title?interpret /][#else]${message("shop.brand.title")}[/#if][#if systemShowPowered] - Powered By HONGQIANG_SHOP[/#if]</title>
+	<meta name="author" content="HONGQIANG_SHOP Team" />
+	<meta name="copyright" content="HONGQIANG_SHOP" />
 	[#if seo.keywords??]
 		<meta name="keywords" content="[@seo.keywords?interpret /]" />
 	[/#if]

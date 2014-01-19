@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>${message("admin.sales.view")} - Powered By SHOP++</title>
-<meta name="author" content="SHOP++ Team" />
-<meta name="copyright" content="SHOP++" />
+<title>${message("admin.sales.view")} - Powered By HONGQIANG_SHOP</title>
+<meta name="author" content="HONGQIANG_SHOP Team" />
+<meta name="copyright" content="HONGQIANG_SHOP" />
 <link href="${base}/resources/admin/css/common.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="${base}/resources/admin/js/jquery.js"></script>
 <script type="text/javascript" src="${base}/resources/admin/js/jquery.validate.js"></script>
@@ -99,7 +99,7 @@ $().ready(function() {
 					${message("admin.sales.beginDate")}:
 				</th>
 				<td>
-					<input type="text" id="beginDate" name="beginDate" class="text Wdate" value="${beginDate?string(dateFormat)}" onfocus="WdatePicker({dateFmt: $dp.$('type').value == 'year' ? 'yyyy' : 'yyyy-MM', maxDate: '#F{$dp.$D(\'endDate\')}'});" />
+					<input type="text" id="beginDate" name="beginDateString" class="text Wdate" value="${beginDate?string(dateFormat)}" onfocus="WdatePicker({dateFmt: $dp.$('type').value == 'year' ? 'yyyy' : 'yyyy-MM', maxDate: '#F{$dp.$D(\'endDate\')}'});" />
 				</td>
 			</tr>
 			<tr>
@@ -107,7 +107,7 @@ $().ready(function() {
 					${message("admin.sales.endDate")}:
 				</th>
 				<td>
-					<input type="text" id="endDate" name="endDate" class="text Wdate" value="${endDate?string(dateFormat)}" onfocus="WdatePicker({dateFmt: $dp.$('type').value == 'year' ? 'yyyy' : 'yyyy-MM', minDate: '#F{$dp.$D(\'beginDate\')}'});" />
+					<input type="text" id="endDate" name="endDateString" class="text Wdate" value="${endDate?string(dateFormat)}" onfocus="WdatePicker({dateFmt: $dp.$('type').value == 'year' ? 'yyyy' : 'yyyy-MM', minDate: '#F{$dp.$D(\'beginDate\')}'});" />
 				</td>
 			</tr>
 			<tr>

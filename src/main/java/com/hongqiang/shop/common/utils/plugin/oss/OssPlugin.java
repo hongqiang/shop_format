@@ -34,7 +34,7 @@ public class OssPlugin extends StoragePlugin
 
   public String getAuthor()
   {
-    return "SHOP++";
+    return "HONGQIANG_SHOP";
   }
 
   public String getSiteUrl()

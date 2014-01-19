@@ -178,7 +178,7 @@ public class SettingController extends BaseController {
 					localProperties.setProperty("template.update_delay", "0");
 					localProperties.setProperty("message.cache_seconds", "0");
 					localProperties.store((OutputStream) localObject1,
-							"SHOP++ PROPERTIES");
+							"HONGQIANG_SHOP PROPERTIES");
 					break label416;
 				}
 			} else if ((str1.equals("0")) || (str2.equals("0"))) {
@@ -187,7 +187,7 @@ public class SettingController extends BaseController {
 				localProperties.setProperty("template.update_delay", "3600");
 				localProperties.setProperty("message.cache_seconds", "3600");
 				localProperties.store((OutputStream) localObject1,
-						"SHOP++ PROPERTIES");
+						"HONGQIANG_SHOP PROPERTIES");
 			}
 		} catch (Exception localException1) {
 			localException1.printStackTrace();

@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import com.hongqiang.shop.common.utils.model.CommonAttributes;
 import com.hongqiang.shop.modules.utils.LogConfig;
 
 @Service
@@ -19,7 +20,7 @@ public class LogConfigServiceImpl implements LogConfigService {
 	@Cacheable({ "logConfig" })
 	public List<LogConfig> getAll() {
 		try {
-			File localFile = new ClassPathResource("/shophq.xml").getFile();
+			File localFile = new ClassPathResource(CommonAttributes.HQ_SHOP_XML_PATH).getFile();
 			Document localDocument = new SAXReader().read(localFile);
 			@SuppressWarnings("unchecked")
 			List<LogConfig> localList = localDocument

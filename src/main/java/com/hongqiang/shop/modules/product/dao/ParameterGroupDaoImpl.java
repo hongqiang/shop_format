@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.persistence.FlushModeType;
 
-import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +18,7 @@ import com.hongqiang.shop.modules.entity.ParameterGroup;
 import com.hongqiang.shop.modules.entity.Product;
 
 @Repository
-public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup,Long>
+public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup, Long>
 		implements ParameterGroupDaoCustom {
 	@Autowired
 	private ParameterDao parameterDao;
@@ -46,22 +45,10 @@ public class ParameterGroupDaoImpl extends BaseDaoImpl<ParameterGroup,Long>
 			String str = "select product from Product product join "
 					+ "product.parameterValue parameterValue "
 					+ "where index(parameterValue) = :parameter ";
-//			String str = "select product from Product product join "
-//					+ "product.parameterValue parameterValue "
-//					+ " where parameterValue = :parameter";
 			List<Product> localList2 = this.getEntityManager()
 					.createQuery(str, Product.class)
 					.setFlushMode(FlushModeType.COMMIT)
 					.setParameter("parameter", localParameter).getResultList();
-			
-//			String str = "select product from Product product join "
-//					+ "product.parameterValue parameterValue"
-//					+ " where parameterValue = ? ";
-//			List<Object> paramsList = new ArrayList<Object>();
-//			paramsList.add(localParameter);
-//			Query query = createQuery(str, paramsList.toArray());
-//			@SuppressWarnings("unchecked")
-//			List<Product> localList2 = query.list();
 			Iterator<Product> localIterator = localList2.iterator();
 			while (localIterator.hasNext()) {
 				Product localProduct = (Product) localIterator.next();

@@ -27,9 +27,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-//import net.shophq.Setting;
-//import net.shophq.util.SettingUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 

@@ -25,12 +25,12 @@ public class AlipayDirectPlugin extends PaymentPlugin
 
   public String getAuthor()
   {
-    return "SHOP++";
+    return "Alipay";
   }
 
   public String getSiteUrl()
   {
-    return "http://www.shopxx.net";
+    return "http://www.alipay.com";
   }
 
   public String getInstallUrl()
