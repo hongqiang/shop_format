@@ -205,20 +205,8 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 
 	@Transactional
 	public Member update(Member member) {
-//		Member member2 = find(member.getId());
-//		if (member2 != null) {
-//			BeanUtils.copyProperties(member, member2);
-//			return (Member) this.memberDao.merge(member2);
-//		}
-		return (Member) this.memberDao.merge(member);
-//		Member result;
-//		try {
-//			this.memberDao.persist(member);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//		return null;
+		return this.memberDao.update(member);
+//		return (Member) this.memberDao.merge(member);
 	}
 
 	@Transactional

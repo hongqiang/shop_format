@@ -157,7 +157,7 @@
 		</tr>
 		<tr>
 			<td class="powered" colspan="4">
-				COPYRIGHT © 2005-2013 SHOPXX.NET ALL RIGHTS RESERVED.
+				COPYRIGHT © 2013-2014 SHIJIHONGQIANG ALL RIGHTS RESERVED.
 			</td>
 		</tr>
 	</table>

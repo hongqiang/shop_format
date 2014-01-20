@@ -148,7 +148,7 @@ public class LoginController extends BaseController {
 		localMember.setLoginIp(request.getRemoteAddr());
 		localMember.setLoginDate(new Date());
 		localMember.setLoginFailureCount(Integer.valueOf(0));
-//		this.memberService.update(localMember);
+		this.memberService.update(localMember);
 //		String[] ignoreStrings = {"username","registerIp"};
 //		this.memberService.update(localMember,ignoreStrings);
 		System.out.println("login here");
@@ -179,5 +179,17 @@ public class LoginController extends BaseController {
 		System.out.println("we submit, message = "+SHOP_SUCCESS.toString());
 		
 		return  SHOP_SUCCESS;
+	}
+	
+	@RequestMapping(value = { "/tt" }, method = RequestMethod.GET)
+	public void test() {
+		System.out.println("we are here.");
+		Member member = this.memberService.find(11L);
+		System.out.println("member="+member.getUsername()+", "+member.getEmail()+" ,"+member.getName());
+		member.setEmail("liamn@163.com");
+		member.setName("liman");
+		this.memberService.update(member);
+		Member member2 = this.memberService.find(11L);
+		System.out.println("member="+member2.getUsername()+", "+member2.getEmail()+" ,"+member2.getName());
 	}
 }

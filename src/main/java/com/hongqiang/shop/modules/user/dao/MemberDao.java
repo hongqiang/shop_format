@@ -36,4 +36,6 @@ interface MemberDaoCustom extends BaseDao<Member,Long> {
 	public boolean usernameExists(String paramString);
 
 	public boolean emailExists(String paramString);
+	
+	public Member update(Member member);
 }

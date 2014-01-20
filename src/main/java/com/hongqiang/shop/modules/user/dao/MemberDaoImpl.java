@@ -136,4 +136,13 @@ public class MemberDaoImpl extends BaseDaoImpl<Member, Long> implements
 				.setParameter("email", email).getSingleResult();
 		return localLong.longValue() > 0L;
 	}
+	
+	@Override
+	public Member update(Member member){
+		Member retMember = null;
+		if (member != null) {
+			retMember = this.getEntityManager().merge(member);
+		}
+		return retMember;
+	}
 }

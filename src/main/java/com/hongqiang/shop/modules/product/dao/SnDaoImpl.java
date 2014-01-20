@@ -125,14 +125,13 @@ public class SnDaoImpl implements SnDao, InitializingBean {
 
 	private long process(Sn.Type paramType) {
 		String str = "select sn from Sn sn where sn.type = :type";
-//		Sn localSn = (Sn) this.entityManager.createQuery(str, Sn.class)
-//				.setFlushMode(FlushModeType.COMMIT)
-//				.setParameter("type", paramType)
-//				.setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
 		Sn localSn = (Sn) this.entityManager.createQuery(str, Sn.class)
-				.setParameter("type", paramType).getSingleResult();
+				.setFlushMode(FlushModeType.COMMIT)
+				.setParameter("type", paramType)
+				.setLockMode(LockModeType.PESSIMISTIC_WRITE).getSingleResult();
+//		Sn localSn = (Sn) this.entityManager.createQuery(str, Sn.class)
+//				.setParameter("type", paramType).getSingleResult();
 		long l = localSn.getLastValue().longValue();
-
 		localSn.setLastValue(Long.valueOf(l + 1L));
 		this.entityManager.merge(localSn);
 		return l;

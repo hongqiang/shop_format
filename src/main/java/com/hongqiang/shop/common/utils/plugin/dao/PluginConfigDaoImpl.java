@@ -1,10 +1,7 @@
 package com.hongqiang.shop.common.utils.plugin.dao;
 
 import javax.persistence.FlushModeType;
-import javax.persistence.NoResultException;
-
 import org.springframework.stereotype.Repository;
-
 import com.hongqiang.shop.common.base.persistence.BaseDaoImpl;
 import com.hongqiang.shop.website.entity.PluginConfig;
 
@@ -35,9 +32,8 @@ public class PluginConfigDaoImpl extends BaseDaoImpl<PluginConfig, Long>
 					.createQuery(str, PluginConfig.class)
 					.setFlushMode(FlushModeType.COMMIT)
 					.setParameter("pluginId", pluginId).getSingleResult();
-		} catch (NoResultException localNoResultException1) {
-			localNoResultException1.printStackTrace();
+		} catch (Exception e) {
+			return null;
 		}
-		return null;
 	}
 }

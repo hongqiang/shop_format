@@ -212,7 +212,7 @@ if (applicationContext != null) {
 						</td>
 					</tr>
 				</table>
-				<div class="powered">COPYRIGHT © 2005-2013 SHOPXX.NET ALL RIGHTS RESERVED.</div>
+				<div class="powered">COPYRIGHT © 2013-2014 SHIJIHONGQIANG ALL RIGHTS RESERVED.</div>
 				<div class="link">
 					<a href="<%=base%>/"><%=SpringContextHolder.getMessage("admin.login.home", new Object[0])%></a> |
 					<a href="http://www.shopxx.net"><%=SpringContextHolder.getMessage("admin.login.official", new Object[0])%></a> |

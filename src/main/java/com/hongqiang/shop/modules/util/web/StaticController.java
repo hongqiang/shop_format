@@ -68,20 +68,20 @@ public class StaticController extends BaseController {
 			Long articleCategoryId, Long productCategoryId, Date beginDate,
 			Date endDate, Integer first, Integer count) {
 		long beginTime = System.currentTimeMillis();
-		Calendar localCalendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance();
 		if (beginDate != null) {
-			localCalendar.setTime(beginDate);
-			localCalendar.set(11, localCalendar.getActualMinimum(11));
-			localCalendar.set(12, localCalendar.getActualMinimum(12));
-			localCalendar.set(13, localCalendar.getActualMinimum(13));
-			beginDate = localCalendar.getTime();
+			calendar.setTime(beginDate);
+			calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMinimum(Calendar.HOUR_OF_DAY));
+			calendar.set(Calendar.MINUTE, calendar.getActualMinimum(Calendar.MINUTE));
+			calendar.set(Calendar.SECOND, calendar.getActualMinimum(Calendar.SECOND));
+			beginDate = calendar.getTime();
 		}
 		if (endDate != null) {
-			localCalendar.setTime(endDate);
-			localCalendar.set(11, localCalendar.getActualMaximum(11));
-			localCalendar.set(12, localCalendar.getActualMaximum(12));
-			localCalendar.set(13, localCalendar.getActualMaximum(13));
-			endDate = localCalendar.getTime();
+			calendar.setTime(endDate);
+			calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+			calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+			calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+			endDate = calendar.getTime();
 		}
 		if ((first == null) || (first.intValue() < 0))
 			first = Integer.valueOf(0);

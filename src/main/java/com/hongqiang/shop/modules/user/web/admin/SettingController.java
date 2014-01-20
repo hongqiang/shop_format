@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.hongqiang.shop.common.utils.Message;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
+import com.hongqiang.shop.common.utils.model.CommonAttributes;
 import com.hongqiang.shop.common.web.BaseController;
 import com.hongqiang.shop.modules.util.service.CacheService;
 import com.hongqiang.shop.modules.util.service.StaticService;
@@ -46,7 +47,7 @@ public class SettingController extends BaseController {
 	private MailService mailService;
 
 	@Autowired
-	 private CacheService cacheService;
+	private CacheService cacheService;
 
 	@Autowired
 	private StaticService staticService;
@@ -54,80 +55,59 @@ public class SettingController extends BaseController {
 	@RequestMapping(value = { "/mail_test" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Message mailTest(String smtpFromMail, String smtpHost,
-			Integer smtpPort, String smtpUsername, String smtpPassword,
-			String toMail) {
+			Integer smtpPort, String smtpUsername, String smtpPassword,String toMail) {
 		if (StringUtils.isEmpty(toMail))
 			return ADMIN_ERROR;
-		Setting localSetting = SettingUtils.get();
+		Setting setting = SettingUtils.get();
 		if (StringUtils.isEmpty(smtpPassword))
-			smtpPassword = localSetting.getSmtpPassword();
+			smtpPassword = setting.getSmtpPassword();
 		try {
-			if ((!beanValidator(Setting.class, "smtpFromMail", smtpFromMail,
-					new Class[0]))
-					|| (!beanValidator(Setting.class, "smtpHost", smtpHost,
-							new Class[0]))
-					|| (!beanValidator(Setting.class, "smtpPort", smtpPort,
-							new Class[0]))
-					|| (!beanValidator(Setting.class, "smtpUsername",
-							smtpUsername, new Class[0])))
+			if ((!beanValidator(Setting.class, "smtpFromMail", smtpFromMail,new Class[0]))
+					|| (!beanValidator(Setting.class, "smtpHost", smtpHost,new Class[0]))
+					|| (!beanValidator(Setting.class, "smtpPort", smtpPort,new Class[0]))
+					|| (!beanValidator(Setting.class, "smtpUsername",smtpUsername, new Class[0])))
 				return ADMIN_ERROR;
 			this.mailService.sendTestMail(smtpFromMail, smtpHost, smtpPort,
 					smtpUsername, smtpPassword, toMail);
 		} catch (MailSendException localMailSendException) {
-			Exception[] arrayOfException1 = localMailSendException
-					.getMessageExceptions();
-			if (arrayOfException1 != null)
-				for (Exception localException1 : arrayOfException1) {
-					Object localObject;
-					Exception localException2;
-					if ((localException1 instanceof SMTPSendFailedException)) {
-						localObject = (SMTPSendFailedException) localException1;
-						localException2 = ((SMTPSendFailedException) localObject)
-								.getNextException();
-						if ((localException2 instanceof SMTPSenderFailedException))
-							return Message.error(
-									"admin.setting.mailTestSenderFailed",
-									new Object[0]);
+			Exception[] exceptions = localMailSendException.getMessageExceptions();
+			if (exceptions != null)
+				for (Exception loopException : exceptions) {
+					Exception exception;
+					if ((loopException instanceof SMTPSendFailedException)) {
+						SMTPSendFailedException smtpSendFailedException = (SMTPSendFailedException) loopException;
+						exception = smtpSendFailedException.getNextException();
+						if ((exception instanceof SMTPSenderFailedException))
+							return Message.error("admin.setting.mailTestSenderFailed",new Object[0]);
 					} else {
-						if (!(localException1 instanceof MessagingException))
+						if (!(loopException instanceof MessagingException))
 							continue;
-						localObject = (MessagingException) localException1;
-						localException2 = ((MessagingException) localObject)
-								.getNextException();
-						if ((localException2 instanceof UnknownHostException))
-							return Message.error(
-									"admin.setting.mailTestUnknownHost",
-									new Object[0]);
-						if ((localException2 instanceof ConnectException))
-							return Message.error(
-									"admin.setting.mailTestConnect",
-									new Object[0]);
+						MessagingException messagingException = (MessagingException) loopException;
+						exception = messagingException.getNextException();
+						if ((exception instanceof UnknownHostException))
+							return Message.error("admin.setting.mailTestUnknownHost",new Object[0]);
+						if ((exception instanceof ConnectException))
+							return Message.error("admin.setting.mailTestConnect",new Object[0]);
 					}
 				}
 			return Message.error("admin.setting.mailTestError", new Object[0]);
-		} catch (MailAuthenticationException localMailAuthenticationException) {
-			return Message.error("admin.setting.mailTestAuthentication",
-					new Object[0]);
-		} catch (Exception localException) {
+		} catch (MailAuthenticationException mailAuthenticationException) {
+			return Message.error("admin.setting.mailTestAuthentication",new Object[0]);
+		} catch (Exception exception) {
 			return Message.error("admin.setting.mailTestError", new Object[0]);
 		}
-		return (Message) Message.success("admin.setting.mailTestSuccess",
-				new Object[0]);
+		return Message.success("admin.setting.mailTestSuccess", new Object[0]);
 	}
 
 	@RequestMapping(value = { "/edit" }, method = RequestMethod.GET)
 	public String edit(ModelMap model) {
-		model.addAttribute("watermarkPositions",
-				Setting.WatermarkPosition.values());
+		model.addAttribute("watermarkPositions",Setting.WatermarkPosition.values());
 		model.addAttribute("roundTypes", Setting.RoundType.values());
 		model.addAttribute("captchaTypes", Setting.CaptchaType.values());
 		model.addAttribute("accountLockTypes", Setting.AccountLockType.values());
-		model.addAttribute("stockAllocationTimes",
-				Setting.StockAllocationTime.values());
-		model.addAttribute("reviewAuthorities",
-				Setting.ReviewAuthority.values());
-		model.addAttribute("consultationAuthorities",
-				Setting.ConsultationAuthority.values());
+		model.addAttribute("stockAllocationTimes",Setting.StockAllocationTime.values());
+		model.addAttribute("reviewAuthorities",Setting.ReviewAuthority.values());
+		model.addAttribute("consultationAuthorities",Setting.ConsultationAuthority.values());
 		return "/admin/setting/edit";
 	}
 
@@ -136,23 +116,18 @@ public class SettingController extends BaseController {
 			RedirectAttributes redirectAttributes) {
 		if (!beanValidator(setting, new Class[0]))
 			return ERROR_PAGE;
-		if ((setting.getUsernameMinLength().intValue() > setting
-				.getUsernameMaxLength().intValue())
-				|| (setting.getPasswordMinLength().intValue() > setting
-						.getPasswordMinLength().intValue()))
+		if ((setting.getUsernameMinLength().intValue() > setting.getUsernameMaxLength().intValue())
+				|| (setting.getPasswordMinLength().intValue() > setting.getPasswordMinLength().intValue()))
 			return ERROR_PAGE;
 		Setting localSetting = SettingUtils.get();
 		if (StringUtils.isEmpty(setting.getSmtpPassword()))
 			setting.setSmtpPassword(localSetting.getSmtpPassword());
 		if ((watermarkImageFile != null) && (!watermarkImageFile.isEmpty())) {
-			if (!this.fileService.isValid(FileInfo.FileType.image,
-					watermarkImageFile)) {
-				beanValidator(redirectAttributes,
-						Message.error("admin.upload.invalid", new Object[0]));
+			if (!this.fileService.isValid(FileInfo.FileType.image,watermarkImageFile)) {
+				beanValidator(redirectAttributes,Message.error("admin.upload.invalid", new Object[0]));
 				return "redirect:edit.jhtml";
 			}
-			String watermarkImage = this.fileService.uploadLocal(
-					FileInfo.FileType.image, watermarkImageFile);
+			String watermarkImage = this.fileService.uploadLocal(FileInfo.FileType.image, watermarkImageFile);
 			setting.setWatermarkImage(watermarkImage);
 		} else {
 			setting.setWatermarkImage(localSetting.getWatermarkImage());
@@ -163,36 +138,29 @@ public class SettingController extends BaseController {
 		this.cacheService.clear();
 		this.staticService.buildIndex();
 		this.staticService.buildOther();
-		Object localObject1 = null;
-		label416: try {
-			ClassPathResource localClassPathResource = new ClassPathResource(
-					"/shophq.properties");
-			Properties localProperties = PropertiesLoaderUtils
-					.loadProperties(localClassPathResource);
-			String str1 = localProperties.getProperty("template.update_delay");
-			String str2 = localProperties.getProperty("message.cache_seconds");
+		OutputStream outputStream = null;
+		try {
+			ClassPathResource classPathResource = new ClassPathResource(CommonAttributes.HQ_SHOP_PROPERTIES_PATH);
+			Properties properties = PropertiesLoaderUtils.loadProperties(classPathResource);
+			String templateUpdateDelay = properties.getProperty("template.update_delay");
+			String messageCacheSeconds = properties.getProperty("message.cache_seconds");
 			if (setting.getIsDevelopmentEnabled().booleanValue()) {
-				if ((!str1.equals("0")) || (!str2.equals("0"))) {
-					localObject1 = new FileOutputStream(
-							localClassPathResource.getFile());
-					localProperties.setProperty("template.update_delay", "0");
-					localProperties.setProperty("message.cache_seconds", "0");
-					localProperties.store((OutputStream) localObject1,
-							"HONGQIANG_SHOP PROPERTIES");
-					break label416;
+				if ((!templateUpdateDelay.equals("0")) || (!messageCacheSeconds.equals("0"))) {
+					outputStream = new FileOutputStream(classPathResource.getFile());
+					properties.setProperty("template.update_delay", "0");
+					properties.setProperty("message.cache_seconds", "0");
+					properties.store((OutputStream) outputStream,"HONGQIANG_SHOP PROPERTIES");
 				}
-			} else if ((str1.equals("0")) || (str2.equals("0"))) {
-				localObject1 = new FileOutputStream(
-						localClassPathResource.getFile());
-				localProperties.setProperty("template.update_delay", "3600");
-				localProperties.setProperty("message.cache_seconds", "3600");
-				localProperties.store((OutputStream) localObject1,
-						"HONGQIANG_SHOP PROPERTIES");
+			} else if ((templateUpdateDelay.equals("0")) || (messageCacheSeconds.equals("0"))) {
+				outputStream = new FileOutputStream(classPathResource.getFile());
+				properties.setProperty("template.update_delay", "3600");
+				properties.setProperty("message.cache_seconds", "3600");
+				properties.store((OutputStream) outputStream,"HONGQIANG_SHOP PROPERTIES");
 			}
-		} catch (Exception localException1) {
-			localException1.printStackTrace();
+		} catch (Exception exception) {
+			exception.printStackTrace();
 		} finally {
-			IOUtils.closeQuietly((OutputStream) localObject1);
+			IOUtils.closeQuietly(outputStream);
 		}
 		addMessage(redirectAttributes, ADMIN_SUCCESS);
 		return "redirect:edit.jhtml";
