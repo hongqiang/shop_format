@@ -5,10 +5,10 @@
 
 	<groupId>com.hongqiang.shop</groupId>
 	<artifactId>shop</artifactId>
-	<version>1.0.3</version>
+	<version>1.0</version>
 	<packaging>war</packaging>
-	<name>JeeSite</name>
-	<url>http://thinkgem.github.com/jeesite</url>
+	<name>SHOP_HQ</name>
+	<url>http://github.com/hongqiang/shop_format</url>
 
 	<!-- 项目属性 -->
 	<properties>

@@ -32,18 +32,18 @@ public class PaymentServiceImpl extends BaseService implements PaymentService {
 	}
 
 	@Transactional
-	public void save(Payment paymentDao) {
-		this.paymentDao.persist(paymentDao);
+	public void save(Payment payment) {
+		this.paymentDao.persist(payment);
 	}
 
 	@Transactional
-	public Payment update(Payment paymentDao) {
-		return (Payment) this.paymentDao.merge(paymentDao);
+	public Payment update(Payment payment) {
+		return (Payment) this.paymentDao.merge(payment);
 	}
 
 	@Transactional
-	public Payment update(Payment paymentDao, String[] ignoreProperties) {
-		return (Payment) this.paymentDao.update(paymentDao, ignoreProperties);
+	public Payment update(Payment payment, String[] ignoreProperties) {
+		return (Payment) this.paymentDao.update(payment, ignoreProperties);
 	}
 
 	@Transactional
@@ -60,7 +60,7 @@ public class PaymentServiceImpl extends BaseService implements PaymentService {
 	}
 
 	@Transactional
-	public void delete(Payment paymentDao) {
-		this.paymentDao.delete(paymentDao);
+	public void delete(Payment payment) {
+		this.paymentDao.delete(payment);
 	}
 }

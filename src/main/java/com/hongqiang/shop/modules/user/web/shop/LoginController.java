@@ -148,7 +148,7 @@ public class LoginController extends BaseController {
 		localMember.setLoginIp(request.getRemoteAddr());
 		localMember.setLoginDate(new Date());
 		localMember.setLoginFailureCount(Integer.valueOf(0));
-		this.memberService.update(localMember);
+//		this.memberService.update(localMember);
 //		String[] ignoreStrings = {"username","registerIp"};
 //		this.memberService.update(localMember,ignoreStrings);
 		System.out.println("login here");
