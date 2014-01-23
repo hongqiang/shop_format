@@ -1,6 +1,6 @@
 
 var shop = {
-	base: "/shop/f",
+	base: "/shop",
 	locale: "zh_CN"
 };
 

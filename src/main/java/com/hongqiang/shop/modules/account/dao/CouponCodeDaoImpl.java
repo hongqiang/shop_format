@@ -33,28 +33,28 @@ public class CouponCodeDaoImpl extends BaseDaoImpl<CouponCode,Long> implements
 
 	@Override
 	public CouponCode build(Coupon coupon, Member member) {
-		CouponCode localCouponCode = new CouponCode();
-		String str = UUID.randomUUID().toString().toUpperCase();
-		localCouponCode.setCode(coupon.getPrefix() + str.substring(0, 8)
-				+ str.substring(9, 13) + str.substring(14, 18)
-				+ str.substring(19, 23) + str.substring(24));
-		localCouponCode.setIsUsed(Boolean.valueOf(false));
-		localCouponCode.setCoupon(coupon);
-		localCouponCode.setMember(member);
-		super.persist(localCouponCode);
-		return localCouponCode;
+		CouponCode couponCode = new CouponCode();
+		String random = UUID.randomUUID().toString().toUpperCase();
+		couponCode.setCode(coupon.getPrefix() + random.substring(0, 8)
+				+ random.substring(9, 13) + random.substring(14, 18)
+				+ random.substring(19, 23) + random.substring(24));
+		couponCode.setIsUsed(Boolean.valueOf(false));
+		couponCode.setCoupon(coupon);
+		couponCode.setMember(member);
+		super.persist(couponCode);
+		return couponCode;
 	}
 
 	@Override
 	public List<CouponCode> build(Coupon coupon, Member member, Integer count) {
-		List<CouponCode> localArrayList = new ArrayList<CouponCode>();
+		List<CouponCode> couponCodes = new ArrayList<CouponCode>();
 		for (int i = 0; i < count.intValue(); i++) {
 			CouponCode localCouponCode = build(coupon, member);
-			localArrayList.add(localCouponCode);
+			couponCodes.add(localCouponCode);
 		}
 		super.flush();
 		super.clear();
-		return localArrayList;
+		return couponCodes;
 	}
 
 	@Override

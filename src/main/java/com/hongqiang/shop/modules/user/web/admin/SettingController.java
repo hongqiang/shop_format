@@ -124,7 +124,7 @@ public class SettingController extends BaseController {
 			setting.setSmtpPassword(localSetting.getSmtpPassword());
 		if ((watermarkImageFile != null) && (!watermarkImageFile.isEmpty())) {
 			if (!this.fileService.isValid(FileInfo.FileType.image,watermarkImageFile)) {
-				beanValidator(redirectAttributes,Message.error("admin.upload.invalid", new Object[0]));
+				addMessage(redirectAttributes,Message.error("admin.upload.invalid", new Object[0]));
 				return "redirect:edit.jhtml";
 			}
 			String watermarkImage = this.fileService.uploadLocal(FileInfo.FileType.image, watermarkImageFile);

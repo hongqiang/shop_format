@@ -85,7 +85,7 @@ public class Returns extends BaseEntity
   }
 
   @Min(0L)
-  @Digits(integer=12, fraction=3)
+//  @Digits(integer=12, fraction=3)
   @Column(updatable=false, precision=21, scale=6)
   public BigDecimal getFreight()
   {

@@ -79,45 +79,42 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = { "/save_receiver" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> saveReceiver(Receiver receiver, Long areaId) {
-		HashMap<String,Object> localHashMap = new HashMap<String,Object>();
+		Map<String,Object> map = new HashMap<String,Object>();
 		receiver.setArea((Area) this.areaService.find(areaId));
 		if (!beanValidator(receiver, new Class[0])) {
-			localHashMap.put("message", SHOP_ERROR);
-			return localHashMap;
+			map.put("message", SHOP_ERROR);
+			return map;
 		}
-		Member localMember = this.memberService.getCurrent();
+		Member member = this.memberService.getCurrent();
 		if ((Receiver.MAX_RECEIVER_COUNT != null)
-				&& (localMember.getReceivers().size() >= Receiver.MAX_RECEIVER_COUNT
-						.intValue())) {
-			localHashMap.put("message", Message.error(
-					"shop.order.addReceiverCountNotAllowed",
+				&& (member.getReceivers().size() >= Receiver.MAX_RECEIVER_COUNT.intValue())) {
+			map.put("message", Message.error("shop.order.addReceiverCountNotAllowed",
 					new Object[] { Receiver.MAX_RECEIVER_COUNT }));
-			return localHashMap;
+			return map;
 		}
-		receiver.setMember(localMember);
+		receiver.setMember(member);
 		this.receiverService.save(receiver);
-		localHashMap.put("message", SHOP_SUCCESS);
-		localHashMap.put("receiver", receiver);
-		return localHashMap;
+		map.put("message", SHOP_SUCCESS);
+		map.put("receiver", receiver);
+		return map;
 	}
 
 	@RequestMapping(value = { "/check_lock" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Message checkLock(String sn) {
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.findBySn(sn);
-		if ((localOrder != null)
-				&& (localOrder.getMember() == this.memberService.getCurrent())
-				&& (!localOrder.isExpired())
-				&& (localOrder.getPaymentMethod() != null)
-				&& (localOrder.getPaymentMethod().getType() == PaymentMethod.Type.online)
-				&& ((localOrder.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid) || (localOrder
-						.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment))) {
-			if (localOrder.isLocked(null))
+		com.hongqiang.shop.modules.entity.Order order = this.orderService.findBySn(sn);
+		if ((order != null)
+				&& (order.getMember() == this.memberService.getCurrent())
+				&& (!order.isExpired())
+				&& (order.getPaymentMethod() != null)
+				&& (order.getPaymentMethod().getType() == PaymentMethod.Type.online)
+				&& ((order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid) || 
+						(order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment))) {
+			if (order.isLocked(null))
 				return Message.warn("shop.order.locked", new Object[0]);
-			localOrder.setLockExpire(DateUtils.addSeconds(new Date(), 60));
-			localOrder.setOperator(null);
-			this.orderService.update(localOrder);
+			order.setLockExpire(DateUtils.addSeconds(new Date(), 60));
+			order.setOperator(null);
+			this.orderService.update(order);
 			return SHOP_SUCCESS;
 		}
 		return SHOP_ERROR;
@@ -126,252 +123,204 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = { "/check_payment" }, method = RequestMethod.POST)
 	@ResponseBody
 	public boolean checkPayment(String sn) {
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.findBySn(sn);
-		return (localOrder != null)
-				&& (localOrder.getMember() == this.memberService.getCurrent())
-				&& (localOrder.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
+		com.hongqiang.shop.modules.entity.Order order = this.orderService.findBySn(sn);
+		return (order != null)
+				&& (order.getMember() == this.memberService.getCurrent())
+				&& (order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
 	}
 
 	@RequestMapping(value = { "/coupon_info" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> couponInfo(String code) {
-		HashMap<String,Object> localHashMap = new HashMap<String,Object>();
-		Cart localCart = this.cartService.getCurrent();
-		if ((localCart == null) || (localCart.isEmpty())) {
-			localHashMap.put("message",
-					Message.warn("shop.order.cartNotEmpty", new Object[0]));
-			return localHashMap;
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		Cart cart = this.cartService.getCurrent();
+		if ((cart == null) || (cart.isEmpty())) {
+			map.put("message",Message.warn("shop.order.cartNotEmpty", new Object[0]));
+			return map;
 		}
-		if (!localCart.isCouponAllowed()) {
-			localHashMap.put("message",
-					Message.warn("shop.order.couponNotAllowed", new Object[0]));
-			return localHashMap;
+		if (!cart.isCouponAllowed()) {
+			map.put("message",Message.warn("shop.order.couponNotAllowed", new Object[0]));
+			return map;
 		}
-		CouponCode localCouponCode = this.couponCodeService.findByCode(code);
-		if ((localCouponCode != null) && (localCouponCode.getCoupon() != null)) {
-			Coupon localCoupon = localCouponCode.getCoupon();
-			if (!localCoupon.getIsEnabled().booleanValue()) {
-				localHashMap.put("message", Message.warn(
-						"shop.order.couponDisabled", new Object[0]));
-				return localHashMap;
+		CouponCode couponCode = this.couponCodeService.findByCode(code);
+		if ((couponCode != null) && (couponCode.getCoupon() != null)) {
+			Coupon coupon = couponCode.getCoupon();
+			if (!coupon.getIsEnabled().booleanValue()) {
+				map.put("message", Message.warn("shop.order.couponDisabled", new Object[0]));
+				return map;
 			}
-			if (!localCoupon.hasBegun()) {
-				localHashMap.put("message", Message.warn(
-						"shop.order.couponNotBegin", new Object[0]));
-				return localHashMap;
+			if (!coupon.hasBegun()) {
+				map.put("message", Message.warn("shop.order.couponNotBegin", new Object[0]));
+				return map;
 			}
-			if (localCoupon.hasExpired()) {
-				localHashMap.put("message", Message.warn(
-						"shop.order.couponHasExpired", new Object[0]));
-				return localHashMap;
+			if (coupon.hasExpired()) {
+				map.put("message", Message.warn("shop.order.couponHasExpired", new Object[0]));
+				return map;
 			}
-			if (!localCart.isValid(localCoupon)) {
-				localHashMap
-						.put("message", Message.warn(
-								"shop.order.couponInvalid", new Object[0]));
-				return localHashMap;
+			if (!cart.isValid(coupon)) {
+				map.put("message", Message.warn("shop.order.couponInvalid", new Object[0]));
+				return map;
 			}
-			if (localCouponCode.getIsUsed().booleanValue()) {
-				localHashMap.put("message", Message.warn(
-						"shop.order.couponCodeUsed", new Object[0]));
-				return localHashMap;
+			if (couponCode.getIsUsed().booleanValue()) {
+				map.put("message", Message.warn("shop.order.couponCodeUsed", new Object[0]));
+				return map;
 			}
-			localHashMap.put("message", SHOP_SUCCESS);
-			localHashMap.put("couponName", localCoupon.getName());
-			return localHashMap;
+			map.put("message", SHOP_SUCCESS);
+			map.put("couponName", coupon.getName());
+			return map;
 		}
-		localHashMap.put("message",
-				Message.warn("shop.order.couponCodeNotExist", new Object[0]));
-		return localHashMap;
+		map.put("message",Message.warn("shop.order.couponCodeNotExist", new Object[0]));
+		return map;
 	}
 
 	@RequestMapping(value = { "/info" }, method = RequestMethod.GET)
 	public String info(ModelMap model) {
-		Cart localCart = this.cartService.getCurrent();
-		if ((localCart == null) || (localCart.isEmpty()))
+		Cart cart = this.cartService.getCurrent();
+		if ((cart == null) || (cart.isEmpty()))
 			return "redirect:/cart/list.jhtml";
-		if (!beanValidator( localCart, new Class[0]))
+		if (!beanValidator( cart, new Class[0]))
 			return SHOP_ERROR_PAGE;
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.build(localCart, null, null, null, null, false, null, false,
-						null);
-		model.addAttribute("order", localOrder);
-		model.addAttribute("cartToken", localCart.getToken());
-		model.addAttribute("paymentMethods",
-				this.paymentMethodService.findAll());
-		model.addAttribute("shippingMethods",
-				this.shippingMethodService.findAll());
+		com.hongqiang.shop.modules.entity.Order order = 
+				this.orderService.build(cart, null, null, null, null, false, null, false,null);
+		model.addAttribute("order", order);
+		model.addAttribute("cartToken", cart.getToken());
+		model.addAttribute("paymentMethods",this.paymentMethodService.findAll());
+		model.addAttribute("shippingMethods",this.shippingMethodService.findAll());
 		return "/shop/member/order/info";
 	}
 
 	@RequestMapping(value = { "/calculate" }, method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> calculate(Long paymentMethodId,
-			Long shippingMethodId, String code,
-			@RequestParam(defaultValue = "false") Boolean isInvoice,
-			String invoiceTitle,
-			@RequestParam(defaultValue = "false") Boolean useBalance,
-			String memo) {
-		HashMap<String,Object> localHashMap = new HashMap<String,Object>();
-		Cart localCart = this.cartService.getCurrent();
-		if ((localCart == null) || (localCart.isEmpty())) {
-			localHashMap.put("message",
-					Message.error("shop.order.cartNotEmpty", new Object[0]));
-			return localHashMap;
+	public Map<String, Object> calculate(Long paymentMethodId,Long shippingMethodId, String code,
+			@RequestParam(defaultValue = "false") Boolean isInvoice,String invoiceTitle,
+			@RequestParam(defaultValue = "false") Boolean useBalance,String memo) {
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		Cart cart = this.cartService.getCurrent();
+		if ((cart == null) || (cart.isEmpty())) {
+			map.put("message",Message.error("shop.order.cartNotEmpty", new Object[0]));
+			return map;
 		}
-		PaymentMethod localPaymentMethod = (PaymentMethod) this.paymentMethodService
-				.find(paymentMethodId);
-		ShippingMethod localShippingMethod = (ShippingMethod) this.shippingMethodService
-				.find(shippingMethodId);
-		CouponCode localCouponCode = this.couponCodeService.findByCode(code);
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.build(localCart, null, localPaymentMethod,
-						localShippingMethod, localCouponCode,
-						isInvoice.booleanValue(), invoiceTitle,
-						useBalance.booleanValue(), memo);
-		localHashMap.put("message", SHOP_SUCCESS);
-		localHashMap.put("quantity", Integer.valueOf(localOrder.getQuantity()));
-		localHashMap.put("price", localOrder.getPrice());
-		localHashMap.put("freight", localOrder.getFreight());
-		localHashMap.put("tax", localOrder.getTax());
-		localHashMap.put("amountPayable", localOrder.getAmountPayable());
-		return localHashMap;
+		PaymentMethod paymentMethod = (PaymentMethod) this.paymentMethodService.find(paymentMethodId);
+		ShippingMethod shippingMethod = (ShippingMethod) this.shippingMethodService.find(shippingMethodId);
+		CouponCode couponCode = this.couponCodeService.findByCode(code);
+		com.hongqiang.shop.modules.entity.Order order = this.orderService
+				.build(cart, null, paymentMethod,shippingMethod, couponCode,isInvoice.booleanValue(),
+						invoiceTitle,useBalance.booleanValue(), memo);
+		map.put("message", SHOP_SUCCESS);
+		map.put("quantity", Integer.valueOf(order.getQuantity()));
+		map.put("price", order.getPrice());
+		map.put("freight", order.getFreight());
+		map.put("tax", order.getTax());
+		map.put("amountPayable", order.getAmountPayable());
+		return map;
 	}
 
 	@RequestMapping(value = { "/create" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Message create(String cartToken, Long receiverId,
 			Long paymentMethodId, Long shippingMethodId, String code,
-			@RequestParam(defaultValue = "false") Boolean isInvoice,
-			String invoiceTitle,
-			@RequestParam(defaultValue = "false") Boolean useBalance,
-			String memo) {
-		
-		Cart localCart = this.cartService.getCurrent();
-		System.out.println("cartToken="+cartToken);
-		System.out.println("localCart.getToken()="+localCart.getToken());
-		if ((localCart == null) || (localCart.isEmpty()))
+			@RequestParam(defaultValue = "false") Boolean isInvoice,String invoiceTitle,
+			@RequestParam(defaultValue = "false") Boolean useBalance,String memo) {
+		Cart cart = this.cartService.getCurrent();
+		if ((cart == null) || (cart.isEmpty()))
 			return Message.warn("shop.order.cartNotEmpty", new Object[0]);
-		if (!StringUtils.equals(localCart.getToken(), cartToken))
+		if (!StringUtils.equals(cart.getToken(), cartToken))
 			return Message.warn("shop.order.cartHasChanged", new Object[0]);
-		if (localCart.getIsLowStock())
+		if (cart.getIsLowStock())
 			return Message.warn("shop.order.cartLowStock", new Object[0]);
-		Receiver localReceiver = (Receiver) this.receiverService
-				.find(receiverId);
-		if (localReceiver == null)
+		Receiver receiver = (Receiver) this.receiverService.find(receiverId);
+		if (receiver == null)
 			return Message.error("shop.order.receiverNotExsit", new Object[0]);
-		PaymentMethod localPaymentMethod = (PaymentMethod) this.paymentMethodService
-				.find(paymentMethodId);
-		if (localPaymentMethod == null)
-			return Message.error("shop.order.paymentMethodNotExsit",
-					new Object[0]);
-		ShippingMethod localShippingMethod = (ShippingMethod) this.shippingMethodService
-				.find(shippingMethodId);
-		if (localShippingMethod == null)
-			return Message.error("shop.order.shippingMethodNotExsit",
-					new Object[0]);
-		if (!localPaymentMethod.getShippingMethods().contains(
-				localShippingMethod))
-			return Message.error("shop.order.deliveryUnsupported",
-					new Object[0]);
-		CouponCode localCouponCode = this.couponCodeService.findByCode(code);
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.create(localCart, localReceiver, localPaymentMethod,
-						localShippingMethod, localCouponCode,
-						isInvoice.booleanValue(), invoiceTitle,
-						useBalance.booleanValue(), memo, null);
-		return Message.success(localOrder.getSn(), new Object[0]);
+		PaymentMethod paymentMethod = (PaymentMethod) this.paymentMethodService.find(paymentMethodId);
+		if (paymentMethod == null)
+			return Message.error("shop.order.paymentMethodNotExsit",new Object[0]);
+		ShippingMethod shippingMethod = (ShippingMethod) this.shippingMethodService.find(shippingMethodId);
+		if (shippingMethod == null)
+			return Message.error("shop.order.shippingMethodNotExsit",new Object[0]);
+		if (!paymentMethod.getShippingMethods().contains(shippingMethod))
+			return Message.error("shop.order.deliveryUnsupported",new Object[0]);
+		CouponCode couponCode = this.couponCodeService.findByCode(code);
+		com.hongqiang.shop.modules.entity.Order order = this.orderService
+				.create(cart, receiver, paymentMethod,shippingMethod, couponCode,isInvoice.booleanValue(), 
+						invoiceTitle,useBalance.booleanValue(), memo, null);
+		return Message.success(order.getSn(), new Object[0]);
 	}
 
 	@RequestMapping(value = { "/payment" }, method = RequestMethod.GET)
 	public String payment(String sn, ModelMap model) {
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.findBySn(sn);
-		if ((localOrder == null)
-				|| (localOrder.getMember() != this.memberService.getCurrent())
-				|| (localOrder.isExpired())
-				|| (localOrder.getPaymentMethod() == null))
+		com.hongqiang.shop.modules.entity.Order order = this.orderService.findBySn(sn);
+		if ((order == null) || (order.getMember() != this.memberService.getCurrent())
+				|| (order.isExpired()) || (order.getPaymentMethod() == null))
 			return SHOP_ERROR_PAGE;
-		if (localOrder.getPaymentMethod().getType() == PaymentMethod.Type.online) {
-			List<PaymentPlugin> localList = this.pluginService.getPaymentPlugins(true);
-			if (!localList.isEmpty()) {
-				PaymentPlugin localPaymentPlugin = (PaymentPlugin) localList
-						.get(0);
-				localOrder.setFee(localPaymentPlugin.getFee(localOrder
-						.getAmountPayable()));
-				model.addAttribute("defaultPaymentPlugin", localPaymentPlugin);
-				model.addAttribute("paymentPlugins", localList);
+		if (order.getPaymentMethod().getType() == PaymentMethod.Type.online) {
+			List<PaymentPlugin> paymentPlugins = this.pluginService.getPaymentPlugins(true);
+			if (!paymentPlugins.isEmpty()) {
+				PaymentPlugin paymentPlugin = (PaymentPlugin) paymentPlugins.get(0);
+				order.setFee(paymentPlugin.getFee(order.getAmountPayable()));
+				model.addAttribute("defaultPaymentPlugin", paymentPlugin);
+				model.addAttribute("paymentPlugins", paymentPlugins);
 			}
 		}
-		model.addAttribute("order", localOrder);
+		model.addAttribute("order", order);
 		return "/shop/member/order/payment";
 	}
 
 	@RequestMapping(value = { "/payment_plugin_select" }, method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> paymentPluginSelect(String sn,
-			String paymentPluginId) {
-		HashMap<String,Object> localHashMap = new HashMap<String,Object>();
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.findBySn(sn);
-		PaymentPlugin localPaymentPlugin = this.pluginService
-				.getPaymentPlugin(paymentPluginId);
-		if ((localOrder == null)
-				|| (localOrder.getMember() != this.memberService.getCurrent())
-				|| (localOrder.isExpired())
-				|| (localOrder.isLocked(null))
-				|| (localOrder.getPaymentMethod() == null)
-				|| (localOrder.getPaymentMethod().getType() == PaymentMethod.Type.offline)
+	public Map<String, Object> paymentPluginSelect(String sn,String paymentPluginId) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		com.hongqiang.shop.modules.entity.Order order = this.orderService.findBySn(sn);
+		PaymentPlugin localPaymentPlugin = this.pluginService.getPaymentPlugin(paymentPluginId);
+		if ((order == null)
+				|| (order.getMember() != this.memberService.getCurrent())
+				|| (order.isExpired())
+				|| (order.isLocked(null))
+				|| (order.getPaymentMethod() == null)
+				|| (order.getPaymentMethod().getType() == PaymentMethod.Type.offline)
 				|| (localPaymentPlugin == null)
 				|| (!localPaymentPlugin.getIsEnabled())) {
-			localHashMap.put("message", SHOP_ERROR);
-			return localHashMap;
+			map.put("message", SHOP_ERROR);
+			return map;
 		}
-		localOrder.setFee(localPaymentPlugin.getFee(localOrder
-				.getAmountPayable()));
-		localHashMap.put("message", SHOP_SUCCESS);
-		localHashMap.put("fee", localOrder.getFee());
-		localHashMap.put("amountPayable", localOrder.getAmountPayable());
-		return localHashMap;
+		order.setFee(localPaymentPlugin.getFee(order.getAmountPayable()));
+		map.put("message", SHOP_SUCCESS);
+		map.put("fee", order.getFee());
+		map.put("amountPayable", order.getAmountPayable());
+		return map;
 	}
 
 	@RequestMapping(value = { "/list" }, method = RequestMethod.GET)
 	public String list(Integer pageNumber, ModelMap model) {
-		Member localMember = this.memberService.getCurrent();
-		Pageable localPageable = new Pageable(pageNumber,
-				Integer.valueOf(PAGE_SIZE));
-		model.addAttribute("page",
-				this.orderService.findPage(localMember, localPageable));
+		Member member = this.memberService.getCurrent();
+		Pageable pageable = new Pageable(pageNumber,Integer.valueOf(PAGE_SIZE));
+		model.addAttribute("page",this.orderService.findPage(member, pageable));
 		return "shop/member/order/list";
 	}
 
 	@RequestMapping(value = { "/view" }, method = RequestMethod.GET)
 	public String view(String sn, ModelMap model) {
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.findBySn(sn);
-		if (localOrder == null)
+		com.hongqiang.shop.modules.entity.Order order = this.orderService.findBySn(sn);
+		if (order == null)
 			return SHOP_ERROR_PAGE;
-		Member localMember = this.memberService.getCurrent();
-		if (!localMember.getOrders().contains(localOrder))
+		Member member = this.memberService.getCurrent();
+		if (!member.getOrders().contains(order))
 			return SHOP_ERROR_PAGE;
-		model.addAttribute("order", localOrder);
+		model.addAttribute("order", order);
 		return "shop/member/order/view";
 	}
 
 	@RequestMapping(value = { "/cancel" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Message cancel(String sn) {
-		com.hongqiang.shop.modules.entity.Order localOrder = this.orderService
-				.findBySn(sn);
-		if ((localOrder != null)
-				&& (localOrder.getMember() == this.memberService.getCurrent())
-				&& (!localOrder.isExpired())
-				&& (localOrder.getOrderStatus() == com.hongqiang.shop.modules.entity.Order.OrderStatus.unconfirmed)
-				&& (localOrder.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid)) {
-			if (localOrder.isLocked(null))
+		com.hongqiang.shop.modules.entity.Order order = this.orderService.findBySn(sn);
+		if ((order != null)
+				&& (order.getMember() == this.memberService.getCurrent())
+				&& (!order.isExpired())
+				&& (order.getOrderStatus() == com.hongqiang.shop.modules.entity.Order.OrderStatus.unconfirmed)
+				&& (order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid)) {
+			if (order.isLocked(null))
 				return Message.warn("shop.member.order.locked", new Object[0]);
-			this.orderService.cancel(localOrder, null);
+			this.orderService.cancel(order, null);
 			return SHOP_SUCCESS;
 		}
 		return SHOP_ERROR;
@@ -380,18 +329,16 @@ public class OrderController extends BaseController {
 	@RequestMapping(value = { "/delivery_query" }, method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> deliveryQuery(String sn) {
-		Map<String, Object> localObject = new HashMap<String, Object>();
-		Shipping localShipping = this.shippingService.findBySn(sn);
-		Setting localSetting = SettingUtils.get();
-		if ((localShipping != null)
-				&& (localShipping.getOrder() != null)
-				&& (localShipping.getOrder().getMember() == this.memberService
-						.getCurrent())
-				&& (StringUtils.isNotEmpty(localSetting
-						.getKuaidi100Key()))
-				&& (StringUtils.isNotEmpty(localShipping.getDeliveryCorpCode()))
-				&& (StringUtils.isNotEmpty(localShipping.getTrackingNo())))
-			localObject = this.shippingService.query(localShipping);
-		return localObject;
+		Map<String, Object> map = new HashMap<String, Object>();
+		Shipping shipping = this.shippingService.findBySn(sn);
+		Setting setting = SettingUtils.get();
+		if ((shipping != null)
+				&& (shipping.getOrder() != null)
+				&& (shipping.getOrder().getMember() == this.memberService.getCurrent())
+				&& (StringUtils.isNotEmpty(setting.getKuaidi100Key()))
+				&& (StringUtils.isNotEmpty(shipping.getDeliveryCorpCode()))
+				&& (StringUtils.isNotEmpty(shipping.getTrackingNo())))
+			map = this.shippingService.query(shipping);
+		return map;
 	}
 }

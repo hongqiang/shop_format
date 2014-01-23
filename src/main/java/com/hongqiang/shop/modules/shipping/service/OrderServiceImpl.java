@@ -115,14 +115,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 
 	@Transactional(readOnly = true)
 	public List<com.hongqiang.shop.modules.entity.Order> findList(
-			Member member, Integer count, List<Filter> filters,
-			List<Order> orders) {
+			Member member, Integer count, List<Filter> filters,List<Order> orders) {
 		return this.orderDao.findList(member, count, filters, orders);
 	}
 
 	@Transactional(readOnly = true)
-	public Page<com.hongqiang.shop.modules.entity.Order> findPage(
-			Member member, Pageable pageable) {
+	public Page<com.hongqiang.shop.modules.entity.Order> findPage(Member member, Pageable pageable) {
 		return this.orderDao.findPage(member, pageable);
 	}
 
@@ -132,8 +130,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 			com.hongqiang.shop.modules.entity.Order.PaymentStatus paymentStatus,
 			com.hongqiang.shop.modules.entity.Order.ShippingStatus shippingStatus,
 			Boolean hasExpired, Pageable pageable) {
-		return this.orderDao.findPage(orderStatus, paymentStatus,
-				shippingStatus, hasExpired, pageable);
+		return this.orderDao.findPage(orderStatus, paymentStatus,shippingStatus, hasExpired, pageable);
 	}
 
 	@Transactional(readOnly = true)
@@ -142,8 +139,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 			com.hongqiang.shop.modules.entity.Order.PaymentStatus paymentStatus,
 			com.hongqiang.shop.modules.entity.Order.ShippingStatus shippingStatus,
 			Boolean hasExpired) {
-		return this.orderDao.count(orderStatus, paymentStatus, shippingStatus,
-				hasExpired);
+		return this.orderDao.count(orderStatus, paymentStatus, shippingStatus,hasExpired);
 	}
 
 	@Transactional(readOnly = true)
@@ -176,322 +172,291 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 			ShippingMethod shippingMethod, CouponCode couponCode,
 			boolean isInvoice, String invoiceTitle, boolean useBalance,
 			String memo) {
-		com.hongqiang.shop.modules.entity.Order localOrder = new com.hongqiang.shop.modules.entity.Order();
-		if (cart == null || cart.getMember() == null
-				|| cart.getCartItems().isEmpty()) {
-			return localOrder;
+		com.hongqiang.shop.modules.entity.Order order = new com.hongqiang.shop.modules.entity.Order();
+		if (cart == null || cart.getMember() == null || cart.getCartItems().isEmpty()) {
+			return order;
 		}
-		localOrder
-				.setShippingStatus(com.hongqiang.shop.modules.entity.Order.ShippingStatus.unshipped);
-		localOrder.setFee(new BigDecimal(0));
-		localOrder.setDiscount(cart.getDiscount());
-		localOrder.setPoint(Integer.valueOf(cart.getPoint()));
-		localOrder.setMemo(memo);
-		localOrder.setMember(cart.getMember());
+		//设置订单的运输状态，费用，折扣，积分，备注，会员信息
+		order.setShippingStatus(com.hongqiang.shop.modules.entity.Order.ShippingStatus.unshipped);
+		order.setFee(new BigDecimal(0));
+		order.setDiscount(cart.getDiscount());
+		order.setPoint(Integer.valueOf(cart.getPoint()));
+		order.setMemo(memo);
+		order.setMember(cart.getMember());
+		//设置订单的收件人信息
 		if (receiver != null) {
-			localOrder.setConsignee(receiver.getConsignee());
-			localOrder.setAreaName(receiver.getAreaName());
-			localOrder.setAddress(receiver.getAddress());
-			localOrder.setZipCode(receiver.getZipCode());
-			localOrder.setPhone(receiver.getPhone());
-			localOrder.setArea(receiver.getArea());
+			order.setConsignee(receiver.getConsignee());
+			order.setAreaName(receiver.getAreaName());
+			order.setAddress(receiver.getAddress());
+			order.setZipCode(receiver.getZipCode());
+			order.setPhone(receiver.getPhone());
+			order.setArea(receiver.getArea());
 		}
+		//设置定的促销信息
 		if (!cart.getPromotions().isEmpty()) {
 			StringBuffer stringBuffer = new StringBuffer();
-			Iterator<Promotion> localObject3 = cart.getPromotions().iterator();
-			while (localObject3.hasNext()) {
-				Promotion localPromotion = (Promotion) localObject3.next();
-				if ((localPromotion == null)
-						|| (((Promotion) localPromotion).getName() == null))
+			Iterator<Promotion> promotionIterator = cart.getPromotions().iterator();
+			while (promotionIterator.hasNext()) {
+				Promotion promotion = (Promotion) promotionIterator.next();
+				if ((promotion == null) || (promotion.getName() == null))
 					continue;
-				stringBuffer.append(" " + localPromotion.getName());
+				stringBuffer.append(" " + promotion.getName());
 			}
 			if (stringBuffer.length() > 0)
-				((StringBuffer) stringBuffer).deleteCharAt(0);
-			localOrder.setPromotion(((StringBuffer) stringBuffer).toString());
+				 stringBuffer.deleteCharAt(0);
+			order.setPromotion(stringBuffer.toString());
 		}
-		localOrder.setPaymentMethod(paymentMethod);
-		if ((shippingMethod != null)
-				&& (paymentMethod != null)
+		//设置订单的付款方式
+		order.setPaymentMethod(paymentMethod);
+		//设置订单的配送方式和配送费
+		if ((shippingMethod != null) && (paymentMethod != null)
 				&& (paymentMethod.getShippingMethods().contains(shippingMethod))) {
-			BigDecimal bigDecimal = shippingMethod.calculateFreight(Integer
-					.valueOf(cart.getWeight()));
-			Iterator<Promotion> localObject3 = cart.getPromotions().iterator();
-			while (localObject3.hasNext()) {
-				Promotion localPromotion = (Promotion) localObject3.next();
-				if (!((Promotion) localPromotion).getIsFreeShipping()
-						.booleanValue())
+			//根据重量计算运输价格
+			BigDecimal freightPrice = shippingMethod.calculateFreight(Integer.valueOf(cart.getWeight()));
+			Iterator<Promotion> iterator = cart.getPromotions().iterator();
+			while (iterator.hasNext()) {
+				Promotion promotion = (Promotion) iterator.next();
+				if (!promotion.getIsFreeShipping().booleanValue())
 					continue;
-				bigDecimal = new BigDecimal(0);
+				freightPrice = new BigDecimal(0);
 				break;
 			}
-			localOrder.setFreight((BigDecimal) bigDecimal);
-			localOrder.setShippingMethod(shippingMethod);
+			order.setFreight(freightPrice);
+			order.setShippingMethod(shippingMethod);
 		} else {
-			localOrder.setFreight(new BigDecimal(0));
+			order.setFreight(new BigDecimal(0));
 		}
+		//使用优惠劵
 		if ((couponCode != null) && (cart.isCouponAllowed())) {
 			this.couponCodeDao.lock(couponCode, LockModeType.PESSIMISTIC_READ);
 			if ((!couponCode.getIsUsed().booleanValue())
 					&& (couponCode.getCoupon() != null)
 					&& (cart.isValid(couponCode.getCoupon()))) {
-				BigDecimal bigDecimal = couponCode.getCoupon().calculatePrice(
-						cart.getAmount());
-				BigDecimal bigDecimal2 = cart.getAmount().subtract(
-						(BigDecimal) bigDecimal);
-				if (((BigDecimal) bigDecimal2).compareTo(new BigDecimal(0)) > 0)
-					localOrder.setDiscount(cart.getDiscount().add(
-							(BigDecimal) bigDecimal2));
-				localOrder.setCouponCode(couponCode);
+				//计算使用优惠劵后的价格
+				BigDecimal realPrice = couponCode.getCoupon().calculatePrice(cart.getAmount());
+				BigDecimal discount = cart.getAmount().subtract(realPrice);
+				if (discount.compareTo(new BigDecimal(0)) > 0)
+					order.setDiscount(cart.getDiscount().add(discount));
+				order.setCouponCode(couponCode);
 			}
 		}
-		List<OrderItem> localOrderItems = localOrder.getOrderItems();
-		Iterator<CartItem> localCartItems = cart.getCartItems().iterator();
-		Product localProduct;
-		OrderItem localOrderItem;
-		while (localCartItems.hasNext()) {
-			CartItem localCartItem = (CartItem) localCartItems.next();
-			if ((localCartItem == null)
-					|| (((CartItem) localCartItem).getProduct() == null))
+		//从cartItem和giftItem中得到商品，放入orderItems
+		List<OrderItem> orderItems = order.getOrderItems();
+		Iterator<CartItem> cartItemIterator = cart.getCartItems().iterator();
+		while (cartItemIterator.hasNext()) {
+			CartItem cartItem = (CartItem) cartItemIterator.next();
+			if ((cartItem == null) || (cartItem.getProduct() == null))
 				continue;
-			localProduct = ((CartItem) localCartItem).getProduct();
-			localOrderItem = new OrderItem();
-			localOrderItem.setSn(localProduct.getSn());
-			localOrderItem.setName(localProduct.getName());
-			localOrderItem.setFullName(localProduct.getFullName());
-			localOrderItem.setPrice(((CartItem) localCartItem).getUnitPrice());
-			localOrderItem.setWeight(localProduct.getWeight());
-			localOrderItem.setThumbnail(localProduct.getThumbnail());
-			localOrderItem.setIsGift(Boolean.valueOf(false));
-			localOrderItem
-					.setQuantity(((CartItem) localCartItem).getQuantity());
-			localOrderItem.setShippedQuantity(Integer.valueOf(0));
-			localOrderItem.setReturnQuantity(Integer.valueOf(0));
-			localOrderItem.setProduct(localProduct);
-			localOrderItem.setOrder(localOrder);
-			localOrderItems.add(localOrderItem);
+			Product product =  cartItem.getProduct();
+			OrderItem orderItem = new OrderItem();
+			orderItem.setSn(product.getSn());
+			orderItem.setName(product.getName());
+			orderItem.setFullName(product.getFullName());
+			orderItem.setPrice(cartItem.getUnitPrice());
+			orderItem.setWeight(product.getWeight());
+			orderItem.setThumbnail(product.getThumbnail());
+			orderItem.setIsGift(Boolean.valueOf(false));
+			orderItem.setQuantity(cartItem.getQuantity());
+			orderItem.setShippedQuantity(Integer.valueOf(0));
+			orderItem.setReturnQuantity(Integer.valueOf(0));
+			orderItem.setProduct(product);
+			orderItem.setOrder(order);
+			orderItems.add(orderItem);
 		}
-		Iterator<GiftItem> localGiftItems = cart.getGiftItems().iterator();
-		while (localGiftItems.hasNext()) {
-			GiftItem localGiftItem = (GiftItem) localGiftItems.next();
-			if ((localGiftItem == null)
-					|| (((GiftItem) localGiftItem).getGift() == null))
+		Iterator<GiftItem> gitftItemIterator = cart.getGiftItems().iterator();
+		while (gitftItemIterator.hasNext()) {
+			GiftItem giftItem = (GiftItem) gitftItemIterator.next();
+			if ((giftItem == null) || (giftItem.getGift() == null))
 				continue;
-			localProduct = ((GiftItem) localGiftItem).getGift();
-			localOrderItem = new OrderItem();
-			localOrderItem.setSn(localProduct.getSn());
-			localOrderItem.setName(localProduct.getName());
-			localOrderItem.setFullName(localProduct.getFullName());
-			localOrderItem.setPrice(new BigDecimal(0));
-			localOrderItem.setWeight(localProduct.getWeight());
-			localOrderItem.setThumbnail(localProduct.getThumbnail());
-			localOrderItem.setIsGift(Boolean.valueOf(true));
-			localOrderItem
-					.setQuantity(((GiftItem) localGiftItem).getQuantity());
-			localOrderItem.setShippedQuantity(Integer.valueOf(0));
-			localOrderItem.setReturnQuantity(Integer.valueOf(0));
-			localOrderItem.setProduct(localProduct);
-			localOrderItem.setOrder(localOrder);
-			localOrderItems.add(localOrderItem);
+			Product product = giftItem.getGift();
+			OrderItem orderItem = new OrderItem();
+			orderItem.setSn(product.getSn());
+			orderItem.setName(product.getName());
+			orderItem.setFullName(product.getFullName());
+			orderItem.setPrice(new BigDecimal(0));
+			orderItem.setWeight(product.getWeight());
+			orderItem.setThumbnail(product.getThumbnail());
+			orderItem.setIsGift(Boolean.valueOf(true));
+			orderItem.setQuantity(giftItem.getQuantity());
+			orderItem.setShippedQuantity(Integer.valueOf(0));
+			orderItem.setReturnQuantity(Integer.valueOf(0));
+			orderItem.setProduct(product);
+			orderItem.setOrder(order);
+			orderItems.add(orderItem);
 		}
-		Setting localSetting = SettingUtils.get();
-		if ((((Setting) localSetting).getIsInvoiceEnabled().booleanValue())
-				&& (isInvoice) && (StringUtils.isNotEmpty(invoiceTitle))) {
-			localOrder.setIsInvoice(Boolean.valueOf(true));
-			localOrder.setInvoiceTitle(invoiceTitle);
-			localOrder.setTax(localOrder.calculateTax());
+		//设置发票项
+		Setting setting = SettingUtils.get();
+		if ((setting.getIsInvoiceEnabled().booleanValue()) && (isInvoice) && (StringUtils.isNotEmpty(invoiceTitle))) {
+			order.setIsInvoice(Boolean.valueOf(true));
+			order.setInvoiceTitle(invoiceTitle);
+			order.setTax(order.calculateTax());
 		} else {
-			localOrder.setIsInvoice(Boolean.valueOf(false));
-			localOrder.setTax(new BigDecimal(0));
+			order.setIsInvoice(Boolean.valueOf(false));
+			order.setTax(new BigDecimal(0));
 		}
+		//设置账户余额项
 		if (useBalance) {
-			Member localMember = cart.getMember();
-			if (localMember.getBalance().compareTo(localOrder.getAmount()) >= 0)
-				localOrder.setAmountPaid(localOrder.getAmount());
+			Member member = cart.getMember();
+			if (member.getBalance().compareTo(order.getAmount()) >= 0)
+				order.setAmountPaid(order.getAmount());
 			else
-				localOrder.setAmountPaid(localMember.getBalance());
+				order.setAmountPaid(member.getBalance());
 		} else {
-			localOrder.setAmountPaid(new BigDecimal(0));
+			order.setAmountPaid(new BigDecimal(0));
 		}
-		if (localOrder.getAmountPayable().compareTo(new BigDecimal(0)) == 0) {
-			localOrder
-					.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.confirmed);
-			localOrder
-					.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
-		} else if ((localOrder.getAmountPayable().compareTo(new BigDecimal(0)) > 0)
-				&& (localOrder.getAmountPaid().compareTo(new BigDecimal(0)) > 0)) {
-			localOrder
-					.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.confirmed);
-			localOrder
-					.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment);
+		//设置订单状态和支付状态
+		if (order.getAmountPayable().compareTo(new BigDecimal(0)) == 0) {
+			order.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.confirmed);
+			order.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
+		} else if ((order.getAmountPayable().compareTo(new BigDecimal(0)) > 0)
+				&& (order.getAmountPaid().compareTo(new BigDecimal(0)) > 0)) {
+			order.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.confirmed);
+			order.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment);
 		} else {
-			localOrder
-					.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.unconfirmed);
-			localOrder
-					.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid);
+			order.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.unconfirmed);
+			order.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid);
 		}
-		if ((paymentMethod != null)
-				&& (paymentMethod.getTimeout() != null)
-				&& (localOrder.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid))
-			localOrder.setExpire(DateUtils.addMinutes(new Date(), paymentMethod
-					.getTimeout().intValue()));
-		return localOrder;
+		//如果订单未支付，设置订单失效时间
+		if ((paymentMethod != null) && (paymentMethod.getTimeout() != null)
+				&& (order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid))
+			order.setExpire(DateUtils.addMinutes(new Date(), paymentMethod.getTimeout().intValue()));
+		return order;
 	}
 
-	public com.hongqiang.shop.modules.entity.Order create(Cart cart,
-			Receiver receiver, PaymentMethod paymentMethod,
-			ShippingMethod shippingMethod, CouponCode couponCode,
-			boolean isInvoice, String invoiceTitle, boolean useBalance,
+	public com.hongqiang.shop.modules.entity.Order create(Cart cart,Receiver receiver, PaymentMethod paymentMethod,
+			ShippingMethod shippingMethod, CouponCode couponCode,boolean isInvoice, String invoiceTitle, boolean useBalance,
 			String memo, Admin operator) {
-		com.hongqiang.shop.modules.entity.Order localOrder = new com.hongqiang.shop.modules.entity.Order();
+		com.hongqiang.shop.modules.entity.Order order = new com.hongqiang.shop.modules.entity.Order();
+		//购物车不存在或者接收人为空，则返回空
 		if (cart == null || cart.getMember() == null
 				|| cart.getCartItems().isEmpty() || receiver == null
 				|| paymentMethod == null || shippingMethod == null) {
-			return localOrder;
+			return order;
 		}
-		localOrder = build(cart, receiver, paymentMethod, shippingMethod,
+		//根据购物车，接收人，付款方式，配送方式，优惠劵，发票，账户余额项生成订单
+		order = build(cart, receiver, paymentMethod, shippingMethod,
 				couponCode, isInvoice, invoiceTitle, useBalance, memo);
-		localOrder.setSn(this.snDao.generate(Sn.Type.orders));
+		order.setSn(this.snDao.generate(Sn.Type.orders));
+		//付款方式为在线付款时
 		if (paymentMethod.getType() == PaymentMethod.Type.online) {
-			localOrder.setLockExpire(DateUtils.addSeconds(new Date(), 10));
-			localOrder.setOperator(operator);
+			order.setLockExpire(DateUtils.addSeconds(new Date(), 10));
+			order.setOperator(operator);
 		}
-		if (localOrder.getCouponCode() != null) {
+		//设置优惠劵
+		if (order.getCouponCode() != null) {
 			couponCode.setIsUsed(Boolean.valueOf(true));
 			couponCode.setUsedDate(new Date());
 			this.couponCodeDao.merge(couponCode);
 		}
+		//设置促销
 		Iterator<Promotion> promotionIterator = cart.getPromotions().iterator();
 		while (promotionIterator.hasNext()) {
-			Promotion localPromotion = (Promotion) promotionIterator.next();
-			Iterator<Coupon> couponIterator = ((Promotion) localPromotion)
-					.getCoupons().iterator();
+			Promotion promotion = (Promotion) promotionIterator.next();
+			Iterator<Coupon> couponIterator = promotion.getCoupons().iterator();
 			while (couponIterator.hasNext()) {
-				Coupon localCoupon = (Coupon) couponIterator.next();
-				localOrder.getCoupons().add(localCoupon);
+				Coupon coupon = (Coupon) couponIterator.next();
+				order.getCoupons().add(coupon);
 			}
 		}
-		Setting localSetting = SettingUtils.get();
-		if ((localSetting.getStockAllocationTime() == Setting.StockAllocationTime.order)
-				|| ((localSetting.getStockAllocationTime() == Setting.StockAllocationTime.payment) && ((localOrder
-						.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment) || (localOrder
-						.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid))))
-			localOrder.setIsAllocatedStock(Boolean.valueOf(true));
+		//
+		Setting setting = SettingUtils.get();
+		if ((setting.getStockAllocationTime() == Setting.StockAllocationTime.order)
+				|| ((setting.getStockAllocationTime() == Setting.StockAllocationTime.payment)
+						&& ((order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment) 
+								|| (order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid))))
+			order.setIsAllocatedStock(Boolean.valueOf(true));
 		else
-			localOrder.setIsAllocatedStock(Boolean.valueOf(false));
-		this.orderDao.persist(localOrder);
-		OrderLog localOrderLog = new OrderLog();
-		localOrderLog.setType(OrderLog.Type.create);
-		localOrderLog.setOperator(operator != null ? operator.getUsername()
-				: null);
-		localOrderLog.setOrder(localOrder);
-		this.orderLogDao.persist(localOrderLog);
-		Member localMember = cart.getMember();
-		if (localOrder.getAmountPaid().compareTo(new BigDecimal(0)) > 0) {
-			this.memberDao.lock(localMember, LockModeType.PESSIMISTIC_WRITE);
-			localMember.setBalance(localMember.getBalance().subtract(
-					localOrder.getAmountPaid()));
-			this.memberDao.merge(localMember);
-			Deposit localDeposit = new Deposit();
-			localDeposit.setType(operator != null ? Deposit.Type.adminPayment
-					: Deposit.Type.memberPayment);
-			localDeposit.setCredit(new BigDecimal(0));
-			localDeposit.setDebit(localOrder.getAmountPaid());
-			localDeposit.setBalance(localMember.getBalance());
-			localDeposit.setOperator(operator != null ? operator.getUsername()
-					: null);
-			localDeposit.setMember(localMember);
-			localDeposit.setOrder(localOrder);
-			this.depositDao.persist(localDeposit);
+			order.setIsAllocatedStock(Boolean.valueOf(false));
+		//保存订单
+		this.orderDao.persist(order);
+		//存入订单日志表中
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.create);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
+		//如果会员账号余额大于订单金额，则从账号余额中扣除
+		Member member = cart.getMember();
+		if (order.getAmountPaid().compareTo(new BigDecimal(0)) > 0) {
+			this.memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
+			member.setBalance(member.getBalance().subtract(order.getAmountPaid()));
+			this.memberDao.merge(member);
+			Deposit deposit = new Deposit();
+			deposit.setType(operator != null ? Deposit.Type.adminPayment : Deposit.Type.memberPayment);
+			deposit.setCredit(new BigDecimal(0));
+			deposit.setDebit(order.getAmountPaid());
+			deposit.setBalance(member.getBalance());
+			deposit.setOperator(operator != null ? operator.getUsername() : null);
+			deposit.setMember(member);
+			deposit.setOrder(order);
+			this.depositDao.persist(deposit);
 		}
-		if ((localSetting.getStockAllocationTime() == Setting.StockAllocationTime.order)
-				|| ((localSetting.getStockAllocationTime() == Setting.StockAllocationTime.payment) && ((localOrder
-						.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment) || (localOrder
+		//设置订单中的商品的可分配库存
+		if ((setting.getStockAllocationTime() == Setting.StockAllocationTime.order)
+				|| ((setting.getStockAllocationTime() == Setting.StockAllocationTime.payment) && ((order
+						.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment) || (order
 						.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid)))) {
-			Iterator<OrderItem> localIterator = localOrder.getOrderItems()
-					.iterator();
-			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+			Iterator<OrderItem> iterator = order.getOrderItems().iterator();
+			while (iterator.hasNext()) {
+				OrderItem orderItem = (OrderItem) iterator.next();
+				if (orderItem == null)
 					continue;
-				Product localProduct = localOrderItem.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null) || (localProduct.getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product,LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				localProduct
-						.setAllocatedStock(Integer
-								.valueOf(localProduct.getAllocatedStock()
-										.intValue()
-										+ (localOrderItem.getQuantity()
-												.intValue() - localOrderItem
-												.getShippedQuantity()
-												.intValue())));
-				this.productDao.merge(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										+ (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build(localProduct);
+				this.staticService.build(product);
 			}
 		}
+		//从购物车中移除商品
 		this.cartDao.remove(cart);
-		return localOrder;
+		return order;
 	}
 
-	public void update(com.hongqiang.shop.modules.entity.Order order,
-			Admin operator) {
+	public void update(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
 		}
-		com.hongqiang.shop.modules.entity.Order localOrder = (com.hongqiang.shop.modules.entity.Order) this.orderDao
-				.find(order.getId());
+		com.hongqiang.shop.modules.entity.Order localOrder = (com.hongqiang.shop.modules.entity.Order) this.orderDao.find(order.getId());
+		//订单的商品为可分配库存的状态,则修改商品的库存
 		if (localOrder.getIsAllocatedStock().booleanValue()) {
-			Iterator<OrderItem> localIterator = localOrder.getOrderItems()
-					.iterator();
-			Product localProduct;
-			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+			Iterator<OrderItem> iterator = localOrder.getOrderItems().iterator();
+			while (iterator.hasNext()) {
+				OrderItem orderItem = (OrderItem) iterator.next();
+				if (orderItem == null)
 					continue;
-				localProduct = localOrderItem.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null) || (localProduct.getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product,LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				localProduct
-						.setAllocatedStock(Integer
-								.valueOf(localProduct.getAllocatedStock()
-										.intValue()
-										- (localOrderItem.getQuantity()
-												.intValue() - localOrderItem
-												.getShippedQuantity()
-												.intValue())));
-				this.productDao.merge(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										- (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build(localProduct);
+				this.staticService.build(product);
 			}
-			localIterator = order.getOrderItems().iterator();
+			Iterator<OrderItem> localIterator = order.getOrderItems().iterator();
 			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+				OrderItem orderItem = (OrderItem) localIterator.next();
+				if (orderItem == null)
 					continue;
-				localProduct = localOrderItem.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null) || (localProduct.getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product,LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				localProduct
-						.setAllocatedStock(Integer
-								.valueOf(localProduct.getAllocatedStock()
-										.intValue()
-										+ (localOrderItem.getQuantity()
-												.intValue() - localOrderItem
-												.getShippedQuantity()
-												.intValue())));
-				this.productDao.merge(localProduct);
-				this.productDao.flush();
-				this.staticService.build(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										+ (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
+				this.orderDao.flush();
+				this.staticService.build(product);
 			}
 		}
 		this.orderDao.merge(order);
+		//存入订单日志表中
 		OrderLog orderLog = new OrderLog();
 		orderLog.setType(OrderLog.Type.modify);
 		orderLog.setOperator(operator != null ? operator.getUsername() : null);
@@ -499,246 +464,210 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
-	public void confirm(com.hongqiang.shop.modules.entity.Order order,
-			Admin operator) {
+	public void confirm(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
 		}
 		order.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.confirmed);
 		this.orderDao.merge(order);
-		OrderLog localOrderLog = new OrderLog();
-		localOrderLog.setType(OrderLog.Type.confirm);
-		localOrderLog.setOperator(operator != null ? operator.getUsername()
-				: null);
-		localOrderLog.setOrder(order);
-		this.orderLogDao.persist(localOrderLog);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.confirm);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
 	}
 
-	public void complete(com.hongqiang.shop.modules.entity.Order order,
-			Admin operator) {
+	public void complete(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
 		}
-		Member localMember = order.getMember();
-		this.memberDao.lock(localMember, LockModeType.PESSIMISTIC_WRITE);
+		Member member = order.getMember();
+		this.memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
+		//如果订单的配送状态为部分送达或者完成配送，就更改用户的积分，并设置优惠劵已被该用户使用
 		if ((order.getShippingStatus() == com.hongqiang.shop.modules.entity.Order.ShippingStatus.partialShipment)
 				|| (order.getShippingStatus() == com.hongqiang.shop.modules.entity.Order.ShippingStatus.shipped)) {
-			localMember.setPoint(Long.valueOf(localMember.getPoint()
-					.longValue() + order.getPoint().intValue()));
+			member.setPoint(Long.valueOf(member.getPoint().longValue() + order.getPoint().intValue()));
 			Iterator<Coupon> localIterator = order.getCoupons().iterator();
 			while (localIterator.hasNext()) {
 				Coupon coupon = (Coupon) localIterator.next();
-				this.couponCodeDao.build(coupon, localMember);
+				this.couponCodeDao.build(coupon, member);
 			}
 		}
+		//如果订单的配送状态为未配送或者退货状态，则把订单中的优惠劵返回
 		if ((order.getShippingStatus() == com.hongqiang.shop.modules.entity.Order.ShippingStatus.unshipped)
 				|| (order.getShippingStatus() == com.hongqiang.shop.modules.entity.Order.ShippingStatus.returned)) {
-			CouponCode localCouponCode = order.getCouponCode();
-			if (localCouponCode != null) {
-				localCouponCode.setIsUsed(Boolean.valueOf(false));
-				localCouponCode.setUsedDate(null);
-				this.couponCodeDao.merge(localCouponCode);
+			CouponCode couponCode = order.getCouponCode();
+			if (couponCode != null) {
+				couponCode.setIsUsed(Boolean.valueOf(false));
+				couponCode.setUsedDate(null);
+				this.couponCodeDao.merge(couponCode);
 				order.setCouponCode(null);
 				this.orderDao.merge(order);
 			}
 		}
-		localMember.setAmount(localMember.getAmount()
-				.add(order.getAmountPaid()));
-		if (!localMember.getMemberRank().getIsSpecial().booleanValue()) {
-			MemberRank localMemberRank = this.memberRankDao
-					.findByAmount(localMember.getAmount());
-			if ((localMemberRank != null)
-					&& (localMemberRank.getAmount().compareTo(
-							localMember.getMemberRank().getAmount()) > 0))
-				localMember.setMemberRank(localMemberRank);
+		//设置会员金额
+		member.setAmount(member.getAmount().add(order.getAmountPaid()));
+		//设置会员等级
+		if (!member.getMemberRank().getIsSpecial().booleanValue()) {
+			MemberRank memberRank = this.memberRankDao.findByAmount(member.getAmount());
+			if ((memberRank != null) && (memberRank.getAmount().compareTo(member.getMemberRank().getAmount()) > 0))
+				member.setMemberRank(memberRank);
 		}
-		this.memberDao.merge(localMember);
-		Product localProduct;
+		this.memberDao.merge(member);
+		//设置商品的可分配库存数量
 		if (order.getIsAllocatedStock().booleanValue()) {
-			Iterator<OrderItem> localIterator = order.getOrderItems()
-					.iterator();
+			Iterator<OrderItem> localIterator = order.getOrderItems().iterator();
 			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+				OrderItem orderItem = (OrderItem) localIterator.next();
+				if (orderItem == null)
 					continue;
-				localProduct = localOrderItem.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null) || (localProduct.getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product,LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				localProduct
-						.setAllocatedStock(Integer
-								.valueOf(localProduct.getAllocatedStock()
-										.intValue()
-										- (localOrderItem.getQuantity()
-												.intValue() - localOrderItem
-												.getShippedQuantity()
-												.intValue())));
-				this.productDao.merge(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										- (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build(localProduct);
+				this.staticService.build(product);
 			}
 			order.setIsAllocatedStock(Boolean.valueOf(false));
 		}
 		Iterator<OrderItem> localIterator = order.getOrderItems().iterator();
 		while (localIterator.hasNext()) {
-			OrderItem localOrderItem = (OrderItem) localIterator.next();
-			if (localOrderItem == null)
+			OrderItem orderItem = (OrderItem) localIterator.next();
+			if (orderItem == null)
 				continue;
-			localProduct = localOrderItem.getProduct();
-			this.productDao.lock(localProduct, LockModeType.PESSIMISTIC_WRITE);
-			if (localProduct == null)
+			Product product = orderItem.getProduct();
+			this.productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+			if (product == null)
 				continue;
-			Integer localInteger = localOrderItem.getQuantity();
-			Calendar localCalendar1 = Calendar.getInstance();
-			// Calendar localCalendar2 = DateUtils.toCalendar(localProduct
-			// .getWeekSalesDate());
-			// Calendar localCalendar3 = DateUtils.toCalendar(localProduct
-			// .getMonthSalesDate());
-			Calendar localCalendar2 = Calendar.getInstance();
-			localCalendar2.setTime(localProduct.getWeekSalesDate());
-			Calendar localCalendar3 = Calendar.getInstance();
-			localCalendar3.setTime(localProduct.getMonthSalesDate());
-			if ((localCalendar1.get(1) != localCalendar2.get(1))
-					|| (localCalendar1.get(3) > localCalendar2.get(3)))
-				localProduct
-						.setWeekSales(Long.valueOf(localInteger.intValue()));
+			//设置月销量和周销量
+			Integer quantity = orderItem.getQuantity();
+			Calendar currentDate = Calendar.getInstance();
+			Calendar weekSalesDate = Calendar.getInstance();
+			weekSalesDate.setTime(product.getWeekSalesDate());
+			Calendar monthSalesDate = Calendar.getInstance();
+			monthSalesDate.setTime(product.getMonthSalesDate());
+			if ((currentDate.get(Calendar.YEAR) != weekSalesDate.get(Calendar.YEAR)) 
+					|| (currentDate.get(Calendar.WEEK_OF_YEAR) > weekSalesDate.get(Calendar.WEEK_OF_YEAR)))
+				product.setWeekSales(Long.valueOf(quantity.intValue()));
 			else
-				localProduct.setWeekSales(Long.valueOf(localProduct
-						.getWeekSales().longValue() + localInteger.intValue()));
-			if ((localCalendar1.get(1) != localCalendar3.get(1))
-					|| (localCalendar1.get(2) > localCalendar3.get(2)))
-				localProduct
-						.setMonthSales(Long.valueOf(localInteger.intValue()));
+				product.setWeekSales(Long.valueOf(product.getWeekSales().longValue() + quantity.intValue()));
+			if ((currentDate.get(Calendar.YEAR) != monthSalesDate.get(Calendar.YEAR)) 
+					|| (currentDate.get(Calendar.MONTH) > monthSalesDate.get(Calendar.MONTH)))
+				product.setMonthSales(Long.valueOf(quantity.intValue()));
 			else
-				localProduct
-						.setMonthSales(Long.valueOf(localProduct
-								.getMonthSales().longValue()
-								+ localInteger.intValue()));
-			localProduct.setSales(Long.valueOf(localProduct.getSales()
-					.longValue() + localInteger.intValue()));
-			localProduct.setWeekSalesDate(new Date());
-			localProduct.setMonthSalesDate(new Date());
-			this.productDao.merge(localProduct);
+				product.setMonthSales(Long.valueOf(product.getMonthSales().longValue() + quantity.intValue()));
+			//设置总销量
+			product.setSales(Long.valueOf(product.getSales().longValue() + quantity.intValue()));
+			product.setWeekSalesDate(new Date());
+			product.setMonthSalesDate(new Date());
+			this.productDao.merge(product);
 			this.orderDao.flush();
-			this.staticService.build(localProduct);
+			this.staticService.build(product);
 		}
 		order.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.completed);
 		order.setExpire(null);
 		this.orderDao.merge(order);
-		OrderLog localOrderLog = new OrderLog();
-		localOrderLog.setType(OrderLog.Type.complete);
-		localOrderLog.setOperator(operator != null ? operator.getUsername()
-				: null);
-		localOrderLog.setOrder(order);
-		this.orderLogDao.persist(localOrderLog);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.complete);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
 	}
 
-	public void cancel(com.hongqiang.shop.modules.entity.Order order,
-			Admin operator) {
+	public void cancel(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
 		}
-		CouponCode localCouponCode = order.getCouponCode();
-		if (localCouponCode != null) {
-			localCouponCode.setIsUsed(Boolean.valueOf(false));
-			localCouponCode.setUsedDate(null);
-			this.couponCodeDao.merge(localCouponCode);
+		//设置优惠劵
+		CouponCode couponCode = order.getCouponCode();
+		if (couponCode != null) {
+			couponCode.setIsUsed(Boolean.valueOf(false));
+			couponCode.setUsedDate(null);
+			this.couponCodeDao.merge(couponCode);
 			order.setCouponCode(null);
 			this.orderDao.merge(order);
 		}
+		//设置商品可用库存
 		if (order.getIsAllocatedStock().booleanValue()) {
-			Iterator<OrderItem> localIterator = order.getOrderItems()
-					.iterator();
+			Iterator<OrderItem> localIterator = order.getOrderItems().iterator();
 			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+				OrderItem orderItem = (OrderItem) localIterator.next();
+				if (orderItem == null)
 					continue;
-				Product localProduct = localOrderItem.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null) || (localProduct.getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				localProduct
-						.setAllocatedStock(Integer
-								.valueOf(localProduct.getAllocatedStock()
-										.intValue()
-										- (localOrderItem.getQuantity()
-												.intValue() - localOrderItem
-												.getShippedQuantity()
-												.intValue())));
-				this.productDao.merge(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										- (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build(localProduct);
+				this.staticService.build(product);
 			}
 			order.setIsAllocatedStock(Boolean.valueOf(false));
 		}
 		order.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.cancelled);
 		order.setExpire(null);
 		this.orderDao.merge(order);
-		OrderLog localOrderLog = new OrderLog();
-		localOrderLog.setType(OrderLog.Type.cancel);
-		localOrderLog.setOperator(operator != null ? operator.getUsername()
-				: null);
-		localOrderLog.setOrder(order);
-		this.orderLogDao.persist(localOrderLog);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.cancel);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
 	}
 
-	public void payment(com.hongqiang.shop.modules.entity.Order order,
-			Payment payment, Admin operator) {
+	public void payment(com.hongqiang.shop.modules.entity.Order order, Payment payment, Admin operator) {
 		if (order == null || payment == null) {
 			return;
 		}
 		this.orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 		payment.setOrder(order);
 		this.paymentDao.merge(payment);
+		//设置会员账号预存款
 		if (payment.getType() == Payment.Type.deposit) {
-			Member localMember = order.getMember();
-			this.memberDao.lock(localMember, LockModeType.PESSIMISTIC_WRITE);
-			localMember.setBalance(localMember.getBalance().subtract(
-					payment.getAmount()));
-			this.memberDao.merge(localMember);
-			Deposit localDeposit = new Deposit();
-			localDeposit.setType(operator != null ? Deposit.Type.adminPayment
-					: Deposit.Type.memberPayment);
-			localDeposit.setCredit(new BigDecimal(0));
-			localDeposit.setDebit(payment.getAmount());
-			localDeposit.setBalance(localMember.getBalance());
-			localDeposit.setOperator(operator != null ? operator.getUsername()
-					: null);
-			localDeposit.setMember(localMember);
-			localDeposit.setOrder(order);
-			this.depositDao.persist(localDeposit);
+			Member member = order.getMember();
+			this.memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
+			member.setBalance(member.getBalance().subtract(payment.getAmount()));
+			this.memberDao.merge(member);
+			Deposit deposit = new Deposit();
+			deposit.setType(operator != null ? Deposit.Type.adminPayment : Deposit.Type.memberPayment);
+			deposit.setCredit(new BigDecimal(0));
+			deposit.setDebit(payment.getAmount());
+			deposit.setBalance(member.getBalance());
+			deposit.setOperator(operator != null ? operator.getUsername() : null);
+			deposit.setMember(member);
+			deposit.setOrder(order);
+			this.depositDao.persist(deposit);
 		}
-		Setting localSetting = SettingUtils.get();
+		//设置商品的可分配库存数量
+		Setting setting = SettingUtils.get();
 		if ((!order.getIsAllocatedStock().booleanValue())
-				&& (((Setting) localSetting).getStockAllocationTime() == Setting.StockAllocationTime.payment)) {
-			Iterator<OrderItem> localIterator = order.getOrderItems()
-					.iterator();
+				&& (((Setting) setting).getStockAllocationTime() == Setting.StockAllocationTime.payment)) {
+			Iterator<OrderItem> localIterator = order.getOrderItems().iterator();
 			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+				OrderItem orderItem = (OrderItem) localIterator.next();
+				if (orderItem == null)
 					continue;
-				Product localProduct = ((OrderItem) localOrderItem)
-						.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null) || (localProduct.getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				localProduct.setAllocatedStock(Integer.valueOf(localProduct
-						.getAllocatedStock().intValue()
-						+ (((OrderItem) localOrderItem).getQuantity()
-								.intValue() - ((OrderItem) localOrderItem)
-								.getShippedQuantity().intValue())));
-				this.productDao.merge(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+						+ (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build(localProduct);
+				this.staticService.build(product);
 			}
 			order.setIsAllocatedStock(Boolean.valueOf(true));
 		}
+		//设置订单总额
 		order.setAmountPaid(order.getAmountPaid().add(payment.getAmount()));
 		order.setFee(payment.getFee());
 		order.setExpire(null);
+		//设置订单状态和支付状态
 		if (order.getAmountPaid().compareTo(order.getAmount()) >= 0) {
 			order.setOrderStatus(com.hongqiang.shop.modules.entity.Order.OrderStatus.confirmed);
 			order.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.paid);
@@ -747,38 +676,35 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 			order.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialPayment);
 		}
 		this.orderDao.merge(order);
-		OrderLog localOrderLog = new OrderLog();
-		((OrderLog) localOrderLog).setType(OrderLog.Type.payment);
-		((OrderLog) localOrderLog).setOperator(operator != null ? operator
-				.getUsername() : null);
-		((OrderLog) localOrderLog).setOrder(order);
-		this.orderLogDao.persist(localOrderLog);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.payment);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
 	}
 
-	public void refunds(com.hongqiang.shop.modules.entity.Order order,
-			Refunds refunds, Admin operator) {
+	public void refunds(com.hongqiang.shop.modules.entity.Order order, Refunds refunds, Admin operator) {
 		if (order == null || refunds == null) {
 			return;
 		}
 		this.orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 		refunds.setOrder(order);
 		this.refundsDao.persist(refunds);
+		//退款类型为预付款，则把金额充值进账户余额
 		if (refunds.getType() == Refunds.Type.deposit) {
-			Member localMember = order.getMember();
-			this.memberDao.lock(localMember, LockModeType.PESSIMISTIC_WRITE);
-			((Member) localMember).setBalance(((Member) localMember)
-					.getBalance().add(refunds.getAmount()));
-			this.memberDao.merge(localMember);
-			Deposit localDeposit = new Deposit();
-			localDeposit.setType(Deposit.Type.adminRefunds);
-			localDeposit.setCredit(refunds.getAmount());
-			localDeposit.setDebit(new BigDecimal(0));
-			localDeposit.setBalance(((Member) localMember).getBalance());
-			localDeposit.setOperator(operator != null ? operator.getUsername()
-					: null);
-			localDeposit.setMember((Member) localMember);
-			localDeposit.setOrder(order);
-			this.depositDao.persist(localDeposit);
+			Member member = order.getMember();
+			this.memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
+			member.setBalance(member.getBalance().add(refunds.getAmount()));
+			this.memberDao.merge(member);
+			Deposit deposit = new Deposit();
+			deposit.setType(Deposit.Type.adminRefunds);
+			deposit.setCredit(refunds.getAmount());
+			deposit.setDebit(new BigDecimal(0));
+			deposit.setBalance(member.getBalance());
+			deposit.setOperator(operator != null ? operator.getUsername() : null);
+			deposit.setMember((Member) member);
+			deposit.setOrder(order);
+			this.depositDao.persist(deposit);
 		}
 		order.setAmountPaid(order.getAmountPaid().subtract(refunds.getAmount()));
 		order.setExpire(null);
@@ -787,88 +713,62 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		else if (order.getAmountPaid().compareTo(new BigDecimal(0)) > 0)
 			order.setPaymentStatus(com.hongqiang.shop.modules.entity.Order.PaymentStatus.partialRefunds);
 		this.orderDao.merge(order);
-		OrderLog localOrderLog = new OrderLog();
-		((OrderLog) localOrderLog).setType(OrderLog.Type.refunds);
-		((OrderLog) localOrderLog).setOperator(operator != null ? operator
-				.getUsername() : null);
-		((OrderLog) localOrderLog).setOrder(order);
-		this.orderLogDao.persist(localOrderLog);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.refunds);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
 	}
 
-	public void shipping(com.hongqiang.shop.modules.entity.Order order,
-			Shipping shipping, Admin operator) {
-		if (order == null || shipping == null
-				|| shipping.getShippingItems().isEmpty()) {
+	public void shipping(com.hongqiang.shop.modules.entity.Order order, Shipping shipping, Admin operator) {
+		if (order == null || shipping == null || shipping.getShippingItems().isEmpty()) {
 			return;
 		}
 		this.orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
-		Setting localSetting = SettingUtils.get();
+		Setting setting = SettingUtils.get();
 		if ((!order.getIsAllocatedStock().booleanValue())
-				&& (localSetting.getStockAllocationTime() == Setting.StockAllocationTime.ship)) {
-			Iterator<OrderItem> localIterator = order.getOrderItems()
-					.iterator();
+				&& (setting.getStockAllocationTime() == Setting.StockAllocationTime.ship)) {
+			Iterator<OrderItem> localIterator = order.getOrderItems().iterator();
 			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+				OrderItem orderItem = (OrderItem) localIterator.next();
+				if (orderItem == null)
 					continue;
-				Product localProduct = ((OrderItem) localOrderItem)
-						.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null)
-						|| (((Product) localProduct).getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				((Product) localProduct)
-						.setAllocatedStock(Integer
-								.valueOf(((Product) localProduct)
-										.getAllocatedStock().intValue()
-										+ (((OrderItem) localOrderItem)
-												.getQuantity().intValue() - ((OrderItem) localOrderItem)
-												.getShippedQuantity()
-												.intValue())));
-				this.productDao.merge(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										+ (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build((Product) localProduct);
+				this.staticService.build(product);
 			}
 			order.setIsAllocatedStock(Boolean.valueOf(true));
 		}
 		shipping.setOrder(order);
 		this.shippingDao.persist(shipping);
-		Iterator<ShippingItem> localIterator = shipping.getShippingItems()
-				.iterator();
+		Iterator<ShippingItem> localIterator = shipping.getShippingItems().iterator();
 		while (localIterator.hasNext()) {
-			ShippingItem localShippingItem = (ShippingItem) localIterator
-					.next();
-			OrderItem localOrderItem = order
-					.getOrderItem(((ShippingItem) localShippingItem).getSn());
-			if (localOrderItem == null)
+			ShippingItem shippingItem = (ShippingItem) localIterator.next();
+			OrderItem orderItem = order.getOrderItem(shippingItem.getSn());
+			if (orderItem == null)
 				continue;
-			Product localProduct = ((OrderItem) localOrderItem).getProduct();
-			this.productDao.lock(localProduct, LockModeType.PESSIMISTIC_WRITE);
-			if (localProduct != null) {
-				if (localProduct.getStock() != null) {
-					localProduct.setStock(Integer.valueOf(localProduct
-							.getStock().intValue()
-							- ((ShippingItem) localShippingItem).getQuantity()
-									.intValue()));
+			Product product = orderItem.getProduct();
+			this.productDao.lock(product, LockModeType.PESSIMISTIC_WRITE);
+			if (product != null) {
+				if (product.getStock() != null) {
+					product.setStock(Integer.valueOf(product.getStock().intValue() - shippingItem.getQuantity().intValue()));
 					if (order.getIsAllocatedStock().booleanValue())
-						localProduct.setAllocatedStock(Integer
-								.valueOf(localProduct.getAllocatedStock()
-										.intValue()
-										- ((ShippingItem) localShippingItem)
-												.getQuantity().intValue()));
+						product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										- shippingItem.getQuantity().intValue()));
 				}
-				this.productDao.merge(localProduct);
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build(localProduct);
+				this.staticService.build(product);
 			}
-			this.orderItemDao.lock(localOrderItem,
-					LockModeType.PESSIMISTIC_WRITE);
-			((OrderItem) localOrderItem).setShippedQuantity(Integer
-					.valueOf(((OrderItem) localOrderItem).getShippedQuantity()
-							.intValue()
-							+ ((ShippingItem) localShippingItem).getQuantity()
-									.intValue()));
+			this.orderItemDao.lock(orderItem, LockModeType.PESSIMISTIC_WRITE);
+			orderItem.setShippedQuantity(Integer.valueOf(orderItem.getShippedQuantity().intValue()
+							+ shippingItem.getQuantity().intValue()));
 		}
 		if (order.getShippedQuantity() >= order.getQuantity()) {
 			order.setShippingStatus(com.hongqiang.shop.modules.entity.Order.ShippingStatus.shipped);
@@ -878,37 +778,29 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		}
 		order.setExpire(null);
 		this.orderDao.merge(order);
-		OrderLog localOrderLog = new OrderLog();
-		localOrderLog.setType(OrderLog.Type.shipping);
-		localOrderLog.setOperator(operator != null ? operator.getUsername()
-				: null);
-		localOrderLog.setOrder(order);
-		this.orderLogDao.persist(localOrderLog);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.shipping);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
 	}
 
-	public void returns(com.hongqiang.shop.modules.entity.Order order,
-			Returns returns, Admin operator) {
-		if (order == null || returns == null
-				|| returns.getReturnsItems().isEmpty()) {
+	public void returns(com.hongqiang.shop.modules.entity.Order order, Returns returns, Admin operator) {
+		if (order == null || returns == null || returns.getReturnsItems().isEmpty()) {
 			return;
 		}
 		this.orderDao.lock(order, LockModeType.PESSIMISTIC_WRITE);
 		returns.setOrder(order);
 		this.returnsDao.persist(returns);
-		Iterator<ReturnsItem> localIterator = returns.getReturnsItems()
-				.iterator();
+		Iterator<ReturnsItem> localIterator = returns.getReturnsItems() .iterator();
 		while (localIterator.hasNext()) {
-			ReturnsItem localReturnsItem = (ReturnsItem) localIterator.next();
-			OrderItem localOrderItem = order
-					.getOrderItem(((ReturnsItem) localReturnsItem).getSn());
-			if (localOrderItem == null)
+			ReturnsItem returnsItem = (ReturnsItem) localIterator.next();
+			OrderItem orderItem = order.getOrderItem(returnsItem.getSn());
+			if (orderItem == null)
 				continue;
-			this.orderItemDao.lock(localOrderItem,
-					LockModeType.PESSIMISTIC_WRITE);
-			localOrderItem.setReturnQuantity(Integer
-					.valueOf(localOrderItem.getReturnQuantity().intValue()
-							+ ((ReturnsItem) localReturnsItem).getQuantity()
-									.intValue()));
+			this.orderItemDao.lock(orderItem,LockModeType.PESSIMISTIC_WRITE);
+			orderItem.setReturnQuantity(Integer.valueOf(orderItem.getReturnQuantity().intValue()
+							+ returnsItem.getQuantity().intValue()));
 		}
 		if (order.getReturnQuantity() >= order.getShippedQuantity())
 			order.setShippingStatus(com.hongqiang.shop.modules.entity.Order.ShippingStatus.returned);
@@ -916,12 +808,11 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 			order.setShippingStatus(com.hongqiang.shop.modules.entity.Order.ShippingStatus.partialReturns);
 		order.setExpire(null);
 		this.orderDao.merge(order);
-		OrderLog localOrderLog = new OrderLog();
-		localOrderLog.setType(OrderLog.Type.returns);
-		localOrderLog.setOperator(operator != null ? operator.getUsername()
-				: null);
-		localOrderLog.setOrder(order);
-		this.orderLogDao.persist(localOrderLog);
+		OrderLog orderLog = new OrderLog();
+		orderLog.setType(OrderLog.Type.returns);
+		orderLog.setOperator(operator != null ? operator.getUsername() : null);
+		orderLog.setOrder(order);
+		this.orderLogDao.persist(orderLog);
 	}
 
 	@Transactional(readOnly = true)
@@ -937,42 +828,32 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 	@Transactional
 	public com.hongqiang.shop.modules.entity.Order update(
 			com.hongqiang.shop.modules.entity.Order order) {
-		return (com.hongqiang.shop.modules.entity.Order) this.orderDao
-				.merge(order);
+		return (com.hongqiang.shop.modules.entity.Order) this.orderDao.merge(order);
 	}
 
 	@Transactional
 	public com.hongqiang.shop.modules.entity.Order update(
 			com.hongqiang.shop.modules.entity.Order order,
 			String[] ignoreProperties) {
-		return (com.hongqiang.shop.modules.entity.Order) this.orderDao.update(
-				order, ignoreProperties);
+		return (com.hongqiang.shop.modules.entity.Order) this.orderDao.update(order, ignoreProperties);
 	}
 
 	public void delete(com.hongqiang.shop.modules.entity.Order order) {
 		if (order.getIsAllocatedStock().booleanValue()) {
-			Iterator<OrderItem> localIterator = order.getOrderItems()
-					.iterator();
+			Iterator<OrderItem> localIterator = order.getOrderItems().iterator();
 			while (localIterator.hasNext()) {
-				OrderItem localOrderItem = (OrderItem) localIterator.next();
-				if (localOrderItem == null)
+				OrderItem orderItem = (OrderItem) localIterator.next();
+				if (orderItem == null)
 					continue;
-				Product localProduct = localOrderItem.getProduct();
-				this.productDao.lock(localProduct,
-						LockModeType.PESSIMISTIC_WRITE);
-				if ((localProduct == null) || (localProduct.getStock() == null))
+				Product product = orderItem.getProduct();
+				this.productDao.lock(product,LockModeType.PESSIMISTIC_WRITE);
+				if ((product == null) || (product.getStock() == null))
 					continue;
-				localProduct
-						.setAllocatedStock(Integer
-								.valueOf(localProduct.getAllocatedStock()
-										.intValue()
-										- (localOrderItem.getQuantity()
-												.intValue() - localOrderItem
-												.getShippedQuantity()
-												.intValue())));
-				this.productDao.merge(localProduct);
+				product.setAllocatedStock(Integer.valueOf(product.getAllocatedStock().intValue()
+										- (orderItem.getQuantity().intValue() - orderItem.getShippedQuantity().intValue())));
+				this.productDao.merge(product);
 				this.orderDao.flush();
-				this.staticService.build(localProduct);
+				this.staticService.build(product);
 			}
 		}
 		this.orderDao.delete(order);

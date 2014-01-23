@@ -1,6 +1,6 @@
 
 var shop = {
-	base: "${base}${frontPath}",
+	base: "${base}",
 	locale: "${locale}"
 };
 

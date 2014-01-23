@@ -73,7 +73,7 @@ public class OrderItem extends BaseEntity
   @JsonProperty
   @NotNull
   @Min(0L)
-  @Digits(integer=12, fraction=3)
+//  @Digits(integer=12, fraction=3)
   @Column(nullable=false, precision=21, scale=6)
   public BigDecimal getPrice()
   {

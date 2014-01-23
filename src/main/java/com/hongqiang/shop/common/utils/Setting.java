@@ -352,7 +352,7 @@ public class Setting implements Serializable {
 
 	@NotNull
 	@Min(0L)
-	@Digits(integer = 3, fraction = 3)
+//	@Digits(integer = 3, fraction = 3)
 	public Double getDefaultMarketPriceScale() {
 		return this.defaultMarketPriceScale;
 	}
@@ -739,7 +739,7 @@ public class Setting implements Serializable {
 
 	@NotNull
 	@Min(0L)
-	@Digits(integer = 3, fraction = 3)
+//	@Digits(integer = 3, fraction = 3)
 	public Double getDefaultPointScale() {
 		return this.defaultPointScale;
 	}
@@ -832,7 +832,7 @@ public class Setting implements Serializable {
 
 	@NotNull
 	@Min(0L)
-	@Digits(integer = 3, fraction = 3)
+//	@Digits(integer = 3, fraction = 3)
 	public Double getTaxRate() {
 		return this.taxRate;
 	}
@@ -920,6 +920,7 @@ public class Setting implements Serializable {
 		return StringUtils.split(this.uploadFileExtension, SEPARATOR);
 	}
 
+	//设置小数的精度
 	public BigDecimal setScale(BigDecimal amount) {
 		if (amount == null)
 			return null;

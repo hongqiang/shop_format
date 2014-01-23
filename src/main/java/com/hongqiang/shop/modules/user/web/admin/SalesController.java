@@ -29,13 +29,11 @@ public enum Type
   @Autowired
   private OrderService orderService;
 
-@RequestMapping(value={"/view"}, method=RequestMethod.GET)
-  public String view(Type type, String beginDateString, String endDateString, Model model)
+  @RequestMapping(value={"/view"}, method=RequestMethod.GET)
+  public String view(Type type, Date beginDate, Date endDate, Model model)
   {
     if (type == null)
       type = Type.month;
-    Date beginDate = com.hongqiang.shop.common.utils.DateUtils.parseDate(beginDateString);
-    Date endDate = com.hongqiang.shop.common.utils.DateUtils.parseDate(endDateString);
     if (beginDate == null)
       beginDate = DateUtils.addMonths(new Date(), -11);
     if (endDate == null)

@@ -136,17 +136,14 @@ public class ProductController extends BaseController {
 		Iterator<ProductImage> productImageIterator = product.getProductImages().iterator();
 		while (productImageIterator.hasNext()) {
 			ProductImage productImage = (ProductImage) productImageIterator.next();
-			if ((productImage == null)
-					|| (productImage.isEmpty())) {
+			if ((productImage == null) || (productImage.isEmpty())) {
 				productImageIterator.remove();
 			} else {
 				if ((productImage.getFile() == null)
 						|| ( productImage.getFile().isEmpty())
-						|| (this.fileService.isValid(FileInfo.FileType.image,
-								productImage.getFile())))
+						|| (this.fileService.isValid(FileInfo.FileType.image, productImage.getFile())))
 					continue;
-				addMessage(redirectAttributes,
-						Message.error("admin.upload.invalid", new Object[0]));
+				addMessage(redirectAttributes, Message.error("admin.upload.invalid", new Object[0]));
 				return "redirect:add.jhtml";
 			}
 		}

@@ -46,7 +46,7 @@ public class MemberRank extends BaseEntity
 
   @NotNull
   @Min(0L)
-  @Digits(integer=3, fraction=3)
+//  @Digits(integer=3, fraction=3)
   @Column(nullable=false, precision=12, scale=6)
   public Double getScale()
   {
@@ -59,7 +59,7 @@ public class MemberRank extends BaseEntity
   }
 
   @Min(0L)
-  @Digits(integer=12, fraction=3)
+//  @Digits(integer=12, fraction=3)
   @Column(unique=true, precision=21, scale=6)
   public BigDecimal getAmount()
   {

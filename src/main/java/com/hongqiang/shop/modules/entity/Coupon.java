@@ -29,261 +29,221 @@ import com.hongqiang.shop.common.utils.SettingUtils;
 
 //团购实体类
 @Entity
-@Table(name="hq_coupon")
-public class Coupon extends BaseEntity
-{
-  private static final long serialVersionUID = -7907808728349149722L;
-  private String name;//团购名称
-  private String prefix;//后缀
-  private Date beginDate;//开始日期
-  private Date endDate;//结束日期
-  private BigDecimal startPrice;//开始价格
-  private BigDecimal endPrice;//结束价格
-  private Boolean isEnabled;//是否可用
-  private Boolean isExchange;//是否可交换
-  private Integer point;//返回点数
-  private Operator priceOperator;//价格操作员
-  private BigDecimal priceValue;//
-  private String introduction;//介绍
-  private Set<CouponCode> couponCodes = new HashSet<CouponCode>();//团购代码
-  private Set<Promotion> promotions = new HashSet<Promotion>();//促销
-  private List<Order> orders = new ArrayList<Order>();//订单
+@Table(name = "hq_coupon")
+public class Coupon extends BaseEntity {
+	private static final long serialVersionUID = -7907808728349149722L;
+	private String name;// 团购名称
+	private String prefix;// 后缀
+	private Date beginDate;// 开始日期
+	private Date endDate;// 结束日期
+	private BigDecimal startPrice;// 开始价格
+	private BigDecimal endPrice;// 结束价格
+	private Boolean isEnabled;// 是否可用
+	private Boolean isExchange;// 是否可交换
+	private Integer point;// 返回点数
+	private Operator priceOperator;// 价格操作员
+	private BigDecimal priceValue;//
+	private String introduction;// 介绍
+	private Set<CouponCode> couponCodes = new HashSet<CouponCode>();// 团购代码
+	private Set<Promotion> promotions = new HashSet<Promotion>();// 促销
+	private List<Order> orders = new ArrayList<Order>();// 订单
 
-  public enum Operator
-	{
-	add, subtract, multiply, divide;
+	public enum Operator {
+		add, subtract, multiply, divide;
 	}
-  
-  @NotEmpty
-  @Length(max=200)
-  @Column(nullable=false)
-  public String getName()
-  {
-    return this.name;
-  }
 
-  public void setName(String name)
-  {
-    this.name = name;
-  }
+	@NotEmpty
+	@Length(max = 200)
+	@Column(nullable = false)
+	public String getName() {
+		return this.name;
+	}
 
-  @NotEmpty
-  @Length(max=200)
-  @Column(nullable=false)
-  public String getPrefix()
-  {
-    return this.prefix;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  public void setPrefix(String prefix)
-  {
-    this.prefix = prefix;
-  }
+	@NotEmpty
+	@Length(max = 200)
+	@Column(nullable = false)
+	public String getPrefix() {
+		return this.prefix;
+	}
 
-  public Date getBeginDate()
-  {
-    return this.beginDate;
-  }
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 
-  public void setBeginDate(Date beginDate)
-  {
-    this.beginDate = beginDate;
-  }
+	public Date getBeginDate() {
+		return this.beginDate;
+	}
 
-  public Date getEndDate()
-  {
-    return this.endDate;
-  }
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
 
-  public void setEndDate(Date endDate)
-  {
-    this.endDate = endDate;
-  }
+	public Date getEndDate() {
+		return this.endDate;
+	}
 
-  @Min(0L)
-  @Digits(integer=12, fraction=3)
-  @Column(precision=21, scale=6)
-  public BigDecimal getStartPrice()
-  {
-    return this.startPrice;
-  }
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
-  public void setStartPrice(BigDecimal startPrice)
-  {
-    this.startPrice = startPrice;
-  }
+	@Min(0L)
+	// @Digits(integer=12, fraction=3)
+	@Column(precision = 21, scale = 6)
+	public BigDecimal getStartPrice() {
+		return this.startPrice;
+	}
 
-  @Min(0L)
-  @Digits(integer=12, fraction=3)
-  @Column(precision=21, scale=6)
-  public BigDecimal getEndPrice()
-  {
-    return this.endPrice;
-  }
+	public void setStartPrice(BigDecimal startPrice) {
+		this.startPrice = startPrice;
+	}
 
-  public void setEndPrice(BigDecimal endPrice)
-  {
-    this.endPrice = endPrice;
-  }
+	@Min(0L)
+	// @Digits(integer=12, fraction=3)
+	@Column(precision = 21, scale = 6)
+	public BigDecimal getEndPrice() {
+		return this.endPrice;
+	}
 
-  @NotNull
-  @Column(nullable=false)
-  public Boolean getIsEnabled()
-  {
-    return this.isEnabled;
-  }
+	public void setEndPrice(BigDecimal endPrice) {
+		this.endPrice = endPrice;
+	}
 
-  public void setIsEnabled(Boolean isEnabled)
-  {
-    this.isEnabled = isEnabled;
-  }
+	@NotNull
+	@Column(nullable = false)
+	public Boolean getIsEnabled() {
+		return this.isEnabled;
+	}
 
-  @NotNull
-  @Column(nullable=false)
-  public Boolean getIsExchange()
-  {
-    return this.isExchange;
-  }
+	public void setIsEnabled(Boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
 
-  public void setIsExchange(Boolean isExchange)
-  {
-    this.isExchange = isExchange;
-  }
+	@NotNull
+	@Column(nullable = false)
+	public Boolean getIsExchange() {
+		return this.isExchange;
+	}
 
-  @Min(0L)
-  public Integer getPoint()
-  {
-    return this.point;
-  }
+	public void setIsExchange(Boolean isExchange) {
+		this.isExchange = isExchange;
+	}
 
-  public void setPoint(Integer point)
-  {
-    this.point = point;
-  }
+	@Min(0L)
+	public Integer getPoint() {
+		return this.point;
+	}
 
-  @NotNull
-  @Column(nullable=false)
-  public Coupon.Operator getPriceOperator()
-  {
-    return this.priceOperator;
-  }
+	public void setPoint(Integer point) {
+		this.point = point;
+	}
 
-  public void setPriceOperator(Coupon.Operator priceOperator)
-  {
-    this.priceOperator = priceOperator;
-  }
+	@NotNull
+	@Column(nullable = false)
+	public Coupon.Operator getPriceOperator() {
+		return this.priceOperator;
+	}
 
-  @Digits(integer=12, fraction=3)
-  @Column(precision=21, scale=6)
-  public BigDecimal getPriceValue()
-  {
-    return this.priceValue;
-  }
+	public void setPriceOperator(Coupon.Operator priceOperator) {
+		this.priceOperator = priceOperator;
+	}
 
-  public void setPriceValue(BigDecimal priceValue)
-  {
-    this.priceValue = priceValue;
-  }
+	// @Digits(integer=12, fraction=3)
+	@Column(precision = 21, scale = 6)
+	public BigDecimal getPriceValue() {
+		return this.priceValue;
+	}
 
-  @Lob
-  public String getIntroduction()
-  {
-    return this.introduction;
-  }
+	public void setPriceValue(BigDecimal priceValue) {
+		this.priceValue = priceValue;
+	}
 
-  public void setIntroduction(String introduction)
-  {
-    this.introduction = introduction;
-  }
+	@Lob
+	public String getIntroduction() {
+		return this.introduction;
+	}
 
-  @OneToMany(mappedBy="coupon", fetch=FetchType.LAZY, cascade={javax.persistence.CascadeType.REMOVE})
-  public Set<CouponCode> getCouponCodes()
-  {
-    return this.couponCodes;
-  }
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
+	}
 
-  public void setCouponCodes(Set<CouponCode> couponCodes)
-  {
-    this.couponCodes = couponCodes;
-  }
+	@OneToMany(mappedBy = "coupon", fetch = FetchType.LAZY, cascade = { javax.persistence.CascadeType.REMOVE })
+	public Set<CouponCode> getCouponCodes() {
+		return this.couponCodes;
+	}
 
-  @ManyToMany(mappedBy="coupons", fetch=FetchType.LAZY)
-  public Set<Promotion> getPromotions()
-  {
-    return this.promotions;
-  }
+	public void setCouponCodes(Set<CouponCode> couponCodes) {
+		this.couponCodes = couponCodes;
+	}
 
-  public void setPromotions(Set<Promotion> promotions)
-  {
-    this.promotions = promotions;
-  }
+	@ManyToMany(mappedBy = "coupons", fetch = FetchType.LAZY)
+	public Set<Promotion> getPromotions() {
+		return this.promotions;
+	}
 
-  @ManyToMany(mappedBy="coupons", fetch=FetchType.LAZY)
-  public List<Order> getOrders()
-  {
-    return this.orders;
-  }
+	public void setPromotions(Set<Promotion> promotions) {
+		this.promotions = promotions;
+	}
 
-  public void setOrders(List<Order> orders)
-  {
-    this.orders = orders;
-  }
+	@ManyToMany(mappedBy = "coupons", fetch = FetchType.LAZY)
+	public List<Order> getOrders() {
+		return this.orders;
+	}
 
-  @Transient
-  public boolean hasBegun()
-  {
-    return (getBeginDate() == null) || (new Date().after(getBeginDate()));
-  }
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
 
-  @Transient
-  public boolean hasExpired()
-  {
-    return (getEndDate() != null) && (new Date().after(getEndDate()));
-  }
+	@Transient
+	public boolean hasBegun() {
+		return (getBeginDate() == null) || (new Date().after(getBeginDate()));
+	}
 
-  @Transient
-  public BigDecimal calculatePrice(BigDecimal price)
-  {
-	  BigDecimal localBigDecimal;
-    if ((price != null) && (getPriceOperator() != null) && (getPriceValue() != null))
-    {
-      Setting localSetting = SettingUtils.get();
-      if (getPriceOperator() == Coupon.Operator.add)
-        localBigDecimal = price.add(getPriceValue());
-      else if (getPriceOperator() == Coupon.Operator.subtract)
-        localBigDecimal = price.subtract(getPriceValue());
-      else if (getPriceOperator() == Coupon.Operator.multiply)
-        localBigDecimal = price.multiply(getPriceValue());
-      else
-        localBigDecimal = price.divide(getPriceValue());
-      BigDecimal localBigDecimal2 = localSetting.setScale(localBigDecimal);
-      return localBigDecimal2.compareTo(new BigDecimal(0)) > 0 ? localBigDecimal2 : new BigDecimal(0);
-    }
-    return price;
-  }
+	@Transient
+	public boolean hasExpired() {
+		return (getEndDate() != null) && (new Date().after(getEndDate()));
+	}
 
-  @PreRemove
-  public void preRemove()
-  {
-    Set<Promotion> localSet = getPromotions();
-    if (localSet != null)
-    {
-    	Iterator<Promotion> localObject2 = localSet.iterator();
-      while (localObject2.hasNext())
-      {
-    	  Promotion localObject1 = (Promotion)(localObject2).next();
-          localObject1.getCoupons().remove(this);
-      }
-    }
-    List<Order> localObject1 = getOrders();
-    if (localObject1 != null)
-    {
-      Iterator<Order> localIterator = localObject1.iterator();
-      while (localIterator.hasNext())
-      {
-    	  Order localObject2 = (Order)localIterator.next();
-          localObject2.getCoupons().remove(this);
-      }
-    }
-  }
+	//使用优惠劵后的价格
+	@Transient
+	public BigDecimal calculatePrice(BigDecimal price) {
+		BigDecimal couponPrice = null;
+		if ((price != null) && (getPriceOperator() != null) && (getPriceValue() != null)) {
+			Setting setting = SettingUtils.get();
+			if (getPriceOperator() == Coupon.Operator.add)
+				couponPrice = price.add(getPriceValue());
+			else if (getPriceOperator() == Coupon.Operator.subtract)
+				couponPrice = price.subtract(getPriceValue());
+			else if (getPriceOperator() == Coupon.Operator.multiply)
+				couponPrice = price.multiply(getPriceValue());
+			else
+				couponPrice = price.divide(getPriceValue());
+			BigDecimal realPrice = setting.setScale(couponPrice);
+			return realPrice.compareTo(new BigDecimal(0)) > 0 ? realPrice : new BigDecimal(0);
+		}
+		return price;
+	}
+
+	@PreRemove
+	public void preRemove() {
+		Set<Promotion> promotions = getPromotions();
+		if (promotions != null) {
+			Iterator<Promotion> iterator = promotions.iterator();
+			while (iterator.hasNext()) {
+				Promotion promotion = (Promotion) iterator.next();
+				promotion.getCoupons().remove(this);
+			}
+		}
+		List<Order> orders = getOrders();
+		if (orders != null) {
+			Iterator<Order> iterator = orders.iterator();
+			while (iterator.hasNext()) {
+				Order order = (Order) iterator.next();
+				order.getCoupons().remove(this);
+			}
+		}
+	}
 }

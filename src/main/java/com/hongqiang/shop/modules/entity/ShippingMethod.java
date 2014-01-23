@@ -74,7 +74,7 @@ public class ShippingMethod extends OrderEntity {
 
 	@NotNull
 	@Min(0L)
-	@Digits(integer = 12, fraction = 3)
+//	@Digits(integer = 12, fraction = 3)
 	@Column(nullable = false, precision = 21, scale = 6)
 	public BigDecimal getFirstPrice() {
 		return this.firstPrice;
@@ -86,7 +86,7 @@ public class ShippingMethod extends OrderEntity {
 
 	@NotNull
 	@Min(0L)
-	@Digits(integer = 12, fraction = 3)
+//	@Digits(integer = 12, fraction = 3)
 	@Column(nullable = false, precision = 21, scale = 6)
 	public BigDecimal getContinuePrice() {
 		return this.continuePrice;
@@ -141,39 +141,38 @@ public class ShippingMethod extends OrderEntity {
 		this.orders = orders;
 	}
 
+	//根据商品的重量计算运输价格
 	@Transient
 	public BigDecimal calculateFreight(Integer weight) {
-		Setting localSetting = SettingUtils.get();
-		BigDecimal localBigDecimal = new BigDecimal(0);
-		if (weight != null)
+		Setting setting = SettingUtils.get();
+		BigDecimal freightPrice = new BigDecimal(0);
+		if (weight != null){
 			if ((weight.intValue() <= getFirstWeight().intValue())
 					|| (getContinuePrice().compareTo(new BigDecimal(0)) == 0)) {
-				localBigDecimal = getFirstPrice();
+				freightPrice = getFirstPrice();
 			} else {
-				double d = Math.ceil((weight.intValue() - getFirstWeight()
-						.intValue()) / getContinueWeight().intValue());
-				localBigDecimal = getFirstPrice().add(
-						getContinuePrice().multiply(new BigDecimal(d)));
+				double d = Math.ceil((weight.intValue() - getFirstWeight().intValue()) / getContinueWeight().intValue());
+				freightPrice = getFirstPrice().add(getContinuePrice().multiply(new BigDecimal(d)));
 			}
-		return localSetting.setScale(localBigDecimal);
+		}
+		return setting.setScale(freightPrice);
 	}
 
 	@PreRemove
 	public void preRemove() {
-		Set<PaymentMethod> localSet = getPaymentMethods();
-		if (localSet != null) {
-			Iterator<PaymentMethod> localIterator = localSet.iterator();
-			while (localIterator.hasNext()) {
-				PaymentMethod paymentMethod = (PaymentMethod) localIterator
-						.next();
+		Set<PaymentMethod> paymentMethods = getPaymentMethods();
+		if (paymentMethods != null) {
+			Iterator<PaymentMethod> iterator = paymentMethods.iterator();
+			while (iterator.hasNext()) {
+				PaymentMethod paymentMethod = (PaymentMethod) iterator.next();
 				paymentMethod.getShippingMethods().remove(this);
 			}
 		}
 		Set<Order> orders = getOrders();
 		if (orders != null) {
-			Iterator<Order> localIterator = orders.iterator();
-			while (localIterator.hasNext()) {
-				Order order = localIterator.next();
+			Iterator<Order> iterator = orders.iterator();
+			while (iterator.hasNext()) {
+				Order order = (Order)iterator.next();
 				order.setShippingMethod(null);
 			}
 		}

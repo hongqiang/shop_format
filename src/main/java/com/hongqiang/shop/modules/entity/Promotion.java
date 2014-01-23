@@ -106,7 +106,7 @@ public class Promotion extends OrderEntity
 
   @JsonProperty
   @Min(0L)
-  @Digits(integer=12, fraction=3)
+//  @Digits(integer=12, fraction=3)
   @Column(precision=21, scale=6)
   public BigDecimal getStartPrice()
   {
@@ -120,7 +120,7 @@ public class Promotion extends OrderEntity
 
   @JsonProperty
   @Min(0L)
-  @Digits(integer=12, fraction=3)
+//  @Digits(integer=12, fraction=3)
   @Column(precision=21, scale=6)
   public BigDecimal getEndPrice()
   {
@@ -144,7 +144,7 @@ public class Promotion extends OrderEntity
     this.priceOperator = priceOperator;
   }
 
-  @Digits(integer=12, fraction=3)
+//  @Digits(integer=12, fraction=3)
   @Column(precision=21, scale=6)
   public BigDecimal getPriceValue()
   {

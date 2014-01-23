@@ -96,7 +96,7 @@ public class Member extends BaseEntity {
 		male, female;
 	}
 
-	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+//	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]*$")
 	@Column(nullable = false, updatable = false, unique = true)
 	public String getUsername() {
@@ -107,7 +107,7 @@ public class Member extends BaseEntity {
 		this.username = username;
 	}
 
-	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+//	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Pattern(regexp = "^[^\\s&\"<>]*$")
 	@Column(nullable = false)
 	public String getPassword() {
@@ -130,7 +130,7 @@ public class Member extends BaseEntity {
 		this.email = email;
 	}
 
-	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+//	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Min(0L)
 	@Column(nullable = false)
 	public Long getPoint() {
@@ -150,9 +150,9 @@ public class Member extends BaseEntity {
 		this.amount = amount;
 	}
 
-	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+//	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Min(0L)
-	@Digits(integer = 12, fraction = 3)
+//	@Digits(integer = 15, fraction = 12)
 	@Column(nullable = false, precision = 27, scale = 12)
 	public BigDecimal getBalance() {
 		return this.balance;

@@ -14,7 +14,7 @@ import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Member;
 
 public interface OrderDao extends OrderDaoCustom, CrudRepository<com.hongqiang.shop.modules.entity.Order, Long> {
-	public com.hongqiang.shop.modules.entity.Order findBySn(String snString);
+	
 }
 
 /**
@@ -25,30 +25,30 @@ public interface OrderDao extends OrderDaoCustom, CrudRepository<com.hongqiang.s
  */
 interface OrderDaoCustom extends BaseDao<com.hongqiang.shop.modules.entity.Order,Long> {
 
-	public List<com.hongqiang.shop.modules.entity.Order> findList(Member paramMember, Integer paramInteger,
-			List<Filter> paramList, List<Order> paramList1);
+	public com.hongqiang.shop.modules.entity.Order findBySn(String sn);
+	
+	public List<com.hongqiang.shop.modules.entity.Order> findList(Member member, Integer count, List<Filter> filters,List<Order> orders);
 
-	public Page<com.hongqiang.shop.modules.entity.Order> findPage(Member paramMember, Pageable paramPageable);
+	public Page<com.hongqiang.shop.modules.entity.Order> findPage(Member member, Pageable pageable);
 
 	public Page<com.hongqiang.shop.modules.entity.Order> findPage(
-			com.hongqiang.shop.modules.entity.Order.OrderStatus paramOrderStatus,
-			com.hongqiang.shop.modules.entity.Order.PaymentStatus paramPaymentStatus,
-			com.hongqiang.shop.modules.entity.Order.ShippingStatus paramShippingStatus,
-			Boolean paramBoolean, Pageable paramPageable);
+			com.hongqiang.shop.modules.entity.Order.OrderStatus orderStatus,
+			com.hongqiang.shop.modules.entity.Order.PaymentStatus paymentStatus,
+			com.hongqiang.shop.modules.entity.Order.ShippingStatus shippingStatus,
+			Boolean hasExpired, Pageable pageable);
 
-	public Long count(
-			com.hongqiang.shop.modules.entity.Order.OrderStatus paramOrderStatus,
-			com.hongqiang.shop.modules.entity.Order.PaymentStatus paramPaymentStatus,
-			com.hongqiang.shop.modules.entity.Order.ShippingStatus paramShippingStatus,
-			Boolean paramBoolean);
+	public Long count(com.hongqiang.shop.modules.entity.Order.OrderStatus orderStatus,
+			com.hongqiang.shop.modules.entity.Order.PaymentStatus paymentStatus,
+			com.hongqiang.shop.modules.entity.Order.ShippingStatus shippingStatus,
+			Boolean hasExpired);
 
-	public Long waitingPaymentCount(Member paramMember);
+	public Long waitingPaymentCount(Member member);
 
-	public Long waitingShippingCount(Member paramMember);
+	public Long waitingShippingCount(Member member);
 
-	public BigDecimal getSalesAmount(Date paramDate1, Date paramDate2);
+	public BigDecimal getSalesAmount(Date beginDate, Date endDate);
 
-	public Integer getSalesVolume(Date paramDate1, Date paramDate2);
+	public Integer getSalesVolume(Date beginDate, Date endDate);
 
 	public void releaseStock();
 }

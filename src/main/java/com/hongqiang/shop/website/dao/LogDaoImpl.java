@@ -23,7 +23,7 @@ public class LogDaoImpl extends BaseDaoImpl<Log,Long> implements LogDaoCustom {
 
 	@Override
 	public Page<Log> findPage(Pageable pageable) {
-		String qlString = "select Log from Log Log where 1=1 ";
+		String qlString = "select log from Log log where 1=1 ";
 		List<Object> parameter = new ArrayList<Object>();
 		return super.findPage(qlString, parameter, pageable);
 	}

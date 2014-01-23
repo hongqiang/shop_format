@@ -203,7 +203,7 @@ public class Product extends BaseEntity {
 	@FieldBridge(impl = BigDecimalNumericFieldBridge.class)
 	@NotNull
 	@Min(0L)
-	@Digits(integer = 12, fraction = 3)
+//	@Digits(integer = 12, fraction = 3)
 	@Column(nullable = false, precision = 21, scale = 6)
 	public BigDecimal getPrice() {
 		return this.price;
@@ -214,7 +214,7 @@ public class Product extends BaseEntity {
 	}
 
 	@Min(0L)
-	@Digits(integer = 12, fraction = 3)
+//	@Digits(integer = 12, fraction = 3)
 	@Column(precision = 21, scale = 6)
 	public BigDecimal getCost() {
 		return this.cost;
@@ -226,7 +226,7 @@ public class Product extends BaseEntity {
 
 	@Field(store = Store.YES, index = Index.NO)
 	@Min(0L)
-	@Digits(integer = 12, fraction = 3)
+//	@Digits(integer = 12, fraction = 3)
 	@Column(nullable = false, precision = 21, scale = 6)
 	public BigDecimal getMarketPrice() {
 		return this.marketPrice;

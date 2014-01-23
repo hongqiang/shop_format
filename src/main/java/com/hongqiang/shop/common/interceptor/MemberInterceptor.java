@@ -18,65 +18,55 @@ import com.hongqiang.shop.common.utils.Principal;
 import com.hongqiang.shop.modules.entity.Member;
 import com.hongqiang.shop.modules.user.service.MemberService;
 
-public class MemberInterceptor extends HandlerInterceptorAdapter
-{
-  private static final String REDIRECT = "redirect:";
-  private static final String REDIRECT_URL = "redirectUrl";
-  private static final String MEMBER = "member";
-  private static final String LOGIN_URL = Global.getFrontPath()+"/login.jhtml";
-  private String loginUrl = LOGIN_URL;
+public class MemberInterceptor extends HandlerInterceptorAdapter {
+	private static final String REDIRECT = "redirect:";
+	private static final String REDIRECT_URL = "redirectUrl";
+	private static final String MEMBER = "member";
+	private static final String LOGIN_URL = Global.getFrontPath()+ "/login.jhtml";
+	private String loginUrl = LOGIN_URL;
 
-  @Value("${url_escaping_charset}")
-  private String url_escaping_charset;
+	@Value("${url_escaping_charset}")
+	private String url_escaping_charset;
 
-  @Autowired
-  private MemberService memberService;
+	@Autowired
+	private MemberService memberService;
 
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException
-  {
-    HttpSession localHttpSession = request.getSession();
-    Principal localPrincipal = (Principal)localHttpSession.getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
-    if (localPrincipal != null)
-      return true;
-    String str1 = request.getHeader("X-Requested-With");
-    if ((str1 != null) && (str1.equalsIgnoreCase("XMLHttpRequest")))
-    {
-      response.addHeader("loginStatus", "accessDenied");
-      response.sendError(403);
-      return false;
-    }
-    if (request.getMethod().equalsIgnoreCase("GET"))
-    {
-    	System.out.println("request.getQueryString()="+request.getQueryString());
-    	System.out.println("request.getRequestURI()="+request.getRequestURI());
-      String str2 = request.getQueryString() != null ? request.getRequestURI() + "?" + request.getQueryString() : request.getRequestURI();
-      System.out.println("str2="+str2);
-      response.sendRedirect(request.getContextPath() + this.loginUrl + "?" + REDIRECT_URL + "=" + URLEncoder.encode(str2, this.url_escaping_charset));
-    }
-    else
-    {
-      response.sendRedirect(request.getContextPath() + this.loginUrl);
-    }
-    return false;
-  }
+	public boolean preHandle(HttpServletRequest request,
+			HttpServletResponse response, Object handler) throws IOException {
+		HttpSession httpSession = request.getSession();
+		Principal principal = (Principal) httpSession.getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
+		if (principal != null)
+			return true;
+		String header = request.getHeader("X-Requested-With");
+		if ((header != null) && (header.equalsIgnoreCase("XMLHttpRequest"))) {
+			response.addHeader("loginStatus", "accessDenied");
+			response.sendError(403);
+			return false;
+		}
+		if (request.getMethod().equalsIgnoreCase("GET")) {
+			String url = request.getQueryString() != null ? 
+					request.getRequestURI() + "?" + request.getQueryString() : request.getRequestURI();
+			response.sendRedirect(request.getContextPath() + this.loginUrl+ "?" + REDIRECT_URL + "="
+					+ URLEncoder.encode(url, this.url_escaping_charset));
+		} else {
+			response.sendRedirect(request.getContextPath() + this.loginUrl);
+		}
+		return false;
+	}
 
-  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
-  {
-    if (modelAndView != null)
-    {
-      String str = modelAndView.getViewName();
-      if (!StringUtils.startsWith(str, REDIRECT))
-        modelAndView.addObject(MEMBER, this.memberService.getCurrent());
-    }
-  }
+	public void postHandle(HttpServletRequest request,HttpServletResponse response, Object handler,ModelAndView modelAndView) {
+		if (modelAndView != null) {
+			String viewName = modelAndView.getViewName();
+			if (!StringUtils.startsWith(viewName, REDIRECT))
+				modelAndView.addObject(MEMBER, this.memberService.getCurrent());
+		}
+	}
 
-  public String getLoginUrl()
-  {
-    return this.loginUrl;
-  }
+	public String getLoginUrl() {
+		return this.loginUrl;
+	}
 
-  public void setLoginUrl(String loginUrl)
-  {
-    this.loginUrl = loginUrl;
-  }
+	public void setLoginUrl(String loginUrl) {
+		this.loginUrl = loginUrl;
+	}
 }
