@@ -85,24 +85,20 @@
 	<property name="suffix" value="${template.suffix}" />
 	</bean>
 
-	<!-- 定义无Controller的path<->view直接映射   有最下面的defaulterrorview，用不到这里-->
-<!-- 	<mvc:view-controller path="/" -->
-<!-- 		view-name="redirect:${web.view.index}" /> -->
-
 	<!-- 支持Shiro对Controller的方法级AOP安全控制 begin -->
-<!-- 	<bean -->
-<!-- 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" -->
-<!-- 		depends-on="lifecycleBeanPostProcessor"> -->
-<!-- 		<property name="proxyTargetClass" value="true" /> -->
-<!-- 	</bean> -->
-<!-- 	<bean -->
-<!-- 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> -->
-<!-- 		<property name="exceptionMappings"> -->
-<!-- 			<props> -->
-<!-- 				<prop key="org.apache.shiro.authz.UnauthorizedException">error/403</prop> -->
-<!-- 			</props> -->
-<!-- 		</property> -->
-<!-- 	</bean> -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="org.apache.shiro.authz.UnauthorizedException">error/403</prop>
+			</props>
+		</property>
+	</bean>
 	<!-- Shiro end -->
 
 	<!-- 上传文件拦截，设置最大上传文件大小 10M=10*1024*1024(B)=10485760 bytes -->

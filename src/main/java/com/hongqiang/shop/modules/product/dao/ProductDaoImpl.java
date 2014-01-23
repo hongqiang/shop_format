@@ -147,8 +147,6 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 			params.add(goods);
 		}
 		if ((excludes != null) && (!excludes.isEmpty())) {
-//			sqlString += " and product not in (?) ";
-//			params.add(excludes);
 			sqlString += " and product not in (";
 			for (Product product : excludes) {
 					sqlString += " ?, ";
@@ -518,26 +516,26 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		if (goods.getProducts() != null) {
 			Iterator<Product> localIterator = goods.getProducts().iterator();
 			while (localIterator.hasNext()) {
-				Product localProduct = (Product) localIterator.next();
-				if (localProduct.getId() != null) {
-					String str;
-					if (!localProduct.getIsGift().booleanValue()) {
-						str = "delete from GiftItem giftItem where giftItem.gift = :product";
-						this.getEntityManager().createQuery(str)
+				Product product = (Product) localIterator.next();
+				if (product.getId() != null) {
+					String query;
+					if (!product.getIsGift().booleanValue()) {
+						query = "delete from GiftItem giftItem where giftItem.gift = :product";
+						this.getEntityManager().createQuery(query)
 								.setFlushMode(FlushModeType.COMMIT)
-								.setParameter("product", localProduct)
+								.setParameter("product", product)
 								.executeUpdate();
 					}
-					if ((!localProduct.getIsMarketable().booleanValue())
-							|| (localProduct.getIsGift().booleanValue())) {
-						str = "delete from CartItem cartItem where cartItem.product = :product";
-						this.getEntityManager().createQuery(str)
+					if ((!product.getIsMarketable().booleanValue())
+							|| (product.getIsGift().booleanValue())) {
+						query = "delete from CartItem cartItem where cartItem.product = :product";
+						this.getEntityManager().createQuery(query)
 								.setFlushMode(FlushModeType.COMMIT)
-								.setParameter("product", localProduct)
+								.setParameter("product", product)
 								.executeUpdate();
 					}
 				}
-				setProductFullName(localProduct);
+				setProductFullName(product);
 			}
 		}
 	}
@@ -555,18 +553,15 @@ class ProductDaoImpl extends BaseDaoImpl<Product,Long> implements ProductDaoCust
 		StringBuffer stringBuffer = new StringBuffer(paramProduct.getName());
 		if ((paramProduct.getSpecificationValues() != null)
 				&& (!paramProduct.getSpecificationValues().isEmpty())) {
-			List<SpecificationValue> localArrayList = new ArrayList<SpecificationValue>(
-					paramProduct.getSpecificationValues());
-			Collections.sort(localArrayList, new SortSpecificationValue());
+			List<SpecificationValue> specificationValues = new ArrayList<SpecificationValue>(paramProduct.getSpecificationValues());
+			Collections.sort(specificationValues, new SortSpecificationValue());
 			stringBuffer.append("[");
 			int i = 0;
-			Iterator<SpecificationValue> localIterator = localArrayList
-					.iterator();
+			Iterator<SpecificationValue> localIterator = specificationValues.iterator();
 			while (localIterator.hasNext()) {
 				if (i != 0)
 					stringBuffer.append(" ");
-				stringBuffer.append(((SpecificationValue) localIterator.next())
-						.getName());
+				stringBuffer.append(((SpecificationValue) localIterator.next()).getName());
 				i++;
 			}
 			stringBuffer.append("]");

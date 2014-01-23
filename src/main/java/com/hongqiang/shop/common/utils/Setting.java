@@ -2,7 +2,7 @@ package com.hongqiang.shop.common.utils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import javax.validation.constraints.Digits;
+//import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

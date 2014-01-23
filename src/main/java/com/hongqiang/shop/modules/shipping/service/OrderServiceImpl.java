@@ -162,11 +162,12 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		return this.orderDao.getSalesVolume(beginDate, endDate);
 	}
 
+	@Transactional
 	public void releaseStock() {
 		this.orderDao.releaseStock();
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public com.hongqiang.shop.modules.entity.Order build(Cart cart,
 			Receiver receiver, PaymentMethod paymentMethod,
 			ShippingMethod shippingMethod, CouponCode couponCode,
@@ -323,6 +324,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		return order;
 	}
 
+	@Transactional
 	public com.hongqiang.shop.modules.entity.Order create(Cart cart,Receiver receiver, PaymentMethod paymentMethod,
 			ShippingMethod shippingMethod, CouponCode couponCode,boolean isInvoice, String invoiceTitle, boolean useBalance,
 			String memo, Admin operator) {
@@ -417,6 +419,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		return order;
 	}
 
+	@Transactional
 	public void update(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
@@ -464,6 +467,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
+	@Transactional
 	public void confirm(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
@@ -477,6 +481,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
+	@Transactional
 	public void complete(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
@@ -577,6 +582,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
+	@Transactional
 	public void cancel(com.hongqiang.shop.modules.entity.Order order, Admin operator) {
 		if (order == null) {
 			return;
@@ -619,6 +625,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
+	@Transactional
 	public void payment(com.hongqiang.shop.modules.entity.Order order, Payment payment, Admin operator) {
 		if (order == null || payment == null) {
 			return;
@@ -683,6 +690,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
+	@Transactional
 	public void refunds(com.hongqiang.shop.modules.entity.Order order, Refunds refunds, Admin operator) {
 		if (order == null || refunds == null) {
 			return;
@@ -720,6 +728,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
+	@Transactional
 	public void shipping(com.hongqiang.shop.modules.entity.Order order, Shipping shipping, Admin operator) {
 		if (order == null || shipping == null || shipping.getShippingItems().isEmpty()) {
 			return;
@@ -785,6 +794,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		this.orderLogDao.persist(orderLog);
 	}
 
+	@Transactional
 	public void returns(com.hongqiang.shop.modules.entity.Order order, Returns returns, Admin operator) {
 		if (order == null || returns == null || returns.getReturnsItems().isEmpty()) {
 			return;
@@ -838,6 +848,7 @@ public class OrderServiceImpl extends BaseService implements OrderService {
 		return (com.hongqiang.shop.modules.entity.Order) this.orderDao.update(order, ignoreProperties);
 	}
 
+	@Transactional
 	public void delete(com.hongqiang.shop.modules.entity.Order order) {
 		if (order.getIsAllocatedStock().booleanValue()) {
 			Iterator<OrderItem> localIterator = order.getOrderItems().iterator();

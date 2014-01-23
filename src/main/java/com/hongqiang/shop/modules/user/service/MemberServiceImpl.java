@@ -45,10 +45,10 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 	@Transactional(readOnly = true)
 	public boolean usernameDisabled(String username) {
 		Assert.hasText(username);
-		Setting localSetting = SettingUtils.get();
-		if (localSetting.getDisabledUsernames() != null)
-			for (String str : localSetting.getDisabledUsernames())
-				if (StringUtils.containsIgnoreCase(username, str))
+		Setting setting = SettingUtils.get();
+		if (setting.getDisabledUsernames() != null)
+			for (String localUsername : setting.getDisabledUsernames())
+				if (StringUtils.containsIgnoreCase(username, localUsername))
 					return true;
 		return false;
 	}
@@ -65,59 +65,53 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 		return !this.memberDao.emailExists(currentEmail);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public void save(Member member, Admin operator) {
-		Assert.notNull(member);
+		if (member == null) {
+			return;
+		}
 		this.memberDao.persist(member);
 		if (member.getBalance().compareTo(new BigDecimal(0)) > 0) {
-			Deposit localDeposit = new Deposit();
-			localDeposit.setType(operator != null ? Deposit.Type.adminRecharge
-					: Deposit.Type.memberRecharge);
-			localDeposit.setCredit(member.getBalance());
-			localDeposit.setDebit(new BigDecimal(0));
-			localDeposit.setBalance(member.getBalance());
-			localDeposit.setOperator(operator != null ? operator.getUsername()
-					: null);
-			localDeposit.setMember(member);
-			this.depositDao.persist(localDeposit);
+			Deposit deposit = new Deposit();
+			deposit.setType(operator != null ? Deposit.Type.adminRecharge : Deposit.Type.memberRecharge);
+			deposit.setCredit(member.getBalance());
+			deposit.setDebit(new BigDecimal(0));
+			deposit.setBalance(member.getBalance());
+			deposit.setOperator(operator != null ? operator.getUsername() : null);
+			deposit.setMember(member);
+			this.depositDao.persist(deposit);
 		}
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public void update(Member member, Integer modifyPoint,
 			BigDecimal modifyBalance, String depositMemo, Admin operator) {
-		Assert.notNull(member);
+		if (member == null) {
+			return;
+		}
 		this.memberDao.lock(member, LockModeType.PESSIMISTIC_WRITE);
-		if ((modifyPoint != null)
-				&& (modifyPoint.intValue() != 0)
+		if ((modifyPoint != null) && (modifyPoint.intValue() != 0)
 				&& (member.getPoint().longValue() + modifyPoint.intValue() >= 0L))
-			member.setPoint(Long.valueOf(member.getPoint().longValue()
-					+ modifyPoint.intValue()));
+			member.setPoint(Long.valueOf(member.getPoint().longValue() + modifyPoint.intValue()));
 		if ((modifyBalance != null)
 				&& (modifyBalance.compareTo(new BigDecimal(0)) != 0)
-				&& (member.getBalance().add(modifyBalance)
-						.compareTo(new BigDecimal(0)) >= 0)) {
+				&& (member.getBalance().add(modifyBalance).compareTo(new BigDecimal(0)) >= 0)) {
 			member.setBalance(member.getBalance().add(modifyBalance));
-			Deposit localDeposit = new Deposit();
+			Deposit deposit = new Deposit();
 			if (modifyBalance.compareTo(new BigDecimal(0)) > 0) {
-				localDeposit
-						.setType(operator != null ? Deposit.Type.adminRecharge
-								: Deposit.Type.memberRecharge);
-				localDeposit.setCredit(modifyBalance);
-				localDeposit.setDebit(new BigDecimal(0));
+				deposit.setType(operator != null ? Deposit.Type.adminRecharge : Deposit.Type.memberRecharge);
+				deposit.setCredit(modifyBalance);
+				deposit.setDebit(new BigDecimal(0));
 			} else {
-				localDeposit
-						.setType(operator != null ? Deposit.Type.adminChargeback
-								: Deposit.Type.memberPayment);
-				localDeposit.setCredit(new BigDecimal(0));
-				localDeposit.setDebit(modifyBalance);
+				deposit.setType(operator != null ? Deposit.Type.adminChargeback : Deposit.Type.memberPayment);
+				deposit.setCredit(new BigDecimal(0));
+				deposit.setDebit(modifyBalance);
 			}
-			localDeposit.setBalance(member.getBalance());
-			localDeposit.setOperator(operator != null ? operator.getUsername()
-					: null);
-			localDeposit.setMemo(depositMemo);
-			localDeposit.setMember(member);
-			this.depositDao.persist(localDeposit);
+			deposit.setBalance(member.getBalance());
+			deposit.setOperator(operator != null ? operator.getUsername() : null);
+			deposit.setMemo(depositMemo);
+			deposit.setMember(member);
+			this.depositDao.persist(deposit);
 		}
 		this.memberDao.merge(member);
 	}
@@ -148,21 +142,17 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Object> findPurchasePage(Date beginDate, Date endDate,
-			Pageable pageable) {
+	public Page<Object> findPurchasePage(Date beginDate, Date endDate, Pageable pageable) {
 		return this.memberDao.findPurchasePage(beginDate, endDate, pageable);
 	}
 
 	@Transactional(readOnly = true)
 	public boolean isAuthenticated() {
-		RequestAttributes localRequestAttributes = RequestContextHolder
-				.currentRequestAttributes();
-		if (localRequestAttributes != null) {
-			HttpServletRequest localHttpServletRequest = ((ServletRequestAttributes) localRequestAttributes)
-					.getRequest();
-			Principal localPrincipal = (Principal) localHttpServletRequest
-					.getSession().getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
-			if (localPrincipal != null)
+		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+		if (requestAttributes != null) {
+			HttpServletRequest localHttpServletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
+			Principal principal = (Principal) localHttpServletRequest.getSession().getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
+			if (principal != null)
 				return true;
 		}
 		return false;
@@ -170,30 +160,24 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 
 	@Transactional(readOnly = true)
 	public Member getCurrent() {
-		RequestAttributes localRequestAttributes = RequestContextHolder
-				.currentRequestAttributes();
-		if (localRequestAttributes != null) {
-			HttpServletRequest localHttpServletRequest = ((ServletRequestAttributes) localRequestAttributes)
-					.getRequest();
-			Principal localPrincipal = (Principal) localHttpServletRequest
-					.getSession().getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
-			if (localPrincipal != null)
-				return (Member) this.memberDao.findById(localPrincipal.getId());
+		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+		if (requestAttributes != null) {
+			HttpServletRequest localHttpServletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
+			Principal principal = (Principal) localHttpServletRequest.getSession().getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
+			if (principal != null)
+				return (Member) this.memberDao.findById(principal.getId());
 		}
 		return null;
 	}
 
 	@Transactional(readOnly = true)
 	public String getCurrentUsername() {
-		RequestAttributes localRequestAttributes = RequestContextHolder
-				.currentRequestAttributes();
-		if (localRequestAttributes != null) {
-			HttpServletRequest localHttpServletRequest = ((ServletRequestAttributes) localRequestAttributes)
-					.getRequest();
-			Principal localPrincipal = (Principal) localHttpServletRequest
-					.getSession().getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
-			if (localPrincipal != null)
-				return localPrincipal.getUsername();
+		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+		if (requestAttributes != null) {
+			HttpServletRequest localHttpServletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
+			Principal principal = (Principal) localHttpServletRequest.getSession().getAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME);
+			if (principal != null)
+				return principal.getUsername();
 		}
 		return null;
 	}
@@ -205,8 +189,7 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 
 	@Transactional
 	public Member update(Member member) {
-		return this.memberDao.update(member);
-//		return (Member) this.memberDao.merge(member);
+		return (Member) this.memberDao.merge(member);
 	}
 
 	@Transactional
@@ -214,19 +197,19 @@ public class MemberServiceImpl extends BaseService implements MemberService {
 		return (Member) this.memberDao.update(member, ignoreProperties);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public void delete(Long id) {
 		this.memberDao.delete(id);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public void delete(Long[] ids) {
 		if (ids != null)
 			for (Long localSerializable : ids)
 				this.memberDao.delete(localSerializable);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public void delete(Member member) {
 		this.memberDao.delete(member);
 	}

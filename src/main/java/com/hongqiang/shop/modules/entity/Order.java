@@ -24,7 +24,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
+//import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -140,7 +140,7 @@ public class Order extends BaseEntity {
 
 	@NotNull
 	@Min(0L)
-	// @Digits(integer=12, fraction=3)
+//	 @Digits(integer=12, fraction=3)
 	@Column(nullable = false, precision = 21, scale = 6)
 	public BigDecimal getFreight() {
 		return this.freight;
@@ -152,7 +152,7 @@ public class Order extends BaseEntity {
 
 	@NotNull
 	@Min(0L)
-	// @Digits(integer=12, fraction=3)
+//	 @Digits(integer=12, fraction=3)
 	@Column(nullable = false, precision = 21, scale = 6)
 	public BigDecimal getDiscount() {
 		return this.discount;
@@ -255,7 +255,7 @@ public class Order extends BaseEntity {
 	}
 
 	@Min(0L)
-	// @Digits(integer=12, fraction=3)
+//	 @Digits(integer=12, fraction=3)
 	@Column(nullable = false, precision = 21, scale = 6)
 	public BigDecimal getTax() {
 		return this.tax;

@@ -147,22 +147,20 @@ public class ProductController extends BaseController {
 				return "redirect:add.jhtml";
 			}
 		}
-		product.setProductCategory((ProductCategory) this.productCategoryService
-				.find(productCategoryId));
+		product.setProductCategory((ProductCategory) this.productCategoryService.find(productCategoryId));
 		product.setBrand((Brand) this.brandService.find(brandId));
 		product.setTags(new HashSet<Tag>(this.tagService.findList(tagIds)));
 		if (!beanValidator(product, new Class[0]))
 			return ERROR_PAGE;
-		if ((StringUtils.isNotEmpty(product.getSn()))
-				&& (this.productService.snExists(product.getSn())))
+		if ((StringUtils.isNotEmpty(product.getSn())) && (this.productService.snExists(product.getSn())))
 			return ERROR_PAGE;
 		if (product.getMarketPrice() == null) {
 			BigDecimal marketPrice = getDefaultMarketPriceScale(product.getPrice());
 			product.setMarketPrice(marketPrice);
 		}
 		if (product.getPoint() == null) {
-			long l = getDefaultPointScale(product.getPrice());
-			product.setPoint(Long.valueOf(l));
+			long point = getDefaultPointScale(product.getPrice());
+			product.setPoint(Long.valueOf(point));
 		}
 		product.setFullName(null);
 		product.setAllocatedStock(Integer.valueOf(0));
@@ -190,33 +188,28 @@ public class ProductController extends BaseController {
 		Iterator<MemberRank> memberRankIterator = this.memberRankService.findAll().iterator();
 		while (memberRankIterator.hasNext()) {
 			MemberRank memberRank = (MemberRank) memberRankIterator.next();
-			String memberPriceId = request.getParameter("memberPrice_"
-					+ ((MemberRank) memberRank).getId());
+			String memberPriceId = request.getParameter("memberPrice_" + ((MemberRank) memberRank).getId());
 			if ((StringUtils.isNotEmpty(memberPriceId))
-					&& (new BigDecimal( memberPriceId)
-							.compareTo(new BigDecimal(0)) >= 0))
-				product.getMemberPrice().put(memberRank,
-						new BigDecimal(memberPriceId));
+					&& (new BigDecimal( memberPriceId).compareTo(new BigDecimal(0)) >= 0))
+				product.getMemberPrice().put(memberRank, new BigDecimal(memberPriceId));
 			else
 				product.getMemberPrice().remove(memberRank);
 		}
 		Iterator<ProductImage> imageIterator = product.getProductImages().iterator();
 		while (imageIterator.hasNext()) {
 			ProductImage productImage = (ProductImage)imageIterator.next();
-			this.productImageService.build((ProductImage) productImage);
+			this.productImageService.build(productImage);
 		}
 		Collections.sort(product.getProductImages());
 		if ((product.getImage() == null) && (product.getThumbnail() != null))
 			product.setImage(product.getThumbnail());
-		Iterator<ParameterGroup> parameterGroupIterator = product.getProductCategory().getParameterGroups()
-				.iterator();
+		Iterator<ParameterGroup> parameterGroupIterator = product.getProductCategory().getParameterGroups().iterator();
 		while (parameterGroupIterator.hasNext()) {
 			ParameterGroup parameterGroup = (ParameterGroup) parameterGroupIterator.next();
 			Iterator<Parameter> parameterIterator = parameterGroup.getParameters().iterator();
 			while (parameterIterator.hasNext()) {
 				Parameter parameter = (Parameter) parameterIterator.next();
-				String parameterId = request.getParameter("parameter_"
-						+ parameter.getId());
+				String parameterId = request.getParameter("parameter_" + parameter.getId());
 				if (StringUtils.isNotEmpty(parameterId))
 					product.getParameterValue().put(parameter, parameterId);
 				else
@@ -226,8 +219,7 @@ public class ProductController extends BaseController {
 		Iterator<Attribute> attributeIterator = product.getProductCategory().getAttributes().iterator();
 		while (attributeIterator.hasNext()) {
 			Attribute attribute = (Attribute) attributeIterator.next();
-			String attributeId = request.getParameter("attribute_"
-					+ attribute.getId());
+			String attributeId = request.getParameter("attribute_" + attribute.getId());
 			if (StringUtils.isNotEmpty(attributeId))
 				product.setAttributeValue(attribute,attributeId);
 			else
@@ -237,10 +229,8 @@ public class ProductController extends BaseController {
 		List<Product> products = new ArrayList<Product>();
 		if ((specificationIds != null) && (specificationIds.length > 0)) {
 			for (int i = 0; i < specificationIds.length; i++) {
-				Specification specification = (Specification) this.specificationService
-						.find(specificationIds[i]);
-				String[] specificationId = request.getParameterValues("specification_"
-						+ specification.getId());
+				Specification specification = (Specification) this.specificationService.find(specificationIds[i]);
+				String[] specificationId = request.getParameterValues("specification_" + specification.getId());
 				if ((specificationId == null) || (specificationId.length <= 0))
 					continue;
 				for (int j = 0; j < specificationId.length; j++) {
@@ -287,11 +277,10 @@ public class ProductController extends BaseController {
 							products.add(localProduct);
 						}
 					Product localProduct = (Product)  products.get(j);
-					SpecificationValue localSpecificationValue = (SpecificationValue) this.specificationValueService
+					SpecificationValue specificationValue = (SpecificationValue) this.specificationValueService
 							.find(Long.valueOf(specificationId[j]));
 					localProduct.getSpecifications().add(specification);
-					localProduct.getSpecificationValues().add(
-							localSpecificationValue);
+					localProduct.getSpecificationValues().add(specificationValue);
 				}
 			}
 		} else {

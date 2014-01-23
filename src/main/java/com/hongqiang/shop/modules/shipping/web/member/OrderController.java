@@ -320,7 +320,12 @@ public class OrderController extends BaseController {
 				&& (order.getPaymentStatus() == com.hongqiang.shop.modules.entity.Order.PaymentStatus.unpaid)) {
 			if (order.isLocked(null))
 				return Message.warn("shop.member.order.locked", new Object[0]);
-			this.orderService.cancel(order, null);
+			try {
+				this.orderService.cancel(order, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			return SHOP_SUCCESS;
 		}
 		return SHOP_ERROR;

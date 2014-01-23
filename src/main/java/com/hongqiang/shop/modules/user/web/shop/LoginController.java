@@ -60,13 +60,12 @@ public class LoginController extends BaseController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(String redirectUrl, HttpServletRequest request,
-			ModelMap model) {
-		Setting localSetting = SettingUtils.get();
+	public String index(String redirectUrl, HttpServletRequest request, ModelMap model) {
+		Setting setting = SettingUtils.get();
 		if ((redirectUrl != null)
-				&& (!redirectUrl.equalsIgnoreCase(localSetting.getSiteUrl()))
+				&& (!redirectUrl.equalsIgnoreCase(setting.getSiteUrl()))
 				&& (!redirectUrl.startsWith(request.getContextPath() + "/"))
-				&& (!redirectUrl.startsWith(localSetting.getSiteUrl() + "/")))
+				&& (!redirectUrl.startsWith(setting.getSiteUrl() + "/")))
 			redirectUrl = null;
 		model.addAttribute("redirectUrl", redirectUrl);
 		model.addAttribute("captchaId", UUID.randomUUID().toString());
@@ -78,116 +77,90 @@ public class LoginController extends BaseController {
 	public Message submit(String captchaId, String captcha, String username,
 			HttpServletRequest request, HttpServletResponse response,
 			HttpSession session) {
-		String str = this.rsaService.decryptParameter("enPassword", request);
+		String password = this.rsaService.decryptParameter("enPassword", request);
 		this.rsaService.removePrivateKey(request);
-		if (!this.captchaService.isValid(Setting.CaptchaType.memberLogin,
-				captchaId, captcha))
+		if (!this.captchaService.isValid(Setting.CaptchaType.memberLogin, captchaId, captcha))
 			return Message.error("shop.captcha.invalid", new Object[0]);
-		if ((StringUtils.isEmpty(username)) || (StringUtils.isEmpty(str)))
+		if ((StringUtils.isEmpty(username)) || (StringUtils.isEmpty(password)))
 			return Message.error("shop.common.invalid", new Object[0]);
-		Setting localSetting = SettingUtils.get();
-		Member localMember;
-		if ((localSetting.getIsEmailLogin().booleanValue())
-				&& (username.contains("@"))) {
-			List<Member> localList = this.memberService.findListByEmail(username);
-			if (localList.isEmpty())
-				localMember = null;
-			else if (localList.size() == 1)
-				localMember = (Member) localList.get(0);
+		Setting setting = SettingUtils.get();
+		Member member;
+		if ((setting.getIsEmailLogin().booleanValue()) && (username.contains("@"))) {
+			List<Member> members = this.memberService.findListByEmail(username);
+			if (members.isEmpty())
+				member = null;
+			else if (members.size() == 1)
+				member = (Member) members.get(0);
 			else
-				return Message.error("shop.login.unsupportedAccount",
-						new Object[0]);
+				return Message.error("shop.login.unsupportedAccount", new Object[0]);
 		} else {
-			localMember = this.memberService.findByUsername(username);
+			member = this.memberService.findByUsername(username);
 		}
-		if (localMember == null)
+		if (member == null)
 			return Message.error("shop.login.unknownAccount", new Object[0]);
-		if (!localMember.getIsEnabled().booleanValue())
+		if (!member.getIsEnabled().booleanValue())
 			return Message.error("shop.login.disabledAccount", new Object[0]);
-		int i=0;
-		if (localMember.getIsLocked().booleanValue()){
-			if (ArrayUtils.contains(localSetting.getAccountLockTypes(),
-					Setting.AccountLockType.member)) {
-				i = localSetting.getAccountLockTime().intValue();
-				if (i == 0)
-					return Message.error("shop.login.lockedAccount",
-							new Object[0]);
-				Date lockedDate = localMember.getLockedDate();
-				Date lockingDate = DateUtils.addMinutes((Date) lockedDate, i);
+		if (member.getIsLocked().booleanValue()){
+			if (ArrayUtils.contains(setting.getAccountLockTypes(), Setting.AccountLockType.member)) {
+				int minute = setting.getAccountLockTime().intValue();
+				if (minute == 0)
+					return Message.error("shop.login.lockedAccount", new Object[0]);
+				Date lockedDate = member.getLockedDate();
+				Date lockingDate = DateUtils.addMinutes(lockedDate, minute);
 				if (new Date().after(lockingDate)) {
-					localMember.setLoginFailureCount(Integer.valueOf(0));
-					localMember.setIsLocked(Boolean.valueOf(false));
-					localMember.setLockedDate(null);
-					this.memberService.update(localMember);
+					member.setLoginFailureCount(Integer.valueOf(0));
+					member.setIsLocked(Boolean.valueOf(false));
+					member.setLockedDate(null);
+					this.memberService.update(member);
 				} else {
-					return Message.error("shop.login.lockedAccount",
-							new Object[0]);
+					return Message.error("shop.login.lockedAccount", new Object[0]);
 				}
 			} else {
-				localMember.setLoginFailureCount(Integer.valueOf(0));
-				localMember.setIsLocked(Boolean.valueOf(false));
-				localMember.setLockedDate(null);
-				this.memberService.update(localMember);
+				member.setLoginFailureCount(Integer.valueOf(0));
+				member.setIsLocked(Boolean.valueOf(false));
+				member.setLockedDate(null);
+				this.memberService.update(member);
 			}
 		}
-		if (!DigestUtils.md5Hex(str).equals(localMember.getPassword())) {
-			i = localMember.getLoginFailureCount().intValue() + 1;
-			if (i >= localSetting.getAccountLockCount().intValue()) {
-				localMember.setIsLocked(Boolean.valueOf(true));
-				localMember.setLockedDate(new Date());
+		if (!DigestUtils.md5Hex(password).equals(member.getPassword())) {
+			int count = member.getLoginFailureCount().intValue() + 1;
+			if (count >= setting.getAccountLockCount().intValue()) {
+				member.setIsLocked(Boolean.valueOf(true));
+				member.setLockedDate(new Date());
 			}
-			localMember.setLoginFailureCount(Integer.valueOf(i));
-			this.memberService.update(localMember);
-			if (ArrayUtils.contains(localSetting.getAccountLockTypes(),
-					Setting.AccountLockType.member))
-				return Message.error("shop.login.accountLockCount",
-						new Object[] { localSetting.getAccountLockCount() });
-			return Message.error("shop.login.incorrectCredentials",
-					new Object[0]);
+			member.setLoginFailureCount(Integer.valueOf(count));
+			this.memberService.update(member);
+			if (ArrayUtils.contains(setting.getAccountLockTypes(), Setting.AccountLockType.member))
+				return Message.error("shop.login.accountLockCount", new Object[] { setting.getAccountLockCount() });
+			return Message.error("shop.login.incorrectCredentials", new Object[0]);
 		}
-		localMember.setLoginIp(request.getRemoteAddr());
-		localMember.setLoginDate(new Date());
-		localMember.setLoginFailureCount(Integer.valueOf(0));
-		this.memberService.update(localMember);
-		System.out.println("login here");
-		Cart localCart = this.cartService.getCurrent();
-		if ((localCart != null) && (localCart.getMember() == null)) {
-			this.cartService.merge(localMember, localCart);
+		member.setLoginIp(request.getRemoteAddr());
+		member.setLoginDate(new Date());
+		member.setLoginFailureCount(Integer.valueOf(0));
+		this.memberService.update(member);
+		Cart cart = this.cartService.getCurrent();
+		if ((cart != null) && (cart.getMember() == null)) {
+			this.cartService.merge(member, cart);
 			CookieUtils.removeCookie(request, response, "cartId");
 			CookieUtils.removeCookie(request, response, "cartKey");
 		}
-		Map<String, Object> localMap = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		@SuppressWarnings("rawtypes")
 		Enumeration enumer = session.getAttributeNames();
 		while (enumer.hasMoreElements()) {
 			String attribute = (String) enumer.nextElement();
-			 localMap.put(attribute,session.getAttribute(attribute));
+			map.put(attribute,session.getAttribute(attribute));
 		}
 		session.invalidate();
 		session = request.getSession();
-		Iterator<Entry<String, Object>> localIterator = localMap.entrySet().iterator();
-		while (localIterator.hasNext()) {
-			Entry<String, Object> pairs = (Entry<String, Object>) localIterator.next();
+		Iterator<Entry<String, Object>> iterator = map.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Object> pairs = (Entry<String, Object>) iterator.next();
 			session.setAttribute((String)pairs.getKey(),pairs.getValue());
 		}
-		session.setAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME, new Principal(
-				localMember.getId(), username));
-		CookieUtils.setCookie(request, response, "username",
-				localMember.getUsername());
+		session.setAttribute(Member.PRINCIPAL_ATTRIBUTE_NAME, new Principal(member.getId(), username));
+		CookieUtils.setCookie(request, response, "username",member.getUsername());
 		System.out.println("we submit, message = "+SHOP_SUCCESS.toString());
-		
 		return  SHOP_SUCCESS;
-	}
-	
-	@RequestMapping(value = { "/tt" }, method = RequestMethod.GET)
-	public void test() {
-		System.out.println("we are here.");
-		Member member = this.memberService.find(11L);
-		System.out.println("member="+member.getUsername()+", "+member.getEmail()+" ,"+member.getName());
-		member.setEmail("liamn@163.com");
-		member.setName("liman");
-		this.memberService.update(member);
-		Member member2 = this.memberService.find(11L);
-		System.out.println("member="+member2.getUsername()+", "+member2.getEmail()+" ,"+member2.getName());
 	}
 }

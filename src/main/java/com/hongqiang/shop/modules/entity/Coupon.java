@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Digits;
+//import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -91,7 +91,7 @@ public class Coupon extends BaseEntity {
 	}
 
 	@Min(0L)
-	// @Digits(integer=12, fraction=3)
+//	 @Digits(integer=12, fraction=3)
 	@Column(precision = 21, scale = 6)
 	public BigDecimal getStartPrice() {
 		return this.startPrice;
@@ -102,7 +102,7 @@ public class Coupon extends BaseEntity {
 	}
 
 	@Min(0L)
-	// @Digits(integer=12, fraction=3)
+//	 @Digits(integer=12, fraction=3)
 	@Column(precision = 21, scale = 6)
 	public BigDecimal getEndPrice() {
 		return this.endPrice;
@@ -151,7 +151,7 @@ public class Coupon extends BaseEntity {
 		this.priceOperator = priceOperator;
 	}
 
-	// @Digits(integer=12, fraction=3)
+//	 @Digits(integer=12, fraction=3)
 	@Column(precision = 21, scale = 6)
 	public BigDecimal getPriceValue() {
 		return this.priceValue;

@@ -21,7 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Digits;
+//import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -96,7 +96,7 @@ public class Member extends BaseEntity {
 		male, female;
 	}
 
-//	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Pattern(regexp = "^[0-9a-z_A-Z\\u4e00-\\u9fa5]*$")
 	@Column(nullable = false, updatable = false, unique = true)
 	public String getUsername() {
@@ -107,7 +107,7 @@ public class Member extends BaseEntity {
 		this.username = username;
 	}
 
-//	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+	@NotEmpty(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Pattern(regexp = "^[^\\s&\"<>]*$")
 	@Column(nullable = false)
 	public String getPassword() {
@@ -130,7 +130,7 @@ public class Member extends BaseEntity {
 		this.email = email;
 	}
 
-//	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Min(0L)
 	@Column(nullable = false)
 	public Long getPoint() {
@@ -150,7 +150,7 @@ public class Member extends BaseEntity {
 		this.amount = amount;
 	}
 
-//	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
+	@NotNull(groups = { BaseEntity.Save.class,BaseEntity.Update.class })
 	@Min(0L)
 //	@Digits(integer = 15, fraction = 12)
 	@Column(nullable = false, precision = 27, scale = 12)
@@ -538,39 +538,35 @@ public class Member extends BaseEntity {
 			if (memberAttribute.getType() == MemberAttribute.Type.checkbox) {
 				if (memberAttribute.getPropertyIndex() != null)
 					try {
-						String str1 = "attributeValue"
-								+ memberAttribute.getPropertyIndex();
-						String str3 = (String) PropertyUtils.getProperty(this,
-								str1);
-						if (str3 == null)
+						String attributeValue = "attributeValue" + memberAttribute.getPropertyIndex();
+						String property = (String) PropertyUtils.getProperty(this, attributeValue);
+						if (property == null)
 							return null;
-						return JsonUtils.toObject(str3, List.class);
-					} catch (IllegalAccessException localIllegalAccessException2) {
-						localIllegalAccessException2.printStackTrace();
-					} catch (InvocationTargetException localInvocationTargetException2) {
-						localInvocationTargetException2.printStackTrace();
-					} catch (NoSuchMethodException localNoSuchMethodException2) {
-						localNoSuchMethodException2.printStackTrace();
+						return JsonUtils.toObject(property, List.class);
+					} catch (IllegalAccessException illegalAccessException) {
+						illegalAccessException.printStackTrace();
+					} catch (InvocationTargetException invocationTargetException) {
+						invocationTargetException.printStackTrace();
+					} catch (NoSuchMethodException noSuchMethodException) {
+						noSuchMethodException.printStackTrace();
 					}
 			} else if (memberAttribute.getPropertyIndex() != null)
 				try {
-					String str2 = "attributeValue"
-							+ memberAttribute.getPropertyIndex();
-					return (String) PropertyUtils.getProperty(this, str2);
-				} catch (IllegalAccessException localIllegalAccessException3) {
-					localIllegalAccessException3.printStackTrace();
-				} catch (InvocationTargetException localInvocationTargetException3) {
-					localInvocationTargetException3.printStackTrace();
-				} catch (NoSuchMethodException localNoSuchMethodException3) {
-					localNoSuchMethodException3.printStackTrace();
+					String attributeValue = "attributeValue" + memberAttribute.getPropertyIndex();
+					return (String) PropertyUtils.getProperty(this, attributeValue);
+				} catch (IllegalAccessException illegalAccessException) {
+					illegalAccessException.printStackTrace();
+				} catch (InvocationTargetException invocationTargetException) {
+					invocationTargetException.printStackTrace();
+				} catch (NoSuchMethodException noSuchMethodException) {
+					noSuchMethodException.printStackTrace();
 				}
 		}
 		return null;
 	}
 
 	@Transient
-	public void setAttributeValue(MemberAttribute memberAttribute,
-			Object attributeValue) {
+	public void setAttributeValue(MemberAttribute memberAttribute, Object attributeValue) {
 		if (memberAttribute != null) {
 			if (((attributeValue instanceof String))
 					&& (StringUtils.isEmpty((String) attributeValue)))
@@ -602,33 +598,28 @@ public class Member extends BaseEntity {
 			else if ((memberAttribute.getType() == MemberAttribute.Type.checkbox)
 					&& (((attributeValue instanceof List)) || (attributeValue == null))) {
 				if ((memberAttribute.getPropertyIndex() != null)
-						&& ((attributeValue == null) || ((memberAttribute
-								.getOptions() != null) && (memberAttribute
-								.getOptions()
-								.containsAll((Collection<?>) attributeValue)))))
+						&& ((attributeValue == null) || ((memberAttribute.getOptions() != null) 
+								&& (memberAttribute.getOptions().containsAll((Collection<?>) attributeValue)))))
 					try {
-						String str1 = "attributeValue"
-								+ memberAttribute.getPropertyIndex();
-						PropertyUtils.setProperty(this, str1,
-								JsonUtils.toJson(attributeValue));
-					} catch (IllegalAccessException localIllegalAccessException2) {
-						localIllegalAccessException2.printStackTrace();
-					} catch (InvocationTargetException localInvocationTargetException2) {
-						localInvocationTargetException2.printStackTrace();
-					} catch (NoSuchMethodException localNoSuchMethodException2) {
-						localNoSuchMethodException2.printStackTrace();
+						String attrString = "attributeValue" + memberAttribute.getPropertyIndex();
+						PropertyUtils.setProperty(this, attrString, JsonUtils.toJson(attributeValue));
+					} catch (IllegalAccessException illegalAccessException) {
+						illegalAccessException.printStackTrace();
+					} catch (InvocationTargetException invocationTargetException) {
+						invocationTargetException.printStackTrace();
+					} catch (NoSuchMethodException noSuchMethodException) {
+						noSuchMethodException.printStackTrace();
 					}
 			} else if (memberAttribute.getPropertyIndex() != null)
 				try {
-					String str2 = "attributeValue"
-							+ memberAttribute.getPropertyIndex();
-					PropertyUtils.setProperty(this, str2, attributeValue);
-				} catch (IllegalAccessException localIllegalAccessException3) {
-					localIllegalAccessException3.printStackTrace();
-				} catch (InvocationTargetException localInvocationTargetException3) {
-					localInvocationTargetException3.printStackTrace();
-				} catch (NoSuchMethodException localNoSuchMethodException3) {
-					localNoSuchMethodException3.printStackTrace();
+					String attrString = "attributeValue" + memberAttribute.getPropertyIndex();
+					PropertyUtils.setProperty(this, attrString, attributeValue);
+				} catch (IllegalAccessException illegalAccessException) {
+					illegalAccessException.printStackTrace();
+				} catch (InvocationTargetException invocationTargetException) {
+					invocationTargetException.printStackTrace();
+				} catch (NoSuchMethodException noSuchMethodException) {
+					noSuchMethodException.printStackTrace();
 				}
 		}
 	}
@@ -644,15 +635,15 @@ public class Member extends BaseEntity {
 		setPhone(null);
 		setMobile(null);
 		for (int i = 0; i < 10; i++) {
-			String str = "attributeValue" + i;
+			String attribute = "attributeValue" + i;
 			try {
-				PropertyUtils.setProperty(this, str, null);
-			} catch (IllegalAccessException localIllegalAccessException) {
-				localIllegalAccessException.printStackTrace();
-			} catch (InvocationTargetException localInvocationTargetException) {
-				localInvocationTargetException.printStackTrace();
-			} catch (NoSuchMethodException localNoSuchMethodException) {
-				localNoSuchMethodException.printStackTrace();
+				PropertyUtils.setProperty(this, attribute, null);
+			} catch (IllegalAccessException illegalAccessException) {
+				illegalAccessException.printStackTrace();
+			} catch (InvocationTargetException invocationTargetException) {
+				invocationTargetException.printStackTrace();
+			} catch (NoSuchMethodException noSuchMethodException) {
+				noSuchMethodException.printStackTrace();
 			}
 		}
 	}
