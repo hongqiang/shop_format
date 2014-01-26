@@ -28,6 +28,7 @@ $().ready(function() {
 			paymentName: "required",
 			partner: "required",
 			key: "required",
+			seller_email:"required",
 			fee: {
 				required: true,
 				min: 0,
@@ -55,6 +56,14 @@ $().ready(function() {
 				</th>
 				<td>
 					<input type="text" name="paymentName" class="text" value="${pluginConfig.attributes['paymentName']}" maxlength="200" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<span class="requiredField">*</span>${message("admin.plugin.alipayDirect.seller_email")}:
+				</th>
+				<td>
+					<input type="text" name="seller_email" class="text" value="${pluginConfig.attributes['seller_email']}" maxlength="200" />
 				</td>
 			</tr>
 			<tr>

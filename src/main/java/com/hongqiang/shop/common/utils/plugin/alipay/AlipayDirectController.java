@@ -58,22 +58,23 @@ public class AlipayDirectController extends BaseController {
 	}
 
 	@RequestMapping(value = { "/update" }, method = RequestMethod.POST)
-	public String update(String paymentName, String partner, String key,
+	public String update(String paymentName, String seller_email, String partner, String key,
 			PaymentPlugin.FeeType feeType, BigDecimal fee, String logo,
 			String description,
 			@RequestParam(defaultValue = "false") Boolean isEnabled,
 			Integer order, RedirectAttributes redirectAttributes) {
-		PluginConfig localPluginConfig = this.alipayDirectPlugin.getPluginConfig();
-		localPluginConfig.setAttribute("paymentName", paymentName);
-		localPluginConfig.setAttribute("partner", partner);
-		localPluginConfig.setAttribute("key", key);
-		localPluginConfig.setAttribute("feeType", feeType.toString());
-		localPluginConfig.setAttribute("fee", fee.toString());
-		localPluginConfig.setAttribute("logo", logo);
-		localPluginConfig.setAttribute("description", description);
-		localPluginConfig.setIsEnabled(isEnabled);
-		localPluginConfig.setOrder(order);
-		this.pluginConfigService.update(localPluginConfig);
+		PluginConfig pluginConfig = this.alipayDirectPlugin.getPluginConfig();
+		pluginConfig.setAttribute("paymentName", paymentName);
+		pluginConfig.setAttribute("seller_email", seller_email);
+		pluginConfig.setAttribute("partner", partner);
+		pluginConfig.setAttribute("key", key);
+		pluginConfig.setAttribute("feeType", feeType.toString());
+		pluginConfig.setAttribute("fee", fee.toString());
+		pluginConfig.setAttribute("logo", logo);
+		pluginConfig.setAttribute("description", description);
+		pluginConfig.setIsEnabled(isEnabled);
+		pluginConfig.setOrder(order);
+		this.pluginConfigService.update(pluginConfig);
 		addMessage(redirectAttributes, ADMIN_SUCCESS);
 		return "redirect:" + Global.getAdminPath()+ "/payment_plugin/list.jhtml";
 	}
