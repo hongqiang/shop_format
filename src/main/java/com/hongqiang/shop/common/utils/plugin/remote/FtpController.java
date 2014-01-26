@@ -57,7 +57,7 @@ public class FtpController extends BaseController
   {
     PluginConfig localPluginConfig = this.ftpPlugin.getPluginConfig();
     model.addAttribute("pluginConfig", localPluginConfig);
-    return "/net/shopxx/plugin/ftp/setting";
+    return "/admin/remote/setting";
   }
 
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)

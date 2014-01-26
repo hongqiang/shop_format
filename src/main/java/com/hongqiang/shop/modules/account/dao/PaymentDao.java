@@ -8,7 +8,7 @@ import com.hongqiang.shop.common.utils.Pageable;
 import com.hongqiang.shop.modules.entity.Payment;
 
 public interface PaymentDao extends PaymentDaoCustom, CrudRepository<Payment, Long> {
-	public Payment findBySn(String snString);
+	public Payment findBySn(String sn);
 }
 
 /**

@@ -70,7 +70,7 @@ public class OssController extends BaseController
   {
     PluginConfig localPluginConfig = this.ossPlugin.getPluginConfig();
     model.addAttribute("pluginConfig", localPluginConfig);
-    return "/net/shopxx/plugin/oss/setting";
+    return "/admin/ali_os/setting";
   }
 
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)

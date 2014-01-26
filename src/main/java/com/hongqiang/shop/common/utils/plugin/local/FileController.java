@@ -29,7 +29,7 @@ public class FileController extends BaseController
   {
     PluginConfig localPluginConfig = this.filePlugin.getPluginConfig();
     model.addAttribute("pluginConfig", localPluginConfig);
-    return "/net/shopxx/plugin/file/setting";
+    return "/admin/local/setting";
   }
 
   @RequestMapping(value={"/update"}, method=RequestMethod.POST)

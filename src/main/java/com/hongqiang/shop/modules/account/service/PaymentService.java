@@ -6,7 +6,7 @@ import com.hongqiang.shop.modules.entity.Payment;
 
 public interface PaymentService {
 
-	public Payment findBySn(String snString);
+	public Payment findBySn(String sn);
 
 	public Payment find(Long id);
 
