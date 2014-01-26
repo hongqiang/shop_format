@@ -738,7 +738,7 @@ div.header .phone strong {
 div.header .mainNav {
 	height: 36px;
 	overflow: hidden;
-	background-color: #1d1d1d;
+	background-color: #B10000;
 }
 
 div.header .mainNav li {
@@ -750,12 +750,12 @@ div.header .mainNav li {
 
 div.header .mainNav li:hover {
 	color: #505050;
-	background-color: #505050;
+	background-color:#CDC5BF;
 }
 
 div.header .mainNav li a {
 	margin: 0px 20px;
-	color: #e7e7e7;
+	color: #FFFFFF;
 	font-size: 14px;
 }
 
@@ -764,7 +764,7 @@ div.header .mainNav a.current {
 	line-height: 36px;
 	color: #ca062c;
 	border-bottom: solid 1px #1d1d1d;
-	background-color: #ca062c;
+	background-color: #6A0000;
 }
 
 div.header .tagWrap {

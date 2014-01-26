@@ -33,7 +33,7 @@ $().ready(function() {
 	
 	$slider.nivoSlider({
 		effect: "random",
-		animSpeed: 1000,
+		animSpeed: 100,
 		pauseTime: 6000,
 		controlNav: true,
 		keyboardNav: false,
@@ -117,28 +117,13 @@ $().ready(function() {
 			[@ad_position id = 4 /]
 		</div>
 		<div class="span18">
-			<div class="hotBrand clearfix">
-				<div class="title">
-					<a href="${base}${frontPath}/brand/list/1.jhtml">${message("shop.index.allBrand")}</a>
-					<strong>${message("shop.index.hotBrand")}</strong>BRAND
-				</div>
-				<ul>
-					[@brand_list type = "image" count = 14]
-						[#list brands as brand]
-							<li>
-								<a href="${base}${brand.path}" title="${brand.name}"><img src="${brand.logo}" alt="${brand.name}" /></a>
-							</li>
-						[/#list]
-					[/@brand_list]
-				</ul>
-			</div>
 			<div class="hotProductCategory">
 				<div class="title">
 					<a href="${base}${frontPath}/product_category.jhtml">${message("shop.index.allProductCategory")}</a>
 					<strong>${message("shop.index.hotProductCategory")}</strong>CATEGORY
 				</div>
 				<div class="content">
-					[@product_category_root_list count = 4]
+					[@product_category_root_list count = 6]
 						<table>
 							[#list productCategories as rootProductCategory]
 								<tr[#if !rootProductCategory_has_next] class="last"[/#if]>
