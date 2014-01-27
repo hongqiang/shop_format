@@ -57,6 +57,12 @@ public class AlipayDirectPlugin extends PaymentPlugin {
 		return Integer.valueOf(21600);
 	}
 
+	public Map<String, String> getConsigneeInfo(
+			com.hongqiang.shop.modules.entity.Order order){
+		Map<String, String> paramsMap = new HashMap<String, String>();
+		return paramsMap;
+	}
+	
 	public Map<String, String> getParameterMap(String sn, BigDecimal amount,
 			String description, HttpServletRequest request) {
 		Map<String, String> paramsMap = new HashMap<String, String>();

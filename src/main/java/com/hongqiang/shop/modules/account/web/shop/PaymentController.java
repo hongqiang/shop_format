@@ -77,6 +77,7 @@ public class PaymentController extends BaseController {
 		payment.setMember(null);
 		payment.setOrder(order);
 		this.paymentService.save(payment);
+		paymentPlugin.setTradeInfoMap(paymentPlugin.getConsigneeInfo(order));
 		model.addAttribute("url", paymentPlugin.getUrl());
 		model.addAttribute("method", paymentPlugin.getMethod());
 		model.addAttribute("parameterMap", paymentPlugin.getParameterMap(

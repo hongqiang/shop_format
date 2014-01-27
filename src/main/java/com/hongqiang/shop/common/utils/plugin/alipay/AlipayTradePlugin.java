@@ -13,6 +13,7 @@ import com.hongqiang.shop.website.entity.PluginConfig;
 
 @Component("alipayTradePlugin")
 public class AlipayTradePlugin extends PaymentPlugin{
+	
 	public String getName() {
 		return "支付宝担保交易";
 	}
@@ -53,26 +54,54 @@ public class AlipayTradePlugin extends PaymentPlugin{
 		return Integer.valueOf(21600);
 	}
 
+	public Map<String, String> getConsigneeInfo(
+			com.hongqiang.shop.modules.entity.Order order) {
+		Map<String, String> paramsMap = new HashMap<String, String>();
+		// 物流费用
+		BigDecimal logistics_fee = order.getFreight().setScale(2,  BigDecimal.ROUND_HALF_UP);
+		paramsMap.put("logistics_fee", logistics_fee.toString());
+		// 物流类型，三个值可选：EXPRESS（快递）、POST（平邮）、EMS（EMS）
+		String shipping_method_name = order.getShippingMethodName();
+		String logistics_type;
+		if (shipping_method_name.compareTo("普通快递")== 0) {
+			logistics_type = "POST";
+		}else if (shipping_method_name.compareTo("EMS")== 0) {
+			logistics_type = "EMS";
+		}else {
+			 logistics_type = "EXPRESS";
+		}
+		paramsMap.put("logistics_type", logistics_type);
+		// 物流支付方式，两个值可选：SELLER_PAY（卖家承担运费）、BUYER_PAY（买家承担运费）
+		String logistics_payment = "SELLER_PAY";
+		paramsMap.put("logistics_payment", logistics_payment);
+		// 收货人姓名 如：张三
+		String receive_name = order.getConsignee();
+		// 收货人地址
+		String receive_address = order.getAddress();
+		// 收货人邮编
+		String receive_zip = order.getZipCode();
+		// 收货人手机号码
+		String receive_mobile = order.getPhone();
+		paramsMap.put("receive_name", receive_name);
+		paramsMap.put("receive_address", receive_address);
+		paramsMap.put("receive_zip", receive_zip);
+		paramsMap.put("receive_mobile", receive_mobile);
+		return paramsMap;
+	}
+	
 	public Map<String, String> getParameterMap(String sn, BigDecimal amount,
 			String description, HttpServletRequest request) {
 		BigDecimal price = amount.setScale(2,  BigDecimal.ROUND_HALF_UP);
 		Map<String, String> paramsMap = new HashMap<String, String>();
+		//配送费以及配送方式先不写
 		// 支付类型
 		String payment_type = "1";
-		// 服务器异步通知页面路径
+		// 服务器异步通知页面路径,根据付款编号获得页面路径
 		String notify_url = getNotifyUrl(sn);
 		// 页面跳转同步通知页面路径
 		String return_url = getReturnUrl(sn);
-		// 订单名称
-		String subject = "testForShopHQ";
 		// 商品数量,建议默认为1，不改变值，把一次交易看成是一次下订单而非购买一件商品
 		String quantity = "1";
-		// 物流费用
-		String logistics_fee = "0.00";
-		// 物流类型，三个值可选：EXPRESS（快递）、POST（平邮）、EMS（EMS）
-		String logistics_type = "EXPRESS";
-		// 物流支付方式，两个值可选：SELLER_PAY（卖家承担运费）、BUYER_PAY（买家承担运费）
-		String logistics_payment = "SELLER_PAY";
 		// 字符集
 		String input_charset = "utf-8";
 		// 订单描述
@@ -90,27 +119,30 @@ public class AlipayTradePlugin extends PaymentPlugin{
 			paramsMap.put("return_url", return_url);
 			paramsMap.put("service", "create_partner_trade_by_buyer");
 			paramsMap.put("payment_type", payment_type);
-			paramsMap.put("subject", subject);
+			paramsMap.put("subject", description);
 			paramsMap.put("quantity", quantity);
-			paramsMap.put("logistics_fee", logistics_fee);
-			paramsMap.put("logistics_type", logistics_type);
-			paramsMap.put("logistics_payment", logistics_payment);
-			System.out.println(paramsMap);
+			if (getTradeInfoMap()!=null && !getTradeInfoMap().isEmpty()) {
+				paramsMap.putAll(getTradeInfoMap());
+			}
 			String mysign = AlipayUtils.buildRequestMysign(paramsMap, key, input_charset);
 			paramsMap.put("sign", mysign);
 			paramsMap.put("sign_type", "MD5");
 		}
+		getTradeInfoMap().clear();
+		getTradeInfoMap().putAll(paramsMap);
 		System.out.println(paramsMap);
 		return paramsMap;
 	}
 
 	public boolean verify(String sn, HttpServletRequest request) {
-		BigDecimal amount = getAmount(sn, request);
-		String description = null;
-		Map<String, String> paramsMap = getParameterMap(sn, amount, description, request);
+//		BigDecimal amount = getAmount(sn, request);
+//		String description = null;
+//		Map<String, String> paramsMap = getParameterMap(sn, amount, description, request);
 		PluginConfig pluginConfig = getPluginConfig();
 		String key = (pluginConfig != null) ? pluginConfig.getAttribute("key") : null;
-		return AlipayUtils.verify(paramsMap, key);
+//		return AlipayUtils.verify(paramsMap, key);
+		System.out.println(getTradeInfoMap());
+		return AlipayUtils.verify(getTradeInfoMap(), key);
 	}
 
 	public BigDecimal getAmount(String sn, HttpServletRequest request) {
