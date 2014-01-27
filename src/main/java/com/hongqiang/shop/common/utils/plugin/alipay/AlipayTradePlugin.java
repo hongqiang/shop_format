@@ -2,6 +2,7 @@ package com.hongqiang.shop.common.utils.plugin.alipay;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -128,21 +129,30 @@ public class AlipayTradePlugin extends PaymentPlugin{
 			paramsMap.put("sign", mysign);
 			paramsMap.put("sign_type", "MD5");
 		}
-		getTradeInfoMap().clear();
-		getTradeInfoMap().putAll(paramsMap);
 		System.out.println(paramsMap);
 		return paramsMap;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean verify(String sn, HttpServletRequest request) {
-//		BigDecimal amount = getAmount(sn, request);
-//		String description = null;
-//		Map<String, String> paramsMap = getParameterMap(sn, amount, description, request);
 		PluginConfig pluginConfig = getPluginConfig();
 		String key = (pluginConfig != null) ? pluginConfig.getAttribute("key") : null;
-//		return AlipayUtils.verify(paramsMap, key);
-		System.out.println(getTradeInfoMap());
-		return AlipayUtils.verify(getTradeInfoMap(), key);
+		String partner = (pluginConfig != null) ? pluginConfig.getAttribute("partner") : null;
+		Map<String,String> params = new HashMap<String,String>();
+		Map<String,String[]> requestParams = request.getParameterMap();
+		for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+			//乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+			//valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");
+			params.put(name, valueStr);
+		}
+		return AlipayUtils.verify(params, partner, key);
 	}
 
 	public BigDecimal getAmount(String sn, HttpServletRequest request) {
@@ -150,6 +160,10 @@ public class AlipayTradePlugin extends PaymentPlugin{
 	}
 
 	public String getNotifyContext(String sn, HttpServletRequest request) {
-		return "success";
+		if(verify(sn, request)){
+			return "success";
+		}else {
+			return "fail";
+		}
 	}
 }

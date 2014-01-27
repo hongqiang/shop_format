@@ -10,7 +10,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.hongqiang.shop.common.config.Global;
 import com.hongqiang.shop.common.utils.Setting;
 import com.hongqiang.shop.common.utils.SettingUtils;
@@ -44,7 +43,9 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	public static final String FEE_ATTRIBUTE_NAME = "fee";// 税率费用
 	public static final String LOGO_ATTRIBUTE_NAME = "logo";// 支付logo
 	public static final String DESCRIPTION_ATTRIBUTE_NAME = "description";// 说明
-
+	public static final String ORDER_ATTRIBUTE_NAME = PaymentPlugin.class
+			.getName() + ".PRINCIPAL";
+	
 	private Map<String, String> tradeInfoMap;
 
 	public Map<String, String> getTradeInfoMap() {
@@ -141,8 +142,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	 */
 	public boolean getIsEnabled() {
 		PluginConfig pluginConfig = getPluginConfig();
-		return pluginConfig != null ? pluginConfig.getIsEnabled()
-				.booleanValue() : false;
+		return pluginConfig != null ? pluginConfig.getIsEnabled().booleanValue() : false;
 	}
 
 	/**
@@ -243,8 +243,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	/**
 	 * 
-	 * @param order
-	 *            订单实体类
+	 * @param order 订单实体类
 	 * @return 收货人信息
 	 */
 	public abstract Map<String, String> getConsigneeInfo(
@@ -252,14 +251,10 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	/**
 	 * 
-	 * @param sn
-	 *            付款编号
-	 * @param amount
-	 *            付款总金额
-	 * @param description
-	 *            说明
-	 * @param request
-	 *            httprequest
+	 * @param sn 付款编号
+	 * @param amount  付款总金额
+	 * @param description  说明
+	 * @param request httprequest
 	 * @return map，包含需要传给支付接口的参数和参数名称
 	 */
 	public abstract Map<String, String> getParameterMap(String sn,
@@ -267,8 +262,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	/**
 	 * 
-	 * @param sn
-	 *            付款编号
+	 * @param sn  付款编号
 	 * @param request
 	 * @return
 	 */
@@ -276,8 +270,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	/**
 	 * 
-	 * @param sn
-	 *            付款编号
+	 * @param sn  付款编号
 	 * @param request
 	 * @return
 	 */
@@ -285,8 +278,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	/**
 	 * 
-	 * @param sn
-	 *            付款编号
+	 * @param sn  付款编号
 	 * @param request
 	 * @return
 	 */
@@ -295,8 +287,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	/**
 	 * 
-	 * @param sn
-	 *            付款编号
+	 * @param sn  付款编号
 	 * @return
 	 */
 	protected String getReturnUrl(String sn) {
@@ -306,8 +297,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 
 	/**
 	 * 
-	 * @param sn
-	 *            付款编号
+	 * @param sn   付款编号
 	 * @return
 	 */
 	protected String getNotifyUrl(String sn) {
@@ -318,8 +308,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 	/**
 	 * 根据订单总金额得到商城的税费
 	 * 
-	 * @param amount
-	 *            订单总金额
+	 * @param amount  订单总金额
 	 * @return 商城的税费
 	 */
 	public final BigDecimal getFee(BigDecimal amount) {
@@ -343,8 +332,7 @@ public abstract class PaymentPlugin implements Comparable<PaymentPlugin> {
 		if (this == obj)
 			return true;
 		PaymentPlugin paymentPlugin = (PaymentPlugin) obj;
-		return new EqualsBuilder().append(getId(), paymentPlugin.getId())
-				.isEquals();
+		return new EqualsBuilder().append(getId(), paymentPlugin.getId()).isEquals();
 	}
 
 	/**

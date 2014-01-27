@@ -108,13 +108,12 @@ public class AlipayUtils {
 	 *            通知返回来的参数数组
 	 * @return 验证结果
 	 */
-	public static boolean verify(Map<String, String> params, String key) {
+	public static boolean verify(Map<String, String> params, String partner, String key) {
 
 		// 判断responsetTxt是否为true，isSign是否为true
 		// responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关
 		// isSign不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
 		String responseTxt = "true";
-		String partner = params.get("parnter");
 		if (params.get("notify_id") != null) {
 			String notify_id = params.get("notify_id");
 			responseTxt = verifyResponse(partner, notify_id);
@@ -182,8 +181,7 @@ public class AlipayUtils {
 	/**
 	 * 获取远程服务器ATN结果
 	 * 
-	 * @param urlvalue
-	 *            指定URL路径地址
+	 * @param urlvalue    指定URL路径地址
 	 * @return 服务器ATN结果 验证结果集： invalid命令参数不对 出现这个错误，请检测返回处理中partner和key是否为空 true
 	 *         返回正确信息 false 请检查防火墙或者是服务器阻止端口问题以及验证时间是否超过一分钟
 	 */
